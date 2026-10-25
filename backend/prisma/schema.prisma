@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ShoppingListStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum PantrySource {
+  MANUAL
+  SHOPPING_LIST
+  RECEIPT
+}
+
+enum RecommendationSource {
+  RULE_BASED
+  ML
+}
+
+model UserProfile {
+  id                    String              @id @default(uuid()) @db.Uuid
+  clerkUserId           String              @unique
+  displayName           String?
+  householdSize         Int                 @default(1)
+  defaultBudget         Decimal?            @db.Decimal(10, 2)
+  currency              String              @default("GBP")
+  shoppingFrequencyDays Int?
+  dietaryPreferences   Json?
+  allergies             Json?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  shoppingLists         ShoppingList[]
+  pantryItems           PantryItem[]
+  shoppingTrips         ShoppingTrip[]
+  consumptionLogs       ConsumptionLog[]
+  recommendationLogs    RecommendationLog[]
+
+  @@index([clerkUserId])
+}
+
+model Product {
+  id                String             @id @default(uuid()) @db.Uuid
+  code              String             @unique // EAN-13 barcode
+  name              String
+  brands            String?
+  description       String?
+  category          String
+  categoriesTags    String[]           @default([])
+  imageUrl          String?
+  unit              String             @default("g") // g, ml, pack, piece
+  productQuantity   Decimal?           @db.Decimal(10, 2)
+  defaultUnitPrice  Decimal            @db.Decimal(10, 2)
+  currency          String             @default("GBP")
+  isFood            Boolean            @default(true)
+  isActive          Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  shoppingListItems ShoppingListItem[]
+  pantryItems       PantryItem[]
+  shoppingTripItems ShoppingTripItem[]
+  consumptionLogs   ConsumptionLog[]
+  recommendationLogs RecommendationLog[]
+
+  @@index([name])
+  @@index([category])
+  @@index([code])
+}
+
+model ShoppingList {
+  id                    String              @id @default(uuid()) @db.Uuid
+  userId                String              @db.Uuid
+  name                  String
+  status                ShoppingListStatus  @default(DRAFT)
+  budget                Decimal?            @db.Decimal(10, 2)
+  currency              String              @default("GBP")
+  householdSizeSnapshot Int                 @default(1)
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  completedAt           DateTime?
+
+  user                  UserProfile         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items                 ShoppingListItem[]
+  shoppingTrips         ShoppingTrip[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model ShoppingListItem {
+  id                 String       @id @default(uuid()) @db.Uuid
+  shoppingListId     String       @db.Uuid
+  productId          String       @db.Uuid
+  quantity           Decimal      @default(1) @db.Decimal(10, 2)
+  unitPriceSnapshot  Decimal      @db.Decimal(10, 2)
+  isPurchased        Boolean      @default(false)
+  notes              String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  shoppingList       ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
+  product            Product      @relation(fields: [productId], references: [id])
+
+  @@index([shoppingListId])
+  @@index([productId])
+}
+
+model PantryItem {
+  id              String            @id @default(uuid()) @db.Uuid
+  userId          String            @db.Uuid
+  productId       String            @db.Uuid
+  quantity        Decimal           @default(1) @db.Decimal(10, 2)
+  unit            String            @default("piece")
+  purchasedAt     DateTime?         @default(now())
+  expiryDate      DateTime?
+  source          PantrySource      @default(MANUAL)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  user            UserProfile       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product         Product           @relation(fields: [productId], references: [id])
+  consumptionLogs ConsumptionLog[]
+
+  @@index([userId])
+  @@index([productId])
+  @@index([expiryDate])
+}
+
+model ShoppingTrip {
+  id              String             @id @default(uuid()) @db.Uuid
+  userId          String             @db.Uuid
+  shoppingListId  String?            @db.Uuid
+  purchasedAt     DateTime           @default(now())
+  actualTotal     Decimal            @db.Decimal(10, 2)
+  currency        String             @default("GBP")
+  notes           String?
+  createdAt       DateTime           @default(now())
+
+  user            UserProfile        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shoppingList    ShoppingList?      @relation(fields: [shoppingListId], references: [id], onDelete: SetNull)
+  items           ShoppingTripItem[]
+
+  @@index([userId])
+  @@index([purchasedAt])
+}
+
+model ShoppingTripItem {
+  id              String        @id @default(uuid()) @db.Uuid
+  shoppingTripId  String        @db.Uuid
+  productId       String        @db.Uuid
+  quantity        Decimal       @db.Decimal(10, 2)
+  unitPrice       Decimal       @db.Decimal(10, 2)
+  lineTotal       Decimal       @db.Decimal(10, 2)
+  createdAt       DateTime      @default(now())
+
+  shoppingTrip    ShoppingTrip  @relation(fields: [shoppingTripId], references: [id], onDelete: Cascade)
+  product         Product       @relation(fields: [productId], references: [id])
+
+  @@index([shoppingTripId])
+  @@index([productId])
+}
+
+model ConsumptionLog {
+  id               String       @id @default(uuid()) @db.Uuid
+  userId           String       @db.Uuid
+  productId        String       @db.Uuid
+  pantryItemId     String?      @db.Uuid
+  quantityConsumed Decimal      @db.Decimal(10, 2)
+  quantityWasted   Decimal?     @default(0) @db.Decimal(10, 2)
+  loggedAt         DateTime     @default(now())
+  reason           String?
+
+  user             UserProfile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product          Product      @relation(fields: [productId], references: [id])
+  pantryItem       PantryItem?  @relation(fields: [pantryItemId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([productId])
+  @@index([loggedAt])
+}
+
+model RecommendationLog {
+  id                 String               @id @default(uuid()) @db.Uuid
+  userId             String               @db.Uuid
+  productId          String               @db.Uuid
+  recommendationType String
+  suggestedQuantity  Decimal?             @db.Decimal(10, 2)
+  reason             String
+  source             RecommendationSource @default(RULE_BASED)
+  modelVersion       String?
+  outcome            String?
+  createdAt          DateTime             @default(now())
+
+  user               UserProfile          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product            Product              @relation(fields: [productId], references: [id])
+
+  @@index([userId])
+  @@index([productId])
+}

@@ -1,0 +1,69 @@
+import express, { Request, Response } from "express";
+import cors from "cors";
+import morgan from "morgan";
+import { clerkMiddleware } from "@clerk/express";
+import { ENV } from "./config/env";
+import apiV1Router from "./routes";
+import { errorHandler } from "./middlewares/errorHandler";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./docs/swagger";
+
+const app = express();
+
+// Global Middlewares
+app.use(
+  cors({
+    origin: ENV.CORS_ORIGIN,
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+if (ENV.NODE_ENV !== "test") {
+  app.use(morgan("dev"));
+}
+
+// Clerk Authentication Middleware (Attaches auth state to requests)
+app.use(
+  clerkMiddleware({
+    publishableKey: ENV.CLERK_PUBLISHABLE_KEY,
+    secretKey: ENV.CLERK_SECRET_KEY,
+  })
+);
+
+// Mount API v1
+app.use("/api/v1", apiV1Router);
+
+// Swagger API Documentation
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customSiteTitle: "SmartGrocer API Docs",
+    swaggerOptions: {
+      persistAuthorization: true,
+      docExpansion: "list",
+      filter: true,
+    },
+  })
+);
+
+app.get("/docs.json", (_req: Request, res: Response) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
+
+// 404 handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    code: "NOT_FOUND",
+    message: `Cannot ${req.method} ${req.path}`,
+  });
+});
+
+// Centralized Error Handler
+app.use(errorHandler);
+
+export default app;
