@@ -21,8 +21,15 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-if (ENV.NODE_ENV !== "test") {
+if (ENV.NODE_ENV === "development") {
   app.use(morgan("dev"));
+} else if (ENV.NODE_ENV === "production") {
+  // In production, only log 4xx and 5xx errors to prevent log flooding
+  app.use(
+    morgan("short", {
+      skip: (_req: Request, res: Response) => res.statusCode < 400,
+    })
+  );
 }
 
 // Clerk Authentication Middleware (Attaches auth state to requests)

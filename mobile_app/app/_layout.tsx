@@ -9,6 +9,13 @@ import { tokenCache } from '@/services/tokenCache';
 import { setAuthTokenGetter } from '@/services/api';
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+ 
+// Suppress verbose console logs in production release builds (keep console.error & console.warn)
+if (!__DEV__) {
+  console.log = () => {};
+  console.info = () => {};
+  console.debug = () => {};
+}
 
 export {
   ErrorBoundary,

@@ -16,7 +16,8 @@ from models import (
     alternative_finder,
 )
 
-logging.basicConfig(level=logging.INFO)
+log_level = logging.ERROR if settings.ENVIRONMENT == "production" else logging.INFO
+logging.basicConfig(level=log_level)
 logger = logging.getLogger("smartgrocer-ai")
 
 app = FastAPI(

@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     HOST: str = "[IP_ADDRESS]"
     PORT: int = 8000
     DEBUG: bool = False
+    ENVIRONMENT: str = "development"
     API_V1_STR: str = "/api/v1"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
