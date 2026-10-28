@@ -1,0 +1,80 @@
+name: SmartGrocer CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # ==========================================
+  # 1. CI: Run Tests & Type Checks
+  # ==========================================
+  ci:
+    name: Continuous Integration (Tests & Build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Validate Backend & Prisma Types
+        run: |
+          cd backend
+          npm ci
+          npx prisma generate
+          npx tsc --noEmit
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: ai_service/requirements.txt
+
+      - name: Run Python AI Service Unit Tests
+        run: |
+          cd ai_service
+          pip install -r requirements.txt
+          pytest
+
+  # ==========================================
+  # 2. CD: Automatic Deployment to AWS
+  # ==========================================
+  cd:
+    name: Continuous Deployment to AWS
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH to AWS and Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ${{ secrets.AWS_USERNAME }}
+          key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            echo "Connecting to SmartGrocer deployment directory..."
+            cd ~/SmartGrocer || cd /home/ubuntu/SmartGrocer
+
+            echo "Pulling latest commits from GitHub..."
+            git pull origin main
+
+            echo "Rebuilding and updating Docker containers..."
+            docker compose up -d --build
+
+            echo "Running Prisma database migrations..."
+            docker compose exec -T backend npx prisma migrate deploy
+
+            echo "Cleaning unused Docker images..."
+            docker image prune -f
+
+            echo "SmartGrocer successfully deployed and live on AWS!"

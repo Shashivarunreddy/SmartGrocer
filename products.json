@@ -1,8 +1,7 @@
 {
-  "count": 197460,
+  "count": 302,
   "page": 1,
-  "page_count": 100,
-  "page_size": 100,
+  "page_size": 302,
   "products": [
     {
       "brands": "Jason's Sourdough",
@@ -2095,7 +2094,3957 @@
       "quantity": "",
       "price": 3.75,
       "currency": "GBP"
+    },
+    {
+      "code": "5000159461122",
+      "product_name": "Snickers",
+      "brands": "Mars Wrigley Confectionery UK Limited, Snickers",
+      "categories_tags_en": [
+        "Groceries"
+      ],
+      "image_url": "https://images.openfoodfacts.org/images/products/500/015/946/1122/front_en.357.400.jpg",
+      "product_quantity": 50,
+      "product_quantity_unit": "g",
+      "price": 1.99,
+      "currency": "GBP"
+    },
+    {
+      "code": "5000159407236",
+      "product_name": "Mars",
+      "brands": "Mars, Mars Wrigley",
+      "categories_tags_en": [
+        "Groceries"
+      ],
+      "image_url": "https://images.openfoodfacts.org/images/products/500/015/940/7236/front_en.125.400.jpg",
+      "product_quantity": 51,
+      "product_quantity_unit": "g",
+      "price": 1.99,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's,by sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Vegetables based foods",
+        "Vegetables",
+        "Fresh foods",
+        "Fresh plant-based foods",
+        "Leaf vegetables",
+        "Fresh vegetables",
+        "Cauliflowers"
+      ],
+      "code": "00000758",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/000/0758/front_en.9.400.jpg",
+      "product_name": "Cauliflower",
+      "product_quantity": 1,
+      "product_quantity_unit": "piece",
+      "quantity": "1",
+      "price": 1.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Condiments",
+        "Vegetables based foods",
+        "Culinary plants",
+        "Aromatic plants",
+        "Fresh foods",
+        "Fresh plant-based foods",
+        "Herbs",
+        "Onions and their products",
+        "Fresh vegetables"
+      ],
+      "code": "00001373",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/000/1373/front_en.17.400.jpg",
+      "product_name": "Spring onion",
+      "product_quantity": 6,
+      "product_quantity_unit": "piece",
+      "quantity": "6",
+      "price": 0.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Cook with M&S,Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Condiments",
+        "Culinary plants",
+        "Aromatic plants",
+        "Fresh foods",
+        "Fresh plant-based foods",
+        "Herbs",
+        "Parsley",
+        "Fresh aromatic plants",
+        "Fresh parsley"
+      ],
+      "code": "00002929",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/000/2929/front_en.4.400.jpg",
+      "product_name": "Flat Leaf Parsley",
+      "product_quantity": 25,
+      "product_quantity_unit": "g",
+      "quantity": "25 g",
+      "price": 0.9,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Condiments",
+        "Spices",
+        "Peppers"
+      ],
+      "code": "00008433",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/000/8433/front_en.3.400.jpg",
+      "product_name": "Mixed Peppers",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Condiments",
+        "Vegetables based foods",
+        "Culinary plants",
+        "Onions and their products",
+        "Onions"
+      ],
+      "code": "00008761",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/000/8761/front_en.3.400.jpg",
+      "product_name": "Spring onions",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 0.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Confectioneries",
+        "Chocolate candies",
+        "Bonbons",
+        "Candies"
+      ],
+      "code": "00011501",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1501/front_en.31.400.jpg",
+      "product_name": "Curiously Strong Mints",
+      "product_quantity": 50,
+      "product_quantity_unit": "g",
+      "quantity": "50 g",
+      "price": 1.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Chocolate biscuits"
+      ],
+      "code": "00011693",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1693/front_fr.10.400.jpg",
+      "product_name": "All Butter Belgian White Chocolate Chunk Cookies",
+      "product_quantity": 225,
+      "product_quantity_unit": "g",
+      "quantity": "225 g e",
+      "price": 2.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Drop cookies",
+        "Oatmeal biscuits",
+        "Raisin cookies"
+      ],
+      "code": "00011709",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1709/front_fr.12.400.jpg",
+      "product_name": "All Butter Fruity Flapjack Cookies",
+      "product_quantity": 225,
+      "product_quantity_unit": "g",
+      "quantity": "225 g e",
+      "price": 2.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits"
+      ],
+      "code": "00011730",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1730/front_en.59.400.jpg",
+      "product_name": "Cranberry & Orange Cookies",
+      "product_quantity": 225,
+      "product_quantity_unit": "g",
+      "quantity": "225 g ℮, 10 cookies",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits",
+        "Chocolate biscuits",
+        "Drop cookies",
+        "Chocolate chip cookies",
+        "Cookies with milk chocolate",
+        "fr:cookies-au-chocolat-blanc",
+        "fr:cookies-au-chocolat-noir"
+      ],
+      "code": "00011747",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1747/front_fr.14.400.jpg",
+      "product_name": "Triple Belgian Chocolaté Chunk Cookies",
+      "product_quantity": 225,
+      "product_quantity_unit": "g",
+      "quantity": "225 g e",
+      "price": 2.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Oatmeal biscuits"
+      ],
+      "code": "00011754",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1754/front_fr.27.400.jpg",
+      "product_name": "Cookies Stem Ginger",
+      "product_quantity": 225,
+      "product_quantity_unit": "g",
+      "quantity": "225 g",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "fr:Cookies au gingembre"
+      ],
+      "code": "00011778",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1778/front_fr.7.400.jpg",
+      "product_name": "All Butter Reduced Fat Stem Ginger Cookies",
+      "product_quantity": 225,
+      "product_quantity_unit": "g",
+      "quantity": "225 g",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits",
+        "Chocolate biscuits"
+      ],
+      "code": "00011785",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1785/front_en.18.400.jpg",
+      "product_name": "Cookies pépites chocolat et noisette",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Oatmeal biscuits"
+      ],
+      "code": "00011815",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1815/front_fr.20.400.jpg",
+      "product_name": "Burdock root",
+      "product_quantity": 320,
+      "product_quantity_unit": "g",
+      "quantity": "320 g",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer, Yesto",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Smoothies"
+      ],
+      "code": "00011839",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/1839/front_fr.24.400.jpg",
+      "product_name": "Smoothie Strawberry & Banana",
+      "product_quantity": 750,
+      "product_quantity_unit": "ml",
+      "quantity": "750 ml e",
+      "price": 2.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Desserts",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Fruit-based foods",
+        "Fruits puree without sugar added"
+      ],
+      "code": "00012126",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/2126/front_fr.4.400.jpg",
+      "product_name": "Passion fruit",
+      "product_quantity": 90,
+      "product_quantity_unit": "g",
+      "quantity": "90 g",
+      "price": 1.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "McDonald's",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Fermented milk products",
+        "Cheeses",
+        "Cow cheeses",
+        "Cheeses from the United Kingdom",
+        "Cheeses from England",
+        "Cheddar cheese",
+        "Sliced cheeses",
+        "Cheddar slices"
+      ],
+      "code": "00013029",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/3029/front_fr.3.400.jpg",
+      "product_name": "Cheddar",
+      "product_quantity": 7788,
+      "product_quantity_unit": "kg",
+      "quantity": "7.788 kg (6 * 1,298 kg)",
+      "price": 14.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "MARKS & SPENCER",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Meals",
+        "Meals with meat",
+        "Meals with chicken"
+      ],
+      "code": "00013628",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/3628/front_fr.5.400.jpg",
+      "product_name": "Chicken pad thaï",
+      "product_quantity": 400,
+      "product_quantity_unit": "g",
+      "quantity": "400 g",
+      "price": 4.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Breads",
+        "Sliced breads",
+        "White breads"
+      ],
+      "code": "00014137",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/4137/front_en.19.400.jpg",
+      "product_name": "Sliced white bread",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.35,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Popcorn"
+      ],
+      "code": "00016940",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/6940/front_en.16.400.jpg",
+      "product_name": "sweet popcorn",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Breads",
+        "Special breads",
+        "Crumpets"
+      ],
+      "code": "00018166",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/8166/front_en.38.400.jpg",
+      "product_name": "6 Ultimate Crumpets",
+      "product_quantity": 330,
+      "product_quantity_unit": "g",
+      "quantity": "330g",
+      "price": 1.45,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Shortbread cookies",
+        "Shortbread"
+      ],
+      "code": "00019101",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/9101/front_en.32.400.jpg",
+      "product_name": "SHORTBREAD all butter fingers",
+      "product_quantity": 200,
+      "product_quantity_unit": "g",
+      "quantity": "200 g",
+      "price": 1.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's,by sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Vegetables based foods",
+        "Fresh foods",
+        "Mushrooms and their products",
+        "Fresh plant-based foods",
+        "Mushrooms",
+        "Fresh vegetables",
+        "Fresh mushrooms"
+      ],
+      "code": "00019170",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/001/9170/front_en.4.400.jpg",
+      "product_name": "Large flat mushrooms",
+      "product_quantity": 250,
+      "product_quantity_unit": "g",
+      "quantity": "250g",
+      "price": 1.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks and Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Fruit-based beverages",
+        "Juices and nectars",
+        "Fruit juices"
+      ],
+      "code": "00020220",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/0220/front_en.4.400.jpg",
+      "product_name": "Apple Pear & Asparagus",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Pastas",
+        "Cereal pastas",
+        "cs:Orzo-pasta"
+      ],
+      "code": "00020985",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/0985/front_cs.23.400.jpg",
+      "product_name": "Risone Orzo Pasta",
+      "product_quantity": 500,
+      "product_quantity_unit": "g",
+      "quantity": "500 g",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S FOOD",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Fermented milk products",
+        "Cheeses",
+        "Meat alternatives",
+        "Breaded products",
+        "Cheese preparations",
+        "Breaded cheeses",
+        "Mozzarella sticks"
+      ],
+      "code": "00022750",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/2750/front_fr.4.400.jpg",
+      "product_name": "MOZZARELLA STICKS",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 3.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "marks and Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits"
+      ],
+      "code": "00023115",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/3115/front_fr.14.400.jpg",
+      "product_name": "Giant cookies triple belgian chocolate",
+      "product_quantity": 257,
+      "product_quantity_unit": "g",
+      "quantity": "257 g",
+      "price": 2.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Meats",
+        "Chicken and its products",
+        "Poultries",
+        "Chickens"
+      ],
+      "code": "00024068",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/4068/front_fr.7.400.jpg",
+      "product_name": "Deep south cajun chicken tenders",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 4.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Meats",
+        "Poultries",
+        "Meals with meat",
+        "Cooked poultries"
+      ],
+      "code": "00024075",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/4075/front_fr.19.400.jpg",
+      "product_name": "British Katsu Chicken Tenders",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 4.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks And Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits",
+        "Shortbread cookies",
+        "Shortbread"
+      ],
+      "code": "00024143",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/4143/front_en.3.400.jpg",
+      "product_name": "Scottish shortbread",
+      "product_quantity": 650,
+      "product_quantity_unit": "g",
+      "quantity": "650 g",
+      "price": 6.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Dry biscuits",
+        "Assortments of biscuits",
+        "fr:Biscuits pur beurre"
+      ],
+      "code": "00024280",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/4280/front_en.20.400.jpg",
+      "product_name": "All Butter Cookies",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers, Marks & Spencer",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Beverages",
+        "Alcoholic beverages",
+        "Beers"
+      ],
+      "code": "00024679",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/4679/front_fr.5.400.jpg",
+      "product_name": "Yorkshire Gold",
+      "product_quantity": 500,
+      "product_quantity_unit": "ml",
+      "quantity": "500 ml",
+      "price": 2.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Vegetable-based foods and beverages",
+        "Condiments",
+        "Vegetables based foods",
+        "Tomatoes and their products",
+        "Sauces",
+        "Tomato sauces"
+      ],
+      "code": "00024815",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/4815/front_fr.10.400.jpg",
+      "product_name": "M&S smoked tomato sauce",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Condiments",
+        "Sauces",
+        "Barbecue sauces"
+      ],
+      "code": "00024907",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/4907/front_en.32.400.jpg",
+      "product_name": "Teriyaki Dip Sauce Marinade",
+      "product_quantity": 305,
+      "product_quantity_unit": "g",
+      "quantity": "305 g",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S Food",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Meats",
+        "Pork and its products"
+      ],
+      "code": "00025751",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/5751/front_fr.34.400.jpg",
+      "product_name": "Outdoor Bred Honey Roast Ham Chunks",
+      "product_quantity": 120,
+      "product_quantity_unit": "g",
+      "quantity": "120 g",
+      "price": 2.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S Collection",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Vegetables based foods",
+        "Vegetables",
+        "Fresh foods",
+        "Fresh plant-based foods",
+        "Fresh vegetables"
+      ],
+      "code": "00025775",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/5775/front_en.26.400.jpg",
+      "product_name": "Marsh Samphire",
+      "product_quantity": 90,
+      "product_quantity_unit": "g",
+      "quantity": "90g",
+      "price": 2.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Shortbread cookies",
+        "Shortbread"
+      ],
+      "code": "00025942",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/5942/front_fr.4.400.jpg",
+      "product_name": "Scottish Shortbreads",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Cakes",
+        "Chocolate cakes"
+      ],
+      "code": "00027137",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/7137/front_fr.15.400.jpg",
+      "product_name": "Paupiette de volaille sauce forestière brocolis purée",
+      "product_quantity": 402,
+      "product_quantity_unit": "g",
+      "quantity": "402 g",
+      "price": 4.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits"
+      ],
+      "code": "00028059",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/8059/front_en.8.400.jpg",
+      "product_name": "All butter viennese swirls",
+      "product_quantity": 130,
+      "product_quantity_unit": "g",
+      "quantity": "130 g",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Chocolate biscuits",
+        "Milk chocolate biscuits",
+        "Shortbread cookies"
+      ],
+      "code": "00028097",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/8097/front_fr.19.400.jpg",
+      "product_name": "Viennese All Butter Chocolate Dipped Fingers",
+      "product_quantity": 135,
+      "product_quantity_unit": "g",
+      "quantity": "135 g e",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Snacks",
+        "Cereals and potatoes",
+        "Salty snacks",
+        "Appetizers",
+        "Chips and fries",
+        "Potatoes and their products",
+        "Crisps",
+        "Salty snacks made from potato",
+        "Potato crisps",
+        "Flavoured potato crisps",
+        "Cheese and onion crisps",
+        "Cheddar and onion crisps"
+      ],
+      "code": "00028202",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/8202/front_fr.3.400.jpg",
+      "product_name": "Cornish Cruncher Cheddar & Pickled Onion Hand Cooked",
+      "product_quantity": 150,
+      "product_quantity_unit": "g",
+      "quantity": "150 g e",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Chips and fries"
+      ],
+      "code": "00028257",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/8257/front_en.4.400.jpg",
+      "product_name": "Salt marsh lamb& mint hand cook crips",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits",
+        "Shortbread cookies",
+        "Shortbread"
+      ],
+      "code": "00028271",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/8271/front_en.24.400.jpg",
+      "product_name": "Scottish All Butter Toffee & Pecan Shortbread Rounds",
+      "product_quantity": 180,
+      "product_quantity_unit": "g",
+      "quantity": "180 g e",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Snacks",
+        "Cereals and potatoes",
+        "Salty snacks",
+        "Appetizers",
+        "Chips and fries",
+        "Potatoes and their products",
+        "Crisps",
+        "Salty snacks made from potato",
+        "Potato crisps",
+        "Flavoured potato crisps",
+        "Potato crisps in sunflower oil",
+        "Sour cream and sweet chilli crisps"
+      ],
+      "code": "00028325",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/8325/front_en.18.400.jpg",
+      "product_name": "sweet Chilli crisps",
+      "product_quantity": 150,
+      "product_quantity_unit": "g",
+      "quantity": "150 g",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Chocolates",
+        "Milk chocolates"
+      ],
+      "code": "00028653",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/8653/front_fr.4.400.jpg",
+      "product_name": "Jersey Milk Chocolate",
+      "product_quantity": 45,
+      "product_quantity_unit": "g",
+      "quantity": "45 g e",
+      "price": 1.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "by sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Flours"
+      ],
+      "code": "00028879",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/8879/front_en.5.400.jpg",
+      "product_name": "British self raising flour",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Seafood",
+        "Fishes and their products",
+        "Fishes",
+        "Fatty fishes",
+        "Fish fillets",
+        "Salmons",
+        "Salmon fillets"
+      ],
+      "code": "00029452",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/9452/front_fr.4.400.jpg",
+      "product_name": "Salmon fillets",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 4.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Confectioneries",
+        "Candies",
+        "Liquorice candies"
+      ],
+      "code": "00029568",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/002/9568/front_fr.8.400.jpg",
+      "product_name": "Liquorice Catherine Wheels",
+      "product_quantity": 113,
+      "product_quantity_unit": "g",
+      "quantity": "113 g e",
+      "price": 1.35,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Tea-based beverages",
+        "Iced teas",
+        "Peach flavored iced teas",
+        "Sweetened beverages"
+      ],
+      "code": "00030045",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/0045/front_fr.11.400.jpg",
+      "product_name": "Iced Tea Spanish Peach",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencdjdj",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Fruit-based foods and beverages",
+        "Plant-based beverages",
+        "Fruit-based beverages",
+        "Juices and nectars",
+        "Fruit juices",
+        "Multifruit juices"
+      ],
+      "code": "00030113",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/0113/front_en.22.400.jpg",
+      "product_name": "Jus pressé ananas, gingembre, pomme, citron",
+      "product_quantity": 250,
+      "product_quantity_unit": "ml",
+      "quantity": "250 ml",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's taste the difference",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Breakfasts",
+        "Spreads",
+        "Plant-based spreads",
+        "Sweet spreads",
+        "Fruit and vegetable preserves",
+        "Jams",
+        "Berry jams",
+        "Blackcurrant jams"
+      ],
+      "code": "00030182",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/0182/front_en.89.400.jpg",
+      "product_name": "Blackcurrant Preserve",
+      "product_quantity": 340,
+      "product_quantity_unit": "g",
+      "quantity": "340 g",
+      "price": 2.3,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Desserts",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits",
+        "Trifles"
+      ],
+      "code": "00030908",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/0908/front_en.13.400.jpg",
+      "product_name": "All Butter Summer Trifle Cookies",
+      "product_quantity": 225,
+      "product_quantity_unit": "g",
+      "quantity": "225 g",
+      "price": 2.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S Food",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Breads",
+        "Special breads",
+        "English muffins"
+      ],
+      "code": "00031059",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/1059/front_en.33.400.jpg",
+      "product_name": "4 English Muffins",
+      "product_quantity": 300,
+      "product_quantity_unit": "g",
+      "quantity": "260 g (4 * 75 g)",
+      "price": 1.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer,M&S",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Cakes",
+        "Carrot cakes"
+      ],
+      "code": "00031394",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/1394/front_fr.4.400.jpg",
+      "product_name": "Gâteau à la Carotte avec des Noix",
+      "product_quantity": 75,
+      "product_quantity_unit": "g",
+      "quantity": "75 g e",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Pastas",
+        "Cereal pastas",
+        "Durum wheat pasta",
+        "Dry pastas"
+      ],
+      "code": "00032056",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/2056/front_en.25.400.jpg",
+      "product_name": "Spaghetti",
+      "product_quantity": 500,
+      "product_quantity_unit": "g",
+      "quantity": "500g",
+      "price": 0.95,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Chocolates",
+        "Chocolate molds"
+      ],
+      "code": "00032582",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/2582/front_en.6.400.jpg",
+      "product_name": "Decorated hollow white chocolate Arendelle Castle",
+      "product_quantity": 220,
+      "product_quantity_unit": "g",
+      "quantity": "220 g",
+      "price": 6.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Simply M&S,Marks & Spencer",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Beef and its products",
+        "Meats",
+        "Beef"
+      ],
+      "code": "00033046",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/3046/front_en.6.400.jpg",
+      "product_name": "British Beef Braising Steak",
+      "product_quantity": 450,
+      "product_quantity_unit": "g",
+      "quantity": "450 g",
+      "price": 5.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Desserts",
+        "Fruit-based foods",
+        "Compotes",
+        "Apple compotes",
+        "Banana Apple compotes"
+      ],
+      "code": "00033312",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/3312/front_fr.35.400.jpg",
+      "product_name": "Wholewheat Spaghetti",
+      "product_quantity": 200,
+      "product_quantity_unit": "g",
+      "quantity": "200 g",
+      "price": 1.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Desserts",
+        "Fermented milk products",
+        "Dairy desserts",
+        "Fermented dairy desserts",
+        "Yogurts",
+        "Fermented dairy desserts with fruits",
+        "Fruit yogurts",
+        "Cow milk yogurts",
+        "Rhubarb yogurts"
+      ],
+      "code": "00033893",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/3893/front_en.15.400.jpg",
+      "product_name": "West country luxury yogurt Rhubarb Custard",
+      "product_quantity": 150,
+      "product_quantity_unit": "g",
+      "quantity": "150 g",
+      "price": 1.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Desserts",
+        "Fermented milk products",
+        "Dairy desserts",
+        "Fermented dairy desserts",
+        "Yogurts"
+      ],
+      "code": "00033909",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/3909/front_fr.16.400.jpg",
+      "product_name": "Victoria plum and bergamot yogurt",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Seafood",
+        "Snacks",
+        "Meals",
+        "Salty snacks",
+        "Appetizers",
+        "Refrigerated foods",
+        "Breaded products",
+        "Refrigerated meals",
+        "Shrimp preparations",
+        "Breaded shrimps"
+      ],
+      "code": "00035460",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/5460/front_fr.11.400.jpg",
+      "product_name": "6 Breaded Jumbo Tiger Prawns",
+      "product_quantity": 144,
+      "product_quantity_unit": "g",
+      "quantity": "144 g e",
+      "price": 4.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Breakfasts",
+        "Spreads",
+        "Plant-based spreads",
+        "Sweet spreads",
+        "Fruit and vegetable preserves",
+        "Jams",
+        "Apricot jams"
+      ],
+      "code": "00036856",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/6856/front_en.31.400.jpg",
+      "product_name": "Apricot jam",
+      "product_quantity": 454,
+      "product_quantity_unit": "g",
+      "quantity": "454 g",
+      "price": 1.6,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Meats",
+        "Prepared meats",
+        "Sausages"
+      ],
+      "code": "00039352",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/003/9352/front_en.23.400.jpg",
+      "product_name": "6 Olde english farmhouse pork sausages",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 3.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks And Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Sweet pastries and pies",
+        "Viennoiseries",
+        "Pastries",
+        "Croissants",
+        "Butter croissants"
+      ],
+      "code": "00041089",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/004/1089/front_en.24.400.jpg",
+      "product_name": "Marks & Spencer Frozen Croissanrs",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 3.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Salty snacks",
+        "Appetizers",
+        "Chips and fries",
+        "Crisps",
+        "Corn chips"
+      ],
+      "code": "00044196",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/004/4196/front_en.54.400.jpg",
+      "product_name": "Cantina Style Corn Tortillas",
+      "product_quantity": 150,
+      "product_quantity_unit": "g",
+      "quantity": "150 g",
+      "price": 1.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's,By Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Vegetables based foods",
+        "Vegetables",
+        "Cucumbers"
+      ],
+      "code": "00045933",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/004/5933/front_en.6.400.jpg",
+      "product_name": "British whole cucumber",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 0.89,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Fermented milk products",
+        "Cheeses",
+        "Cow cheeses",
+        "Cheeses from the United Kingdom",
+        "Cheeses from England",
+        "Cheddar cheese"
+      ],
+      "code": "00046473",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/004/6473/front_fr.4.400.jpg",
+      "product_name": "Cornish Cove Grated Cheddar Mature",
+      "product_quantity": 250,
+      "product_quantity_unit": "g",
+      "quantity": "250 g",
+      "price": 2.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Chocolates"
+      ],
+      "code": "00047548",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/004/7548/front_fr.4.400.jpg",
+      "product_name": "After Dinner Mint Batons",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's, N/A",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Fruits"
+      ],
+      "code": "00047708",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/004/7708/front_en.62.400.jpg",
+      "product_name": "Large Ripe Avocado",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Shortbread cookies",
+        "Shortbread"
+      ],
+      "code": "00047852",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/004/7852/front_fr.13.400.jpg",
+      "product_name": "Shortbread",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers, Marks & Spencer, Waitrose",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Beverages",
+        "Non-alcoholic beverages",
+        "Artificially sweetened beverages",
+        "Carbonated drinks",
+        "Soft drinks",
+        "Sodas",
+        "Unsweetened beverages"
+      ],
+      "code": "00050678",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/0678/front_en.6.400.jpg",
+      "product_name": "Diet Sparkling Fiery Ginger Beer",
+      "product_quantity": 1000,
+      "product_quantity_unit": "liter",
+      "quantity": "1 liter",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Snacks",
+        "Cereals and potatoes",
+        "Salty snacks",
+        "Appetizers",
+        "Chips and fries",
+        "Potatoes and their products",
+        "Crisps",
+        "Salty snacks made from potato",
+        "Potato crisps",
+        "Flavoured potato crisps"
+      ],
+      "code": "00051248",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/1248/front_fr.3.400.jpg",
+      "product_name": "Winter Berries & Prosecco Hand cooked crisps",
+      "product_quantity": 150,
+      "product_quantity_unit": "g",
+      "quantity": "150 g e",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S Food",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Fermented milk products",
+        "Desserts",
+        "Dairy desserts",
+        "Fermented dairy desserts",
+        "Fermented dairy desserts with fruits",
+        "Yogurts",
+        "Fruit yogurts",
+        "Plain fermented dairy desserts",
+        "Low-fat yogurts",
+        "Plain yogurts",
+        "Greek-style yogurts",
+        "Yogurts high in protein on a fruit layer"
+      ],
+      "code": "00051446",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/1446/front_en.52.400.jpg",
+      "product_name": "Greek Style Natural Yogurt",
+      "product_quantity": 1000,
+      "product_quantity_unit": "kg",
+      "quantity": "1 kg",
+      "price": 2.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Fermented milk products",
+        "Desserts",
+        "Dairy desserts",
+        "Fermented dairy desserts",
+        "Yogurts",
+        "Greek-style yogurts"
+      ],
+      "code": "00051477",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/1477/front_en.3.400.jpg",
+      "product_name": "0% fat greek style yogurt",
+      "product_quantity": 150,
+      "product_quantity_unit": "g",
+      "quantity": "150 g",
+      "price": 1.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks And Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Breads",
+        "Flatbreads",
+        "Special breads",
+        "Naans"
+      ],
+      "code": "00051705",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/1705/front_fr.17.400.jpg",
+      "product_name": "2 garlic & coriander naans",
+      "product_quantity": 220,
+      "product_quantity_unit": "g",
+      "quantity": "220 g",
+      "price": 1.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S Food",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Snacks",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Confectioneries",
+        "Nuts and their products",
+        "Chocolate candies",
+        "Bonbons",
+        "Nut confectioneries",
+        "Chocolate covered nuts and fruits",
+        "Chocolate covered nuts"
+      ],
+      "code": "00052283",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/2283/front_fr.4.400.jpg",
+      "product_name": "Belgian Milk Chocolate Peanuts",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Snacks",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Confectioneries",
+        "Nuts and their products",
+        "Chocolate candies",
+        "Bonbons",
+        "Nut confectioneries",
+        "Chocolate covered nuts and fruits",
+        "Chocolate covered nuts"
+      ],
+      "code": "00052368",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/2368/front_en.31.400.jpg",
+      "product_name": "Belgian milk chocolate coated brazil nuts",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Flours",
+        "Cereal flours"
+      ],
+      "code": "00053327",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/3327/front_en.3.400.jpg",
+      "product_name": "British Plain Flour",
+      "product_quantity": 1500,
+      "product_quantity_unit": "kg",
+      "quantity": "1.5 kg",
+      "price": 1.15,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Meals with meat",
+        "Pizzas pies and quiches",
+        "Pizzas",
+        "Chicken pizza"
+      ],
+      "code": "00053587",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/3587/front_fr.32.400.jpg",
+      "product_name": "Mighty Meaty Pizza",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 5.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Canned foods",
+        "Canned plant-based foods",
+        "Fruits",
+        "Canned fruits",
+        "Tropical fruits",
+        "Canned fruits in juice"
+      ],
+      "code": "00054379",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/4379/front_en.21.400.jpg",
+      "product_name": "Pineapple slices in juice",
+      "product_quantity": 425,
+      "product_quantity_unit": "g",
+      "quantity": "425 g (255 g)",
+      "price": 1.3,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S Food",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Fruits",
+        "Fresh fruits"
+      ],
+      "code": "00056496",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/6496/front_en.14.400.jpg",
+      "product_name": "Perfectly Ripe Figs",
+      "product_quantity": 140,
+      "product_quantity_unit": "g",
+      "quantity": "140g",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Meals",
+        "Soups",
+        "Vegetable soups"
+      ],
+      "code": "00057981",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/7981/front_fr.13.400.jpg",
+      "product_name": "Pea & mint soup",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Canned foods",
+        "Meals",
+        "Soups",
+        "Canned meals",
+        "Canned soups",
+        "Microwave meals"
+      ],
+      "code": "00057998",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/7998/front_en.15.400.jpg",
+      "product_name": "Thai green chicken curry soup",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Vegetable-based foods and beverages",
+        "Vegetables based foods"
+      ],
+      "code": "00059718",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/005/9718/front_en.29.400.jpg",
+      "product_name": "sweetcorn, carrots, peas & broccoli with seasoned butter",
+      "product_quantity": 355,
+      "product_quantity_unit": "g",
+      "quantity": "355 g",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Dairies",
+        "Milks (liquid and powder)",
+        "Milks"
+      ],
+      "code": "00062114",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/006/2114/front_en.25.400.jpg",
+      "product_name": "1%milk fat Low Fat Milk",
+      "product_quantity": 454,
+      "product_quantity_unit": "ml",
+      "quantity": "454ml",
+      "price": 0.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Meals with meat",
+        "Rice dishes",
+        "Meals with chicken",
+        "Microwave meals"
+      ],
+      "code": "00062299",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/006/2299/front_en.22.400.jpg",
+      "product_name": "Chicken jalfrezi & pilau Rice",
+      "product_quantity": 400,
+      "product_quantity_unit": "g",
+      "quantity": "400g",
+      "price": 4.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Fermented milk products",
+        "Desserts",
+        "Dairy desserts",
+        "Fermented dairy desserts",
+        "Fermented dairy desserts with fruits",
+        "Yogurts",
+        "Fruit yogurts",
+        "Yogurts with cereals"
+      ],
+      "code": "00062855",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/006/2855/front_en.4.400.jpg",
+      "product_name": "Bircher style summer muesli Greek style yogurt",
+      "product_quantity": 195,
+      "product_quantity_unit": "g",
+      "quantity": "195 g",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fats",
+        "Vegetable fats",
+        "Vegetable oils",
+        "Sunflower seeds and their products",
+        "Sunflower oils"
+      ],
+      "code": "00064491",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/006/4491/front_en.18.400.jpg",
+      "product_name": "Sunflower Oil",
+      "product_quantity": 1000,
+      "product_quantity_unit": "l",
+      "quantity": "1 l",
+      "price": 2.4,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks &Spencer",
+      "categories_tags_en": [
+        "Pancakes"
+      ],
+      "code": "00065252",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/006/5252/front_fr.28.400.jpg",
+      "product_name": "Pancake",
+      "product_quantity": 280,
+      "product_quantity_unit": "g",
+      "quantity": "280 g",
+      "price": 2.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Seafood",
+        "Fishes and their products",
+        "Fishes",
+        "Fatty fishes",
+        "Herring",
+        "Pickled herring",
+        "Rollmops"
+      ],
+      "code": "00068789",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/006/8789/front_en.47.400.jpg",
+      "product_name": "Rollmop Herrings",
+      "product_quantity": 280,
+      "product_quantity_unit": "g",
+      "quantity": "280 g",
+      "price": 2.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Pies",
+        "Refrigerated foods",
+        "Double crust pies",
+        "Meals with meat",
+        "Refrigerated meals",
+        "Meals with chicken"
+      ],
+      "code": "00070430",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/0430/front_fr.12.400.jpg",
+      "product_name": "Creamy Chicken Pie",
+      "product_quantity": 1,
+      "product_quantity_unit": "personne",
+      "quantity": "1 personne",
+      "price": 3.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Disney, Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Specific products",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Chocolates",
+        "Chocolate molds",
+        "Milk chocolates",
+        "Licensed products"
+      ],
+      "code": "00071093",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/1093/front_en.22.400.jpg",
+      "product_name": "Hollow Milk Chocolate Decorated R2D2",
+      "product_quantity": 215,
+      "product_quantity_unit": "g",
+      "quantity": "215 g e",
+      "price": 6.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Festive foods",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Chocolates",
+        "Chocolate molds",
+        "Easter foods and drinks",
+        "Chocolate Sculptures",
+        "Chocolate dinosaurs"
+      ],
+      "code": "00071185",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/1185/front_en.6.400.jpg",
+      "product_name": "Spiketail the dinosaur",
+      "product_quantity": 205,
+      "product_quantity_unit": "g",
+      "quantity": "205 g e",
+      "price": 6.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Sweeteners",
+        "Syrups",
+        "Simple syrups"
+      ],
+      "code": "00071321",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/1321/front_fr.3.400.jpg",
+      "product_name": "Smoothie Vanilla Bean Maple Syrup & Yogurt",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Smoothies"
+      ],
+      "code": "00071338",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/1338/front_fr.4.400.jpg",
+      "product_name": "Smoothie super Berry",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Meals",
+        "Soups",
+        "Vegetable soups"
+      ],
+      "code": "00071406",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/1406/front_en.19.400.jpg",
+      "product_name": "Super broccoli spinach & pea soup",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Fruit-based beverages"
+      ],
+      "code": "00071543",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/1543/front_fr.3.400.jpg",
+      "product_name": "Aloe Vera Grape & Apple Juice",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Fruit-based foods and beverages",
+        "Vegetable-based foods and beverages",
+        "Plant-based beverages",
+        "Fruit-based beverages",
+        "Refrigerated foods",
+        "Vegetable-based beverages",
+        "Smoothies",
+        "Fruit smoothies"
+      ],
+      "code": "00071574",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/1574/front_fr.11.400.jpg",
+      "product_name": "Smoothie Orange, Carrot & Mango",
+      "product_quantity": 750,
+      "product_quantity_unit": "ml",
+      "quantity": "750 ml",
+      "price": 2.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Fruit-based foods and beverages",
+        "Plant-based beverages",
+        "Artificially sweetened beverages",
+        "Fruit-based beverages"
+      ],
+      "code": "00071604",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/1604/front_en.20.400.jpg",
+      "product_name": "CRANBERRY & RASPERRY JUICE DRINK",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Dried products",
+        "Pastas",
+        "Dried products to be rehydrated",
+        "Noodles",
+        "Instant noodles",
+        "Instant noodle soups"
+      ],
+      "code": "00072847",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/2847/front_fr.4.400.jpg",
+      "product_name": "Pho Noodle Pot",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Dried products",
+        "Pastas",
+        "Dried products to be rehydrated",
+        "Noodles",
+        "Instant noodles",
+        "Instant noodle soups"
+      ],
+      "code": "00072854",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/2854/front_fr.4.400.jpg",
+      "product_name": "Tom Yum Noodle Pot",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Pastas",
+        "Noodles"
+      ],
+      "code": "00072861",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/2861/front_en.3.400.jpg",
+      "product_name": "Ramen noodle pot",
+      "product_quantity": 98,
+      "product_quantity_unit": "g",
+      "quantity": "98 g",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Pastas",
+        "Noodles"
+      ],
+      "code": "00072878",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/2878/front_en.3.400.jpg",
+      "product_name": "Laksa noodle pot",
+      "product_quantity": 99,
+      "product_quantity_unit": "g",
+      "quantity": "99 g",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers, Count on US, Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Meals with meat",
+        "Meals with chicken",
+        "Low-fat prepared meals"
+      ],
+      "code": "00073455",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/3455/front_fr.5.400.jpg",
+      "product_name": "grilled Cajun chicken breast, spicy wedges & sour cream",
+      "product_quantity": 350,
+      "product_quantity_unit": "g",
+      "quantity": "350 g",
+      "price": 4.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Meals with meat",
+        "Meals with chicken"
+      ],
+      "code": "00073677",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/3677/front_fr.4.400.jpg",
+      "product_name": "Tikka Chicken & Spiced Cauliflower Rice",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 4.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer,M&S",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Fermented milk products",
+        "Cheeses",
+        "Cow cheeses",
+        "Cheeses from the United Kingdom",
+        "Cheeses from England",
+        "Cheddar cheese",
+        "Mild cheddar"
+      ],
+      "code": "00073899",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/3899/front_fr.10.400.jpg",
+      "product_name": "Cornish Cove Cheddar",
+      "product_quantity": 200,
+      "product_quantity_unit": "g",
+      "quantity": "200 g e",
+      "price": 2.95,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Desserts",
+        "Fermented milk products",
+        "Dairy desserts",
+        "Fermented dairy desserts",
+        "Yogurts",
+        "Fermented dairy desserts with fruits",
+        "Fruit yogurts",
+        "Greek-style yogurts",
+        "Mango yogurts"
+      ],
+      "code": "00073974",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/3974/front_fr.4.400.jpg",
+      "product_name": "Mango & Passion Fruit & Greek Style Yogurt Snack Pot",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's, Taste the difference",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Breakfasts",
+        "Spreads",
+        "Plant-based spreads",
+        "Sweet spreads",
+        "Fruit and vegetable preserves",
+        "Jams",
+        "Berry jams",
+        "Raspberry jams"
+      ],
+      "code": "00074742",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/4742/front_en.26.400.jpg",
+      "product_name": "Taste the Difference Raspberry Conserve",
+      "product_quantity": 340,
+      "product_quantity_unit": "g",
+      "quantity": "340g",
+      "price": 2.3,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Confectioneries",
+        "Sugar-free chewing gum"
+      ],
+      "code": "00075053",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/5053/front_fr.23.400.jpg",
+      "product_name": "Mango et lime gum",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 0.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Fruit-based foods",
+        "Fruits"
+      ],
+      "code": "00076517",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/6517/front_fr.4.400.jpg",
+      "product_name": "Banana & Berries",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's,by sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Vegetables based foods",
+        "Vegetables",
+        "Fresh foods",
+        "Fresh plant-based foods",
+        "Leaf vegetables",
+        "Fresh vegetables",
+        "Broccoli"
+      ],
+      "code": "00076630",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/6630/front_en.5.400.jpg",
+      "product_name": "Broccoli",
+      "product_quantity": 335,
+      "product_quantity_unit": "g",
+      "quantity": "335g",
+      "price": 0.95,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Nuts and their products",
+        "Nuts",
+        "Shelled nuts"
+      ],
+      "code": "00076715",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/6715/front_en.30.400.jpg",
+      "product_name": "Natural Nut Collection",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 3.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Meals",
+        "Prepared salads",
+        "Meals with fish",
+        "Salads with fish",
+        "Tuna salads"
+      ],
+      "code": "00077101",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/7101/front_fr.4.400.jpg",
+      "product_name": "Tuna & sweetcorn",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Condiments",
+        "Sauces",
+        "Mayonnaises"
+      ],
+      "code": "00077125",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/7125/front_fr.4.400.jpg",
+      "product_name": "Free range egg mayonnaise",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Flours"
+      ],
+      "code": "00078023",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/8023/front_fr.15.400.jpg",
+      "product_name": "Self raising flour",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Dairies",
+        "Fermented foods",
+        "Fermented milk products",
+        "Cheeses",
+        "Cow cheeses",
+        "Cheeses from the United Kingdom",
+        "Cheeses from England",
+        "Cheddar cheese",
+        "Sliced cheeses",
+        "Cheddar slices",
+        "Mild cheddar",
+        "fr:Cheddar aux Oignons"
+      ],
+      "code": "00078115",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/8115/front_fr.5.400.jpg",
+      "product_name": "Mild Cheddar with Onions & Chives",
+      "product_quantity": 160,
+      "product_quantity_unit": "g",
+      "quantity": "160 g",
+      "price": 2.6,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Fruit-based foods",
+        "Fruits",
+        "Berries",
+        "fr:Mélanges de fruits"
+      ],
+      "code": "00078832",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/8832/front_fr.4.400.jpg",
+      "product_name": "Berry Medley",
+      "product_quantity": 240,
+      "product_quantity_unit": "g",
+      "quantity": "240 g e",
+      "price": 2.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Meals",
+        "Pastas",
+        "Meals with meat",
+        "Combination Meals",
+        "Noodles",
+        "Ready to eat combination meals"
+      ],
+      "code": "00079112",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/007/9112/front_en.38.400.jpg",
+      "product_name": "Hoisin Duck Noodles",
+      "product_quantity": 350,
+      "product_quantity_unit": "g",
+      "quantity": "350 g",
+      "price": 4.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Meals with meat",
+        "Refrigerated foods",
+        "Rice dishes",
+        "Refrigerated meals",
+        "Meals with chicken",
+        "Microwave meals"
+      ],
+      "code": "00080897",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/0897/front_fr.8.400.jpg",
+      "product_name": "Poulet Korma & Riz Pilaf",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 4.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Meals with meat",
+        "Refrigerated foods",
+        "Meals with chicken",
+        "Microwave meals",
+        "Refrigerated meals",
+        "Chicken tikka masala"
+      ],
+      "code": "00080910",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/0910/front_fr.3.400.jpg",
+      "product_name": "Poulet Tikka Masala Et Riz Pilaf",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 4.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits"
+      ],
+      "code": "00082372",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/2372/front_en.17.400.jpg",
+      "product_name": "Millionaire's Mini Bites",
+      "product_quantity": 270,
+      "product_quantity_unit": "g",
+      "quantity": "270 g",
+      "price": 2.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Dairies",
+        "Creams",
+        "Squirty creams"
+      ],
+      "code": "00083089",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/3089/front_fr.16.400.jpg",
+      "product_name": "Dairy cream",
+      "product_quantity": 250,
+      "product_quantity_unit": "ml",
+      "quantity": "250 ml",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Prepared meats",
+        "Fish and meat and eggs",
+        "Offals",
+        "Tripe dishes",
+        "fr:boudins",
+        "Black pudding",
+        "Sautéed black pudding"
+      ],
+      "code": "00084215",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/4215/front_en.11.400.jpg",
+      "product_name": "4 Black Pudding Slices",
+      "product_quantity": 113,
+      "product_quantity_unit": "g",
+      "quantity": "113 g",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Pasta dishes",
+        "Prepared salads",
+        "Meals with meat",
+        "Pasta salads",
+        "Refrigerated foods",
+        "Salads with meat",
+        "Pasta salad with meat",
+        "Refrigerated meals",
+        "Pasta salad with chicken"
+      ],
+      "code": "00084222",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/4222/front_fr.4.400.jpg",
+      "product_name": "Poulet Kip Piri-Piri",
+      "product_quantity": 320,
+      "product_quantity_unit": "g",
+      "quantity": "320 g",
+      "price": 4.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "by sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Fruits"
+      ],
+      "code": "00086660",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/6660/front_en.5.400.jpg",
+      "product_name": "prunes",
+      "product_quantity": 250,
+      "product_quantity_unit": "g",
+      "quantity": "250 g",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Snacks",
+        "Salty snacks",
+        "Appetizers",
+        "Meals",
+        "Coleslaw"
+      ],
+      "code": "00086974",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/6974/front_fr.15.400.jpg",
+      "product_name": "Traditional Coleslaw",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Sweeteners",
+        "Sugars",
+        "Cane sugars"
+      ],
+      "code": "00087186",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/7186/front_en.3.400.jpg",
+      "product_name": "Fairtrade Demerara Cane Sugar 1kg",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Cakes",
+        "Cooking helpers",
+        "Dessert mixes",
+        "Pastry helpers",
+        "Baking Mixes",
+        "Cake mixes",
+        "Muffins mix"
+      ],
+      "code": "00087216",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/7216/front_fr.4.400.jpg",
+      "product_name": "English breakfast muffin mix",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Meals",
+        "Pasta dishes",
+        "Prepared lasagne"
+      ],
+      "code": "00087544",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/7544/front_en.18.400.jpg",
+      "product_name": "Lasagna al forno",
+      "product_quantity": 730,
+      "product_quantity_unit": "g",
+      "quantity": "730 g",
+      "price": 5.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Pastries",
+        "Meringues"
+      ],
+      "code": "00087728",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/7728/front_fr.4.400.jpg",
+      "product_name": "Lemon meringue fudge",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Confectioneries",
+        "Candies",
+        "Gummi candies"
+      ],
+      "code": "00088749",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/8749/front_fr.4.400.jpg",
+      "product_name": "Dolly Mixtures",
+      "product_quantity": 120,
+      "product_quantity_unit": "g",
+      "quantity": "120 g",
+      "price": 1.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Vegetable-based foods and beverages",
+        "Plant-based beverages",
+        "Juices and nectars",
+        "Vegetable-based beverages",
+        "Unsweetened beverages",
+        "Vegetable juices"
+      ],
+      "code": "00088893",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/8893/front_fr.4.400.jpg",
+      "product_name": "Beetroot juice",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based foods",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Fruit-based foods",
+        "Plant-based beverages",
+        "Fruit-based beverages",
+        "Coconuts and their products",
+        "Unsweetened beverages",
+        "Coconut waters"
+      ],
+      "code": "00088978",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/8978/front_en.27.400.jpg",
+      "product_name": "Fresh Drinking Coconut",
+      "product_quantity": 1,
+      "product_quantity_unit": "pi",
+      "quantity": "1 pièce",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Pastas",
+        "Dry pastas"
+      ],
+      "code": "00089241",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/9241/front_fr.14.400.jpg",
+      "product_name": "High Fibre Fusilloni",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Seafood",
+        "Fishes and their products",
+        "Fishes",
+        "Fatty fishes",
+        "Fish fillets",
+        "Mackerels",
+        "Mackerel fillets"
+      ],
+      "code": "00089456",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/008/9456/front_en.28.400.jpg",
+      "product_name": "Scottish Hot Smoked Mackerel | 2 Fillets",
+      "product_quantity": 150,
+      "product_quantity_unit": "g",
+      "quantity": "150g",
+      "price": 3.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Nems"
+      ],
+      "code": "00090056",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/0056/front_en.19.400.jpg",
+      "product_name": "Vegetables spring rolls",
+      "product_quantity": 215,
+      "product_quantity_unit": "g",
+      "quantity": "215 g",
+      "price": 2.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers, Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Meats and their products",
+        "Meals with meat",
+        "Microwave meals",
+        "fr:Feijoada"
+      ],
+      "code": "00090100",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/0100/front_fr.6.400.jpg",
+      "product_name": "Pulled Pork & Chorizo Feijoada",
+      "product_quantity": 400,
+      "product_quantity_unit": "g",
+      "quantity": "400 g",
+      "price": 4.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Breads",
+        "Sliced breads",
+        "Wholemeal breads",
+        "Wholemeal sliced breads"
+      ],
+      "code": "00090414",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/0414/front_en.16.400.jpg",
+      "product_name": "Miller’s Wholemeal",
+      "product_quantity": 430,
+      "product_quantity_unit": "g",
+      "quantity": "430g",
+      "price": 1.45,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Pasta dishes",
+        "Refrigerated foods",
+        "Prepared lasagne",
+        "Vegetarian lasagne"
+      ],
+      "code": "00091244",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/1244/front_en.30.400.jpg",
+      "product_name": "Roasted Vegetable Lasagne",
+      "product_quantity": 400,
+      "product_quantity_unit": "g",
+      "quantity": "400 g e",
+      "price": 3.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Condiments",
+        "Sauces",
+        "Mustards"
+      ],
+      "code": "00091640",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/1640/front_fr.3.400.jpg",
+      "product_name": "Moutarde Posh Dog",
+      "product_quantity": 300,
+      "product_quantity_unit": "g",
+      "quantity": "300 g",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Cakes",
+        "Cheesecakes"
+      ],
+      "code": "00096225",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/6225/front_fr.19.400.jpg",
+      "product_name": "Made Without Wheat New York Cheesecake",
+      "product_quantity": 200,
+      "product_quantity_unit": "g",
+      "quantity": "200 g",
+      "price": 3.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Fruit-based foods",
+        "Fruits",
+        "Berries",
+        "Blueberries"
+      ],
+      "code": "00096485",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/6485/front_en.33.400.jpg",
+      "product_name": "Blueberries crips & Juicy Organic",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits"
+      ],
+      "code": "00098144",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/8144/front_en.35.400.jpg",
+      "product_name": "Ginger snaps",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 0.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Puffed cereal cakes",
+        "Puffed rice cakes",
+        "Puffed rice cakes with milk chocolate"
+      ],
+      "code": "00099134",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/9134/front_fr.16.400.jpg",
+      "product_name": "MILK CHOCOLATE RICE CAKES",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Salty snacks",
+        "Appetizers",
+        "Biscuits and crackers",
+        "Chips and fries",
+        "Crisps",
+        "Crackers (Appetizers)"
+      ],
+      "code": "00099165",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/9165/front_fr.3.400.jpg",
+      "product_name": "Cracked Black Pepper & Salted Popped Potato Chips",
+      "product_quantity": 23,
+      "product_quantity_unit": "g",
+      "quantity": "23 g e",
+      "price": 0.95,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products"
+      ],
+      "code": "00099202",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/9202/front_fr.4.400.jpg",
+      "product_name": "Yogurt coated rice cakes",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer, มาร์คแอนด์สเปนเซอร์",
+      "categories_tags_en": [
+        "Snacks",
+        "Salty snacks",
+        "Appetizers",
+        "Biscuits and crackers",
+        "Crackers (Appetizers)"
+      ],
+      "code": "00099233",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/9233/front_fr.9.400.jpg",
+      "product_name": "Cheese Twists",
+      "product_quantity": 125,
+      "product_quantity_unit": "g",
+      "quantity": "125 g",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Smoothies"
+      ],
+      "code": "00099271",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/9271/front_en.6.400.jpg",
+      "product_name": "Smoothie Cucumber Avocado & Lime",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meals",
+        "Fresh foods",
+        "Sandwiches",
+        "Fresh meals",
+        "Poultry sandwiches",
+        "Wraps",
+        "Chicken wraps"
+      ],
+      "code": "00099332",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/009/9332/front_fr.7.400.jpg",
+      "product_name": "Wrap Poulet à la Jamaïcaine",
+      "product_quantity": 231,
+      "product_quantity_unit": "g",
+      "quantity": "231 g",
+      "price": 3.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Nishiki",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Seeds",
+        "Cereals and their products",
+        "Cereal grains",
+        "Rices"
+      ],
+      "code": "0011152285863",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/115/228/5863/front_en.22.400.jpg",
+      "product_name": "Premium Grade Rice",
+      "product_quantity": 4540,
+      "product_quantity_unit": "kg",
+      "quantity": "4.54kg",
+      "price": 14.99,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Avery Island LA, McIhenny Company, Tabasco",
+      "categories_tags_en": [
+        "Condiments",
+        "Sauces",
+        "Hot sauces"
+      ],
+      "code": "0011210115255",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/121/011/5255/front_en.57.400.jpg",
+      "product_name": "Tabasco - Red Pepper Hot Sauce",
+      "product_quantity": 57,
+      "product_quantity_unit": "ml",
+      "quantity": "57ml",
+      "price": 2.15,
+      "currency": "GBP"
+    },
+    {
+      "brands": "TWST",
+      "categories_tags_en": [
+        "Beverages",
+        "Carbonated drinks",
+        "Sodas"
+      ],
+      "code": "0012000150050",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/200/015/0050/front_en.7.400.jpg",
+      "product_name": "Sierra mist soda",
+      "product_quantity": 2,
+      "product_quantity_unit": "ltr",
+      "quantity": "2Ltr",
+      "price": 1.8,
+      "currency": "GBP"
+    },
+    {
+      "brands": "HEINZ HomeStyle",
+      "categories_tags_en": [
+        "Condiments",
+        "Dried products",
+        "Dried products to be rehydrated",
+        "Sauces",
+        "Dehydrated sauces"
+      ],
+      "code": "0013000798402",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/300/079/8402/front_en.11.400.jpg",
+      "product_name": "TURKEY GRAVY",
+      "product_quantity": 510.29141625,
+      "product_quantity_unit": "oz",
+      "quantity": "Yellow 18 oz",
+      "price": 2.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Ore-Ida",
+      "categories_tags_en": [
+        "Chips and fries",
+        "Potato fries"
+      ],
+      "code": "0013120008009",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/312/000/8009/front_en.60.400.jpg",
+      "product_name": "Classic Steak Fries",
+      "product_quantity": 793.7866475,
+      "product_quantity_unit": "oz",
+      "quantity": "28 oz",
+      "price": 3.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Ore-Ida",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Frozen foods",
+        "Cereals and potatoes",
+        "Chips and fries",
+        "Potatoes and their products",
+        "Frozen fried potatoes",
+        "Potato fries",
+        "Frozen potato fries"
+      ],
+      "code": "0013120011504",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/312/001/1504/front_en.7.400.jpg",
+      "product_name": "Easy fries golden fries french fried potatoes extra crispy",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sweet Baby Ray's",
+      "categories_tags_en": [
+        "Condiments",
+        "Sauces",
+        "Barbecue sauces"
+      ],
+      "code": "0013409918104",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/340/991/8104/front_en.94.400.jpg",
+      "product_name": "Barbecue Sauce",
+      "product_quantity": 510.29141625,
+      "product_quantity_unit": "oz",
+      "quantity": "18 oz",
+      "price": 3.4,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Pepperridge Farm",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Chocolate biscuits",
+        "Drop cookies",
+        "Chocolate chip cookies"
+      ],
+      "code": "0014100082033",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/410/008/2033/front_en.26.400.jpg",
+      "product_name": "Captiva; Dark Chocolate",
+      "product_quantity": 243.805898875,
+      "product_quantity_unit": "oz",
+      "quantity": "8.6 oz (244 g)",
+      "price": 3.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Chocolate Chunk, Pepperidge Farm",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Biscuits and crackers",
+        "Biscuits",
+        "Chocolate biscuits",
+        "Drop cookies"
+      ],
+      "code": "0014100097006",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/410/009/7006/front_fr.8.400.jpg",
+      "product_name": "Pepperidge Farm Chocolate Chunk Milk Chocolate Macademia",
+      "product_quantity": 204,
+      "product_quantity_unit": "g",
+      "quantity": "204 g",
+      "price": 3.2,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Wonderful",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Nuts and their products",
+        "Nuts",
+        "Almonds",
+        "Shelled nuts",
+        "Shelled almonds",
+        "Roasted almonds",
+        "Salted almonds",
+        "Roasted and salted almonds"
+      ],
+      "code": "0014113230117",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/411/323/0117/front_fr.3.400.jpg",
+      "product_name": "Amandes Grillées Salées",
+      "product_quantity": 115,
+      "product_quantity_unit": "g",
+      "quantity": "115 g",
+      "price": 2.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Meats",
+        "Lamb meat"
+      ],
+      "code": "0014402513747",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/440/251/3747/front_en.11.400.jpg",
+      "product_name": "Half lamb leg bone in",
+      "product_quantity": 1146,
+      "product_quantity_unit": "kg",
+      "quantity": "1.146 kg",
+      "price": 14.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Beef and its products",
+        "Meats",
+        "Beef",
+        "Steaks",
+        "Beef steaks",
+        "Ground steaks"
+      ],
+      "code": "0015509010009",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/550/901/0009/front_en.7.400.jpg",
+      "product_name": "British Sirloin Steak",
+      "product_quantity": 455,
+      "product_quantity_unit": "steak",
+      "quantity": "1 steak (0.455 kg)",
+      "price": 6.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Gardettos",
+      "categories_tags_en": [
+        "Snacks",
+        "Salty snacks",
+        "Appetizers",
+        "Chips and fries",
+        "Crisps"
+      ],
+      "code": "0016000193338",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/600/019/3338/front_en.8.400.jpg",
+      "product_name": "Roasted garlic rye chips",
+      "product_quantity": 226.796185,
+      "product_quantity_unit": "oz",
+      "quantity": "8 oz",
+      "price": 2.95,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Betty Crocker",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Cakes",
+        "Cooking helpers",
+        "Dessert mixes",
+        "Pastry helpers",
+        "Baking Mixes",
+        "Chocolate cakes",
+        "Cake mixes"
+      ],
+      "code": "0016000277939",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/600/027/7939/front_en.3.400.jpg",
+      "product_name": "Betty Crocker Gluten Free Chocolate Brownie Mix",
+      "product_quantity": 453.59237,
+      "product_quantity_unit": "oz",
+      "quantity": "16 oz",
+      "price": 3.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "General Mills",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Breakfasts",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Breakfast cereals"
+      ],
+      "code": "0016000478855",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/600/047/8855/front_en.6.400.jpg",
+      "product_name": "Pumpkin spice cheerios limited edition cereal",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 3.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "General Mills",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Breakfasts",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Breakfast cereals",
+        "Extruded cereals"
+      ],
+      "code": "0016000487956",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/600/048/7956/front_en.28.400.jpg",
+      "product_name": "Chex rice",
+      "product_quantity": 510,
+      "product_quantity_unit": "g",
+      "quantity": "510g",
+      "price": 3.95,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Nature Valley",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Bars",
+        "Cereal bars"
+      ],
+      "code": "0016000502642",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/600/050/2642/front_en.34.400.jpg",
+      "product_name": "Nature Valley Crunchy Oats 'n Honey",
+      "product_quantity": 42,
+      "product_quantity_unit": "g",
+      "quantity": "42 g",
+      "price": 0.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Nature Valley",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Bars",
+        "Cereal bars"
+      ],
+      "code": "0016000502666",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/600/050/2666/front_en.77.400.jpg",
+      "product_name": "NATURE VALLEY CRUNCHY OATS & HONEY",
+      "product_quantity": 42,
+      "product_quantity_unit": "g",
+      "quantity": "42 g",
+      "price": 0.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Aroy-D, Thai Agri Foods Public Company Limited",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based foods",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Dairy substitutes",
+        "Fruit-based foods",
+        "Milk substitutes",
+        "Plant-based beverages",
+        "Plant-based milk alternatives",
+        "Coconuts and their products",
+        "Plant-based creams",
+        "Coconut milks and creams",
+        "Plant-based creams for cooking"
+      ],
+      "code": "0016229001711",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/622/900/1711/front_en.88.400.jpg",
+      "product_name": "Coconut Milk",
+      "product_quantity": 400,
+      "product_quantity_unit": "ml",
+      "quantity": "400ml",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Aroy-D, Thai Agri Foods Public Company Limited",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Desserts",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Canned foods",
+        "Fruit-based foods",
+        "Canned plant-based foods",
+        "Fruits",
+        "Tropical fruits",
+        "Canned fruits",
+        "Coconuts and their products",
+        "Coconuts",
+        "Fruits in syrup",
+        "Fresh ripe coconut kernel",
+        "Coconut kernel in syrup"
+      ],
+      "code": "0016229002114",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/622/900/2114/front_fr.14.400.jpg",
+      "product_name": "Young Coconut Meat In Syrup",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "0.00 3.00",
+      "price": 1.95,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Thai Agri Foods Public Company Limited",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based foods",
+        "Fruit-based foods and beverages",
+        "Fruits and vegetables based foods",
+        "Dairy substitutes",
+        "Fruit-based foods",
+        "Milk substitutes",
+        "Plant-based beverages",
+        "Cooking helpers",
+        "Plant-based milk alternatives",
+        "Coconuts and their products",
+        "Plant-based creams",
+        "Coconut milks and creams",
+        "Plant-based creams for cooking"
+      ],
+      "code": "0016229906221",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/622/990/6221/front_en.24.400.jpg",
+      "product_name": "Aroy-D, Coconut Cream",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Uni-Eagle",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Condiments",
+        "Sauces",
+        "Hot sauces",
+        "Sriracha sauces"
+      ],
+      "code": "0016229912437",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/622/991/2437/front_en.30.400.jpg",
+      "product_name": "Sriracha Hot Chill Sauce",
+      "product_quantity": 430,
+      "product_quantity_unit": "ml",
+      "quantity": "430ml",
+      "price": 3.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Barefoot, Tesco",
+      "categories_tags_en": [
+        "Beverages and beverages preparations",
+        "Beverages",
+        "Alcoholic beverages",
+        "Wines"
+      ],
+      "code": "0018341751062",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/834/175/1062/front_de.3.400.jpg",
+      "product_name": "Stuffed Mushrooms",
+      "product_quantity": 750,
+      "product_quantity_unit": "ml",
+      "quantity": "750 ml",
+      "price": 6.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Barefoot",
+      "categories_tags_en": [
+        "Beverages",
+        "Alcoholic beverages",
+        "Wines",
+        "Red wines"
+      ],
+      "code": "0018341751130",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/834/175/1130/front_en.17.400.jpg",
+      "product_name": "Shiraz California",
+      "product_quantity": 750,
+      "product_quantity_unit": "ml",
+      "quantity": "750 ml",
+      "price": 7.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Kashi",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Bars",
+        "Cereal bars"
+      ],
+      "code": "0018627100478",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/862/710/0478/front_en.10.400.jpg",
+      "product_name": "Salted Caramel Pecan Chewy Nut Butter Bars",
+      "product_quantity": 34.86991344375,
+      "product_quantity_unit": "oz",
+      "quantity": "1.23 oz",
+      "price": 1.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Kashi",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Bars"
+      ],
+      "code": "0018627386896",
+      "image_url": "https://images.openfoodfacts.org/images/products/001/862/738/6896/front_en.16.400.jpg",
+      "product_name": "Soft baked breakfast bars ripe strawberry",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.1,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Meals",
+        "Puff pastry meals",
+        "Friands",
+        "Large sausage rolls"
+      ],
+      "code": "00101639",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/1639/front_en.41.400.jpg",
+      "product_name": "Pork Sausage Rolls",
+      "product_quantity": 120,
+      "product_quantity_unit": "g",
+      "quantity": "120 g",
+      "price": 1.4,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Snacks",
+        "Cereals and potatoes",
+        "Salty snacks",
+        "Appetizers",
+        "Chips and fries",
+        "Potatoes and their products",
+        "Crisps",
+        "Salty snacks made from potato",
+        "Potato crisps"
+      ],
+      "code": "00102315",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/2315/front_en.18.400.jpg",
+      "product_name": "Mature cheddar & caramelised red onion baked potato crisps",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Bars",
+        "Cereal bars"
+      ],
+      "code": "00102469",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/2469/front_fr.4.400.jpg",
+      "product_name": "Peanut, caramel & cocoa treat bars",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Bars",
+        "Cereal bars",
+        "Fruits cereal bars"
+      ],
+      "code": "00102476",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/2476/front_fr.8.400.jpg",
+      "product_name": "3 Apple, Ginger & Dark Chocolate Treat Bars",
+      "product_quantity": 135,
+      "product_quantity_unit": "g",
+      "quantity": "135 g e (3 * 45 g)",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Bars"
+      ],
+      "code": "00102483",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/2483/front_fr.4.400.jpg",
+      "product_name": "Treat bars",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Dairy substitutes",
+        "Milk substitutes",
+        "Plant-based beverages",
+        "Plant-based milk alternatives"
+      ],
+      "code": "00102841",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/2841/front_fr.4.400.jpg",
+      "product_name": "Almond & chocolate milk drink",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Sweet pastries and pies",
+        "Cakes",
+        "Viennoiseries",
+        "Brioches"
+      ],
+      "code": "00103350",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/3350/front_fr.8.400.jpg",
+      "product_name": "Sultana scones",
+      "product_quantity": 280,
+      "product_quantity_unit": "g",
+      "quantity": "280g",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S FOOD",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Cakes",
+        "Muffins",
+        "Fruit muffins",
+        "Blueberry muffins"
+      ],
+      "code": "00104302",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/4302/front_fr.32.400.jpg",
+      "product_name": "Fruity Blueberry Muffin",
+      "product_quantity": 260,
+      "product_quantity_unit": "g",
+      "quantity": "260 g e",
+      "price": 2.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Beef and its products",
+        "Meats",
+        "Prepared meats",
+        "Dried meats",
+        "Prepared beef meats",
+        "Beef jerkies"
+      ],
+      "code": "00104364",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/4364/front_fr.14.400.jpg",
+      "product_name": "BBQ Beef Jerky",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Fish and meat and eggs",
+        "Offals"
+      ],
+      "code": "00104456",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/4456/front_en.9.400.jpg",
+      "product_name": "Haggis",
+      "product_quantity": 454,
+      "product_quantity_unit": "g",
+      "quantity": "454 g",
+      "price": 3.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Breads",
+        "Flatbreads",
+        "Special breads",
+        "Naans"
+      ],
+      "code": "00105095",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/5095/front_fr.4.400.jpg",
+      "product_name": "Mini Flame Baked Naans",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.35,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Condiments",
+        "Sauces",
+        "Tzatzikis"
+      ],
+      "code": "00106337",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/6337/front_fr.4.400.jpg",
+      "product_name": "Reduced fat Tzatziki",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Meals",
+        "fr:cereales-preparees",
+        "Prepared rices",
+        "Fried rice"
+      ],
+      "code": "00107884",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/7884/front_en.22.400.jpg",
+      "product_name": "Egg fried rice",
+      "product_quantity": 300,
+      "product_quantity_unit": "g",
+      "quantity": "300 g",
+      "price": 2.35,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Meals",
+        "Soups",
+        "Vegetable soups"
+      ],
+      "code": "00107952",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/7952/front_en.29.400.jpg",
+      "product_name": "chunky country vegetable soup",
+      "product_quantity": 600,
+      "product_quantity_unit": "g",
+      "quantity": "600 g",
+      "price": 2.65,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's, By Sainsbury's",
+      "categories_tags_en": [
+        "Meats and their products",
+        "Meats",
+        "Pork and its products",
+        "Pork"
+      ],
+      "code": "00108784",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/8784/front_en.5.400.jpg",
+      "product_name": "2 british pork boneless loin steaks",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 3.4,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Cocoa and its products",
+        "Confectioneries",
+        "Festive foods",
+        "Chocolate candies",
+        "Chocolates"
+      ],
+      "code": "00108867",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/8867/front_fr.4.400.jpg",
+      "product_name": "Chick-a-Boo",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.5,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&S",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Cereals and potatoes",
+        "Meals",
+        "Seeds",
+        "Cereals and their products",
+        "Cereal grains",
+        "Rice dishes",
+        "Rices",
+        "Aromatic rices",
+        "Indica rices",
+        "Long grain rices",
+        "Basmati rices"
+      ],
+      "code": "00109024",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/9024/front_fr.34.400.jpg",
+      "product_name": "PILAU RICE",
+      "product_quantity": 300,
+      "product_quantity_unit": "g",
+      "quantity": "300 g",
+      "price": 2.35,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Strawberry Joe's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Fruits",
+        "Berries",
+        "Strawberries"
+      ],
+      "code": "00109123",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/9123/front_en.20.400.jpg",
+      "product_name": "Strawberries",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 2.4,
+      "currency": "GBP"
+    },
+    {
+      "brands": "M&s",
+      "categories_tags_en": [
+        "Meals",
+        "Prepared salads",
+        "Rice dishes",
+        "Rice salads"
+      ],
+      "code": "00109543",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/010/9543/front_fr.3.400.jpg",
+      "product_name": "Salade De Riz, Haricots Noirs Et Feta",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 3.25,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's, Sainsburys",
+      "categories_tags_en": [
+        "Meals",
+        "Prepared salads"
+      ],
+      "code": "00110112",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/011/0112/front_en.25.400.jpg",
+      "product_name": "Tex Mex Dips",
+      "product_quantity": 200,
+      "product_quantity_unit": "g",
+      "quantity": "200 g",
+      "price": 1.75,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's, OraCsre",
+      "categories_tags_en": [
+        "Pies"
+      ],
+      "code": "00111652",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/011/1652/front_en.43.400.jpg",
+      "product_name": "Mince Pies",
+      "product_quantity": 335,
+      "product_quantity_unit": "g",
+      "quantity": "335g",
+      "price": 1.85,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencers",
+      "categories_tags_en": [
+        "Snacks",
+        "Sweet snacks",
+        "Biscuits and cakes",
+        "Cakes"
+      ],
+      "code": "00112314",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/011/2314/front_fr.17.400.jpg",
+      "product_name": "Lemon Drizzle Cake",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 3.4,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's, Tesco",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Fruits and vegetables based foods",
+        "Legumes and their products",
+        "Legumes",
+        "Seeds",
+        "Legume seeds",
+        "Pulses"
+      ],
+      "code": "00113168",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/011/3168/front_en.11.400.jpg",
+      "product_name": "British Petit Pois",
+      "product_quantity": null,
+      "product_quantity_unit": "piece",
+      "quantity": "",
+      "price": 1.4,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Marks & Spencer",
+      "categories_tags_en": [
+        "Seafood",
+        "Meals",
+        "Fresh foods",
+        "Crustaceans",
+        "lobsters",
+        "Fresh meals",
+        "fr:Plats à base de crustacés"
+      ],
+      "code": "00113380",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/011/3380/front_fr.5.400.jpg",
+      "product_name": "Canadian Dressed Lobster",
+      "product_quantity": 330,
+      "product_quantity_unit": "g",
+      "quantity": "330 g (2 personnes)",
+      "price": 15.0,
+      "currency": "GBP"
+    },
+    {
+      "brands": "Sainsbury's",
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Plant-based foods",
+        "Breakfasts",
+        "Cereals and potatoes",
+        "Cereals and their products",
+        "Breakfast cereals",
+        "Flakes",
+        "Cereal flakes",
+        "Rolled flakes",
+        "Rolled oats"
+      ],
+      "code": "00113557",
+      "image_url": "https://images.openfoodfacts.org/images/products/000/000/011/3557/front_fr.4.400.jpg",
+      "product_name": "Porridge oats",
+      "product_quantity": 500,
+      "product_quantity_unit": "g",
+      "quantity": "500g",
+      "price": 1.15,
+      "currency": "GBP"
     }
-  ],
-  "skip": 0
+  ]
 }

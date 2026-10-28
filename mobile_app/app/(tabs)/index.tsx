@@ -34,23 +34,29 @@ export default function HomeScreen() {
   const loadDashboard = async () => {
     try {
       setLoading(true);
-      // Fetch AI Demand Replenishments with fallback
-      const aiRes = await api.getReplenishments().catch(() => null);
+
+      // Fetch AI Replenishments, Expiring Items, and Active Lists concurrently
+      const [aiResult, pantryResult, listsResult] = await Promise.allSettled([
+        api.getReplenishments().catch(() => null),
+        api.getExpiringPantryItems().catch(() => ({ data: [] })),
+        api.getShoppingLists().catch(() => ({ data: [] })),
+      ]);
+
+      const aiRes = aiResult.status === 'fulfilled' ? aiResult.value : null;
+      const pantryRes = pantryResult.status === 'fulfilled' ? pantryResult.value : null;
+      const listsRes = listsResult.status === 'fulfilled' ? listsResult.value : null;
+
       if (aiRes?.data?.replenishments && aiRes.data.replenishments.length > 0) {
         setAiReplenishments(aiRes.data.replenishments);
       } else {
-        const productRes = await api.getProducts({ pageSize: 4 });
+        const productRes = await api.getProducts({ pageSize: 4 }).catch(() => null);
         if (productRes?.data) {
           setSuggestedProducts(productRes.data);
         }
       }
 
-      // Fetch expiring items
-      const pantryRes = await api.getExpiringPantryItems().catch(() => ({ data: [] }));
       setExpiringItems(pantryRes?.data || []);
 
-      // Fetch active shopping lists and calculate real live totals
-      const listsRes = await api.getShoppingLists().catch(() => ({ data: [] }));
       const lists = listsRes?.data || [];
       if (lists.length > 0) {
         const first = lists[0];

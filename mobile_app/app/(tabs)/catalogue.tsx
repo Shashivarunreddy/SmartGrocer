@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
@@ -25,28 +26,76 @@ const CATEGORIES = [
   'Breads',
 ];
 
+const PAGE_SIZE = 20;
+
 export default function CatalogueScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeListId, setActiveListId] = useState<string | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
   const [basketCounts, setBasketCounts] = useState<Record<string, number>>({});
 
-  const fetchProducts = async () => {
+  // In-memory cache for instant 0ms tab switching
+  const cacheRef = useRef<Record<string, { products: Product[]; hasMore: boolean }>>({});
+
+  const fetchProducts = async (pageToFetch: number = 1, append: boolean = false) => {
+    const cacheKey = `${selectedCategory}:${search.trim()}`;
+
+    // Instant cache hit on first page
+    if (!append && pageToFetch === 1 && cacheRef.current[cacheKey]) {
+      const cached = cacheRef.current[cacheKey];
+      setProducts(cached.products);
+      setHasMore(cached.hasMore);
+      setLoading(false);
+      return;
+    }
+
     try {
-      setLoading(true);
+      if (append) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
+      }
+
       const res = await api.getProducts({
-        pageSize: 50,
+        page: pageToFetch,
+        pageSize: PAGE_SIZE,
         search: search.trim() || undefined,
         category: selectedCategory !== 'All' ? selectedCategory : undefined,
       });
-      setProducts(res.data || []);
+
+      const items = res.data || [];
+      const moreAvailable = items.length >= PAGE_SIZE;
+
+      if (append) {
+        setProducts((prev) => {
+          const merged = [...prev, ...items];
+          cacheRef.current[cacheKey] = { products: merged, hasMore: moreAvailable };
+          return merged;
+        });
+      } else {
+        setProducts(items);
+        cacheRef.current[cacheKey] = { products: items, hasMore: moreAvailable };
+      }
+
+      setHasMore(moreAvailable);
+      setPage(pageToFetch);
     } catch (err: any) {
       console.log('Error fetching products:', err.message);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loading && !loadingMore && hasMore) {
+      fetchProducts(page + 1, true);
     }
   };
 
@@ -75,8 +124,8 @@ export default function CatalogueScreen() {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      fetchProducts();
-    }, 300);
+      fetchProducts(1, false);
+    }, search ? 300 : 0);
     return () => clearTimeout(delayDebounce);
   }, [search, selectedCategory]);
 
@@ -143,9 +192,13 @@ export default function CatalogueScreen() {
         <View style={styles.thumbnailWrapper}>
           {item.imageUrl ? (
             <Image
-              source={{ uri: item.imageUrl }}
+              source={{
+                uri: item.imageUrl,
+                cache: 'force-cache',
+              }}
               style={styles.thumbnailImg}
               resizeMode="contain"
+              fadeDuration={100}
             />
           ) : (
             <Ionicons name="basket" size={36} color={BrandColors.primary} />
@@ -244,7 +297,7 @@ export default function CatalogueScreen() {
       </View>
 
       {/* Products Grid */}
-      {loading ? (
+      {loading && products.length === 0 ? (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={BrandColors.primary} />
           <Text style={styles.loadingText}>Loading fresh items...</Text>
@@ -263,6 +316,19 @@ export default function CatalogueScreen() {
           contentContainerStyle={styles.productsGrid}
           columnWrapperStyle={styles.columnWrapper}
           renderItem={renderProductItem}
+          initialNumToRender={8}
+          maxToRenderPerBatch={8}
+          windowSize={5}
+          removeClippedSubviews={Platform.OS !== 'web'}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.4}
+          ListFooterComponent={
+            loadingMore ? (
+              <View style={{ paddingVertical: 20, alignItems: 'center' }}>
+                <ActivityIndicator size="small" color={BrandColors.primary} />
+              </View>
+            ) : undefined
+          }
         />
       )}
     </View>

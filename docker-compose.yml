@@ -1,0 +1,57 @@
+services:
+  # 1. PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: smartgrocer-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-smartgrocer}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-smartgrocer_secure_pass123}
+      POSTGRES_DB: ${POSTGRES_DB:-smartgrocer}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-smartgrocer}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  # 2. Python AI Service (FastAPI)
+  ai_service:
+    build:
+      context: ./ai_service
+      dockerfile: Dockerfile
+    container_name: smartgrocer-ai
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+
+  # 3. Node.js Backend API (Express & Prisma)
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    container_name: smartgrocer-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ai_service:
+        condition: service_started
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-smartgrocer}:${POSTGRES_PASSWORD:-smartgrocer_secure_pass123}@postgres:5432/${POSTGRES_DB:-smartgrocer}?schema=public
+      - PYTHON_SERVICE_URL=http://ai_service:8000
+      - CLERK_PUBLISHABLE_KEY=${CLERK_PUBLISHABLE_KEY}
+      - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+      - CORS_ORIGIN=*
+
+volumes:
+  postgres_data:
