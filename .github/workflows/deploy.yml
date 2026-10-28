@@ -17,14 +17,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "npm"
           cache-dependency-path: backend/package-lock.json
 
       - name: Validate Backend & Prisma Types
+        env:
+          DATABASE_URL: "postgresql://mock:mock@localhost:5432/smartgrocer?schema=public"
         run: |
           cd backend
           npm ci
@@ -71,8 +73,8 @@ jobs:
             echo "Rebuilding and updating Docker containers..."
             docker compose up -d --build
 
-            echo "Running Prisma database migrations..."
-            docker compose exec -T backend npx prisma migrate deploy
+            echo "Running Prisma database synchronization..."
+            docker compose exec -T backend npx prisma db push
 
             echo "Cleaning unused Docker images..."
             docker image prune -f
