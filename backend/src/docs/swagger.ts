@@ -11,8 +11,12 @@ export const swaggerSpec = {
   },
   servers: [
     {
+      url: "/api/v1",
+      description: "Current Server (Auto-detects IP/domain)",
+    },
+    {
       url: "http://localhost:5000/api/v1",
-      description: "Local Development Server (API v1)",
+      description: "Local Development",
     },
   ],
   components: {
