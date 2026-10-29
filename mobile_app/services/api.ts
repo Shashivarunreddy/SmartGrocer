@@ -149,6 +149,32 @@ export interface ShoppingTripRecord {
   items: ShoppingTripItem[];
 }
 
+export interface AnalyticsSummary {
+  spending: {
+    lifetimeSpendGbp: number;
+    thisMonthSpendGbp: number;
+    totalTripsCount: number;
+    targetWeeklyBudgetGbp: number;
+    budgetAdherenceRate: number;
+    totalSavedUnderBudgetGbp: number;
+    monthlyHistory: Array<{ month: string; total: number; tripCount: number }>;
+    categoryDistribution: Array<{
+      category: string;
+      totalGbp: number;
+      itemsCount: number;
+      percentage: number;
+    }>;
+  };
+  foodWaste: {
+    wasteAvoidanceRate: number;
+    totalQuantityConsumed: number;
+    totalQuantityWasted: number;
+    estimatedMoneySavedGbp: number;
+    pantryTotalStockCount: number;
+    expiringSoonCount: number;
+  };
+}
+
 
 export interface RecipeItem {
   id: string;
@@ -388,5 +414,21 @@ export const api = {
     }>("/recommendations/receipt-scan", {
       method: "POST",
       body: JSON.stringify({ image, mimeType }),
+    }),
+
+  // Spending & Food-Waste Analytics (Phase B)
+  getAnalyticsSummary: () =>
+    request<{ data: AnalyticsSummary }>("/analytics/summary"),
+
+  logConsumption: (data: {
+    productId: string;
+    pantryItemId?: string;
+    quantityConsumed: number;
+    quantityWasted?: number;
+    reason?: string;
+  }) =>
+    request<{ data: any; message: string }>("/analytics/consumption", {
+      method: "POST",
+      body: JSON.stringify(data),
     }),
 };
