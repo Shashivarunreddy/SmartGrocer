@@ -9,11 +9,14 @@ from schemas import (
     WasteRiskResponse,
     AlternativesRequest,
     AlternativesResponse,
+    RecipeGenerateRequest,
+    RecipeGenerateResponse,
 )
 from models import (
     demand_predictor,
     waste_analyzer,
     alternative_finder,
+    recipe_generator,
 )
 
 log_level = logging.ERROR if settings.ENVIRONMENT == "production" else logging.INFO
@@ -93,6 +96,22 @@ async def find_cheaper_alternatives(request: AlternativesRequest):
     """
     logger.info(f"Finding alternatives for {len(request.basket_items)} basket items")
     return alternative_finder.find_alternatives(request)
+
+@app.post(
+    f"{settings.API_V1_STR}/recipes/generate",
+    response_model=RecipeGenerateResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["Recipes"],
+    summary="Generate zero-waste recipes from pantry stock using Gemini AI or heuristic",
+)
+async def generate_recipes(request: RecipeGenerateRequest):
+    """
+    Analyzes current pantry items (prioritizing expiring items) and generates
+    creative, affordable recipes to prevent food waste.
+    """
+    logger.info(f"Generating recipes for {len(request.pantry_items)} pantry items, household_size={request.household_size}")
+    return await recipe_generator.generate_recipes(request)
+
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,5 +1,6 @@
 import { prisma } from "../config/prisma";
 import { ENV } from "../config/env";
+import { geminiService, RecipeItem, ReceiptScanResult } from "./gemini.service";
 
 export interface ReplenishmentItem {
   productId: string;
@@ -414,6 +415,50 @@ class AIService {
       substitutions,
       summary: `Found ${substitutions.length} alternative suggestions.`,
     };
+  }
+
+  /**
+   * Generates Zero-Waste Recipes using Gemini AI and Pantry items.
+   */
+  async getRecipeSuggestions(userId: string): Promise<{
+    recipes: RecipeItem[];
+    source: string;
+    summary: string;
+  }> {
+    const [profile, pantryItems] = await Promise.all([
+      prisma.userProfile.findUnique({ where: { id: userId } }),
+      prisma.pantryItem.findMany({
+        where: { userId },
+        include: { product: true },
+        orderBy: { expiryDate: "asc" },
+      }),
+    ]);
+
+    const formattedPantry = pantryItems.map((p) => ({
+      productId: p.productId,
+      name: p.product.name,
+      category: p.product.category,
+      quantity: Number(p.quantity),
+      unit: p.unit || p.product.unit || "unit",
+      expiryDate: p.expiryDate,
+    }));
+
+    const dietaryPreferences = Array.isArray(profile?.dietaryPreferences)
+      ? (profile.dietaryPreferences as string[])
+      : [];
+
+    return geminiService.generateRecipes(
+      formattedPantry,
+      dietaryPreferences,
+      profile?.householdSize || 2
+    );
+  }
+
+  /**
+   * Scans a supermarket receipt image using Gemini Multimodal Vision.
+   */
+  async scanReceipt(imageBase64: string, mimeType?: string): Promise<ReceiptScanResult> {
+    return geminiService.scanReceipt(imageBase64, mimeType || "image/jpeg");
   }
 }
 

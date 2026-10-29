@@ -43,3 +43,32 @@ export async function getAlternativeSuggestions(
     next(error);
   }
 }
+
+export async function getRecipeRecommendations(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const userId = req.userProfile!.id;
+    const result = await aiService.getRecipeSuggestions(userId);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function scanReceipt(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { image, mimeType } = req.body;
+    const result = await aiService.scanReceipt(image, mimeType);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+

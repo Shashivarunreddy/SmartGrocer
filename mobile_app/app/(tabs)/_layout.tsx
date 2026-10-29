@@ -76,6 +76,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="ai"
+        options={{
+          title: 'Smart AI',
+          headerTitle: 'SmartGrocer AI Assistant',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} size={24} color={color as string} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
@@ -85,7 +95,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      {/* Hide default two.tsx if not used */}
+      {/* Hide legacy two.tsx */}
       <Tabs.Screen
         name="two"
         options={{

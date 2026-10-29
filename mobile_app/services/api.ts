@@ -129,6 +129,52 @@ export interface AlternativeItem {
   suggestedImageUrl?: string | null;
 }
 
+export interface RecipeItem {
+  id: string;
+  title: string;
+  description: string;
+  prepTimeMinutes: number;
+  difficulty: "EASY" | "MEDIUM" | "HARD";
+  cuisine: string;
+  servings: number;
+  usedPantryItems: Array<{
+    name: string;
+    quantity: string;
+    isFromPantry: boolean;
+    productId?: string;
+  }>;
+  missingIngredients: Array<{
+    name: string;
+    estimatedPriceGbp: number;
+    suggestedCategory: string;
+    matchedProductId?: string;
+  }>;
+  instructions: string[];
+  chefTip?: string;
+  wasteReductionScore: number;
+}
+
+export interface ExtractedReceiptItem {
+  rawName: string;
+  matchedProductId: string | null;
+  matchedProductName: string | null;
+  category: string;
+  quantity: number;
+  unitPriceGbp: number;
+  totalPriceGbp: number;
+  confidence: number;
+}
+
+export interface ReceiptScanResult {
+  storeName: string;
+  transactionDate: string;
+  totalGbp: number;
+  items: ExtractedReceiptItem[];
+  matchedCatalogueCount: number;
+  source: "GEMINI_VISION" | "DEMO_UK_RECEIPT_SIMULATOR";
+}
+
+
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -303,4 +349,23 @@ export const api = {
         summary: string;
       };
     }>(`/recommendations/alternatives/${listId}`),
+
+  // Zero-Waste Chef Recipes (Gemini AI + Pantry)
+  getRecipes: () =>
+    request<{
+      data: {
+        recipes: RecipeItem[];
+        source: string;
+        summary: string;
+      };
+    }>("/recommendations/recipes"),
+
+  // Smart Receipt Scanner (Gemini Multimodal Vision OCR)
+  scanReceipt: (image: string, mimeType: string = "image/jpeg") =>
+    request<{
+      data: ReceiptScanResult;
+    }>("/recommendations/receipt-scan", {
+      method: "POST",
+      body: JSON.stringify({ image, mimeType }),
+    }),
 };

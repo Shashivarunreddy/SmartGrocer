@@ -18,6 +18,13 @@ from .alternatives import (
     SubstitutionSuggestion,
     AlternativesResponse,
 )
+from .recipe import (
+    RecipeGenerateRequest,
+    RecipeGenerateResponse,
+    RecipeItem,
+    RecipeIngredient,
+    MissingIngredient,
+)
 
 __all__ = [
     "PantryItemInput",
@@ -34,4 +41,10 @@ __all__ = [
     "AlternativesRequest",
     "SubstitutionSuggestion",
     "AlternativesResponse",
+    "RecipeGenerateRequest",
+    "RecipeGenerateResponse",
+    "RecipeItem",
+    "RecipeIngredient",
+    "MissingIngredient",
 ]
+

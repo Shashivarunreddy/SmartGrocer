@@ -12,4 +12,5 @@ export const ENV = {
   PYTHON_SERVICE_URL: process.env.PYTHON_SERVICE_URL || "http://localhost:8000",
   ADMIN_USERNAME: process.env.ADMIN_USERNAME || "admin",
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "SmartGrocerAdmin2026!",
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
 };
