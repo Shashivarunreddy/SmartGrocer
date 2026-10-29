@@ -76,6 +76,9 @@ jobs:
             echo "Running Prisma database synchronization..."
             docker compose exec -T backend npx prisma db push
 
+            echo "Seeding/updating product catalogue in production database..."
+            docker compose exec -T backend npm run seed
+
             echo "Cleaning unused Docker images..."
             docker image prune -f
 
