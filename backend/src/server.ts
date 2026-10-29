@@ -10,6 +10,7 @@ const server = app.listen(ENV.PORT, HOST, () => {
   console.log(`📱 LAN:   http://0.0.0.0:${ENV.PORT}`);
   console.log(`🩺 Health: http://localhost:${ENV.PORT}/api/v1/health`);
   console.log(`📑 Swagger Docs: http://localhost:${ENV.PORT}/docs`);
+  console.log(`🛡️  Admin Dashboard: http://localhost:${ENV.PORT}/admin`);
   console.log(`📦 Environment: ${ENV.NODE_ENV}`);
   console.log(`=========================================`);
 });

@@ -10,4 +10,6 @@ export const ENV = {
   CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY || "",
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY || "",
   PYTHON_SERVICE_URL: process.env.PYTHON_SERVICE_URL || "http://localhost:8000",
+  ADMIN_USERNAME: process.env.ADMIN_USERNAME || "admin",
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "SmartGrocerAdmin2026!",
 };

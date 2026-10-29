@@ -4,6 +4,7 @@ import morgan from "morgan";
 import { clerkMiddleware } from "@clerk/express";
 import { ENV } from "./config/env";
 import apiV1Router from "./routes";
+import adminRouter from "./routes/admin";
 import { errorHandler } from "./middlewares/errorHandler";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger";
@@ -42,6 +43,9 @@ app.use(
 
 // Mount API v1
 app.use("/api/v1", apiV1Router);
+
+// Protected Admin Database Dashboard
+app.use("/admin", adminRouter);
 
 // Swagger API Documentation
 app.use(
