@@ -352,9 +352,57 @@ adminRouter.get("/api/pantry", async (req: Request, res: Response) => {
 
 /**
  * GET /admin
- * Serves the Pure Black & White (Monochrome) Admin Console with Dashboard and Enter Product form
+ * Serves the Pure Black & White (Monochrome) Admin Console with Dashboard and Enter Product form.
+ * Pre-fetches initial database stats and first 20 products server-side so the UI renders INSTANTLY.
  */
-adminRouter.get("/", (_req: Request, res: Response) => {
+adminRouter.get("/", async (_req: Request, res: Response) => {
+  let initialStats = {
+    totalProducts: 0,
+    totalUsers: 0,
+    totalShoppingLists: 0,
+    totalPantryItems: 0,
+    dbLatencyMs: 0,
+    uptimeSeconds: Math.floor(process.uptime()),
+  };
+  let initialProducts: any[] = [];
+  let initialMeta = { page: 1, pageSize: 20, total: 0, totalPages: 1 };
+
+  try {
+    const start = Date.now();
+    await prisma.$queryRaw`SELECT 1`;
+    const dbLatencyMs = Date.now() - start;
+
+    const [totalProducts, totalUsers, totalShoppingLists, totalPantryItems] = await Promise.all([
+      prisma.product.count(),
+      prisma.userProfile.count(),
+      prisma.shoppingList.count(),
+      prisma.pantryItem.count(),
+    ]);
+
+    initialProducts = await prisma.product.findMany({
+      take: 20,
+      orderBy: { name: "asc" },
+    });
+
+    initialStats = {
+      totalProducts,
+      totalUsers,
+      totalShoppingLists,
+      totalPantryItems,
+      dbLatencyMs,
+      uptimeSeconds: Math.floor(process.uptime()),
+    };
+
+    initialMeta = {
+      page: 1,
+      pageSize: 20,
+      total: totalProducts,
+      totalPages: Math.max(1, Math.ceil(totalProducts / 20)),
+    };
+  } catch (preErr) {
+    console.error("Error pre-fetching admin data:", preErr);
+  }
+
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.send(`<!DOCTYPE html>
 <html lang="en">
@@ -371,7 +419,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       --bg: #000000;
       --card-bg: #0A0A0A;
       --card-border: #222222;
-      --card-border-focus: #FFFFFF;
       --text-white: #FFFFFF;
       --text-gray: #A3A3A3;
       --text-dark-gray: #555555;
@@ -573,7 +620,7 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       background: #FFFFFF;
     }
 
-    /* Table Container */
+    /* Panel */
     .panel {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -706,9 +753,7 @@ adminRouter.get("/", (_req: Request, res: Response) => {
     .pag-btn:hover:not(:disabled) { background: #FFFFFF; color: #000000; }
     .pag-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* ========================================================
-       ENTER PRODUCT PAGE STYLES (PURE BLACK AND WHITE)
-       ======================================================== */
+    /* ENTER PRODUCT FORM STYLES */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -749,7 +794,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* JSON Paste Box */
     .json-paste-box {
       background: #050505;
       border: 1px dashed #333333;
@@ -774,7 +818,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
     }
     textarea.json-input:focus { border-color: #FFFFFF; }
 
-    /* Submit Controls */
     .form-actions {
       display: flex;
       gap: 12px;
@@ -811,7 +854,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
     }
     .btn-secondary:hover { background: #161616; border-color: #FFFFFF; }
 
-    /* Live Image Preview */
     .img-preview-box {
       width: 90px;
       height: 90px;
@@ -829,7 +871,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       object-fit: cover;
     }
 
-    /* Alerts */
     .alert-banner {
       display: none;
       padding: 12px 16px;
@@ -851,7 +892,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       color: #FFFFFF;
     }
 
-    /* Footer */
     footer {
       border-top: 1px solid var(--card-border);
       padding: 1.25rem 2rem;
@@ -893,9 +933,7 @@ adminRouter.get("/", (_req: Request, res: Response) => {
   <!-- Main Container -->
   <main>
 
-    <!-- ========================================================
-         PAGE 1: DASHBOARD OVERVIEW & TABLE EXPLORER
-         ======================================================== -->
+    <!-- PAGE 1: DASHBOARD OVERVIEW & TABLE EXPLORER -->
     <div id="page-dashboard" class="page-view active">
 
       <!-- Metrics Row -->
@@ -966,9 +1004,7 @@ adminRouter.get("/", (_req: Request, res: Response) => {
 
     </div>
 
-    <!-- ========================================================
-         PAGE 2: ENTER PRODUCT PAGE (DIRECT PROD ENTRY)
-         ======================================================== -->
+    <!-- PAGE 2: ENTER PRODUCT PAGE (DIRECT PROD ENTRY) -->
     <div id="page-enter" class="page-view">
 
       <div class="panel">
@@ -1118,12 +1154,31 @@ adminRouter.get("/", (_req: Request, res: Response) => {
   </footer>
 
   <script>
+    // Embedded Initial Data (Server-Rendered for Instant Zero-Latency Load)
+    window.__INITIAL_DATA__ = {
+      stats: ${JSON.stringify(initialStats)},
+      products: ${JSON.stringify(initialProducts)},
+      meta: ${JSON.stringify(initialMeta)}
+    };
+
     let activePage = 'dashboard';
     let currentSubTab = 'products';
     let currentPage = 1;
-    let totalPages = 1;
+    let totalPages = window.__INITIAL_DATA__.meta?.totalPages || 1;
     let searchQuery = '';
     let searchTimeout = null;
+
+    // Helper wrapper for fetch ensuring Basic Auth credentials are kept across same-origin calls
+    function authFetch(url, options = {}) {
+      return fetch(url, {
+        ...options,
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json',
+          ...(options.headers || {})
+        }
+      });
+    }
 
     // Page Switching (Dashboard vs Enter Product)
     function showPage(pageName) {
@@ -1184,32 +1239,81 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       }
     }
 
-    // Load Overall Metrics
+    // Render Stats to UI
+    function renderStats(d) {
+      if (!d) return;
+      document.getElementById('stat-products').innerText = Number(d.totalProducts || 0).toLocaleString();
+      document.getElementById('stat-users').innerText = Number(d.totalUsers || 0).toLocaleString();
+      document.getElementById('stat-lists').innerText = Number(d.totalShoppingLists || 0).toLocaleString();
+      document.getElementById('stat-pantry').innerText = Number(d.totalPantryItems || 0).toLocaleString();
+      document.getElementById('stat-latency').innerText = (d.dbLatencyMs || 0) + ' ms';
+      document.getElementById('stat-uptime').innerText = 'Uptime: ' + Math.floor((d.uptimeSeconds || 0) / 60) + 'm';
+    }
+
+    // Render Products Table
+    function renderProductsTable(items, meta) {
+      const thead = document.getElementById('table-head');
+      const tbody = document.getElementById('table-body');
+      const pagInfo = document.getElementById('pag-info');
+
+      thead.innerHTML = \`
+        <tr>
+          <th>Image</th>
+          <th>Barcode</th>
+          <th>Product Name</th>
+          <th>Brand</th>
+          <th>Category</th>
+          <th>Size</th>
+          <th>Price</th>
+        </tr>
+      \`;
+
+      if (!items || items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 3rem; color: #666;">No products found.</td></tr>';
+      } else {
+        tbody.innerHTML = items.map(p => \`
+          <tr>
+            <td>
+              <img src="\${p.imageUrl || 'https://placehold.co/36x36/111111/444444?text=-'}" class="prod-thumb" alt="\${p.name || ''}" onerror="this.src='https://placehold.co/36x36/111111/444444?text=-';">
+            </td>
+            <td><span class="code-pill">\${p.code || ''}</span></td>
+            <td style="font-weight: 600; max-width: 320px;">\${p.name || ''}</td>
+            <td><span class="tag">\${p.brands || 'UK Groceries'}</span></td>
+            <td><span class="tag">\${p.category || 'General'}</span></td>
+            <td style="color: #999; font-family: 'JetBrains Mono', monospace;">\${p.productQuantity ? p.productQuantity + ' ' + (p.unit || '') : p.unit || '-'}</td>
+            <td class="price-cell">&pound;\${Number(p.defaultUnitPrice || 0).toFixed(2)}</td>
+          </tr>
+        \`).join('');
+      }
+
+      if (meta) {
+        totalPages = meta.totalPages || 1;
+        pagInfo.innerText = 'Page ' + (meta.page || 1) + ' of ' + totalPages + ' (' + (meta.total || items.length).toLocaleString() + ' records)';
+        document.getElementById('btn-prev').disabled = (meta.page || 1) <= 1;
+        document.getElementById('btn-next').disabled = (meta.page || 1) >= totalPages;
+      }
+    }
+
+    // Load Overall Metrics via API
     async function loadStats() {
       try {
-        const res = await fetch('/admin/api/stats');
+        const res = await authFetch('/admin/api/stats');
         const json = await res.json();
         if (json.success) {
-          const d = json.data;
-          document.getElementById('stat-products').innerText = d.totalProducts.toLocaleString();
-          document.getElementById('stat-users').innerText = d.totalUsers.toLocaleString();
-          document.getElementById('stat-lists').innerText = d.totalShoppingLists.toLocaleString();
-          document.getElementById('stat-pantry').innerText = d.totalPantryItems.toLocaleString();
-          document.getElementById('stat-latency').innerText = d.dbLatencyMs + ' ms';
-          document.getElementById('stat-uptime').innerText = 'Uptime: ' + Math.floor(d.uptimeSeconds / 60) + 'm';
+          renderStats(json.data);
         }
       } catch (err) {
         console.error('Stats error:', err);
       }
     }
 
-    // Load Table Data
+    // Load Table Data via API
     async function loadTableData() {
       const thead = document.getElementById('table-head');
       const tbody = document.getElementById('table-body');
       const pagInfo = document.getElementById('pag-info');
 
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 3rem; color: #666;">Loading...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 3rem; color: #666;">Loading records...</td></tr>';
 
       try {
         let url = '';
@@ -1223,7 +1327,7 @@ adminRouter.get("/", (_req: Request, res: Response) => {
           url = '/admin/api/pantry?page=' + currentPage + '&pageSize=20';
         }
 
-        const res = await fetch(url);
+        const res = await authFetch(url);
         const json = await res.json();
 
         if (!json.success) {
@@ -1236,35 +1340,7 @@ adminRouter.get("/", (_req: Request, res: Response) => {
         const total = json.meta?.total || items.length;
 
         if (currentSubTab === 'products') {
-          thead.innerHTML = \`
-            <tr>
-              <th>Image</th>
-              <th>Barcode</th>
-              <th>Product Name</th>
-              <th>Brand</th>
-              <th>Category</th>
-              <th>Size</th>
-              <th>Price</th>
-            </tr>
-          \`;
-
-          if (items.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 3rem; color: #666;">No products found.</td></tr>';
-          } else {
-            tbody.innerHTML = items.map(p => \`
-              <tr>
-                <td>
-                  <img src="\${p.imageUrl || 'https://placehold.co/36x36/111111/444444?text=-'}" class="prod-thumb" alt="\${p.name}" onerror="this.src='https://placehold.co/36x36/111111/444444?text=-';">
-                </td>
-                <td><span class="code-pill">\${p.code}</span></td>
-                <td style="font-weight: 600; max-width: 320px;">\${p.name}</td>
-                <td><span class="tag">\${p.brands || 'UK Groceries'}</span></td>
-                <td><span class="tag">\${p.category}</span></td>
-                <td style="color: #999; font-family: 'JetBrains Mono', monospace;">\${p.productQuantity ? p.productQuantity + ' ' + (p.unit || '') : p.unit || '-'}</td>
-                <td class="price-cell">&pound;\${Number(p.defaultUnitPrice).toFixed(2)}</td>
-              </tr>
-            \`).join('');
-          }
+          renderProductsTable(items, json.meta);
         } else if (currentSubTab === 'users') {
           thead.innerHTML = \`
             <tr>
@@ -1282,9 +1358,9 @@ adminRouter.get("/", (_req: Request, res: Response) => {
           } else {
             tbody.innerHTML = items.map(u => \`
               <tr>
-                <td><span class="code-pill">\${u.id.slice(0, 8)}...</span></td>
+                <td><span class="code-pill">\${(u.id || '').slice(0, 8)}...</span></td>
                 <td style="font-weight: 600;">\${u.displayName || u.clerkUserId}</td>
-                <td>\${u.householdSize} member(s)</td>
+                <td>\${u.householdSize || 1} member(s)</td>
                 <td class="price-cell">\${u.defaultBudget ? '&pound;' + Number(u.defaultBudget).toFixed(2) : 'Not Set'}</td>
                 <td><span class="tag">\${u._count?.shoppingLists || 0} lists</span></td>
                 <td style="color: #888; font-family: 'JetBrains Mono', monospace;">\${new Date(u.createdAt).toLocaleDateString('en-GB')}</td>
@@ -1352,9 +1428,7 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       }
     }
 
-    // ========================================================
     // ENTER PRODUCT FORM LOGIC
-    // ========================================================
     function updateImagePreview(url) {
       const container = document.getElementById('img-preview-container');
       if (url && url.startsWith('http')) {
@@ -1364,7 +1438,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       }
     }
 
-    // Auto-parse raw JSON box into form fields
     function parseJsonBox() {
       const alertBox = document.getElementById('form-alert');
       alertBox.className = 'alert-banner';
@@ -1402,7 +1475,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       }
     }
 
-    // Fill Sample Product Button
     function fillSampleProduct() {
       const sample = {
         "brands": "Jasons",
@@ -1437,7 +1509,6 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       alertBox.style.display = 'none';
     }
 
-    // Handle Form Submit to /admin/api/products
     async function handleProductSubmit(e) {
       e.preventDefault();
       const alertBox = document.getElementById('form-alert');
@@ -1462,7 +1533,7 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       };
 
       try {
-        const res = await fetch('/admin/api/products', {
+        const res = await authFetch('/admin/api/products', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -1492,11 +1563,22 @@ adminRouter.get("/", (_req: Request, res: Response) => {
       }
     }
 
-    // Initialization
-    document.addEventListener('DOMContentLoaded', () => {
-      loadStats();
-      loadTableData();
-    });
+    // App Initialization: Runs immediately using pre-fetched server data, or hooks DOMContentLoaded
+    function initApp() {
+      if (window.__INITIAL_DATA__) {
+        renderStats(window.__INITIAL_DATA__.stats);
+        renderProductsTable(window.__INITIAL_DATA__.products, window.__INITIAL_DATA__.meta);
+      } else {
+        loadStats();
+        loadTableData();
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
   </script>
 </body>
 </html>`);

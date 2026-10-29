@@ -11,15 +11,19 @@ export function adminAuth(req: Request, res: Response, next: NextFunction): void
 
   if (!authHeader || !authHeader.startsWith("Basic ")) {
     res.setHeader("WWW-Authenticate", 'Basic realm="SmartGrocer Production Admin Area"');
+    if (req.path.startsWith("/api") || req.headers.accept?.includes("application/json")) {
+      res.status(401).json({ success: false, error: "Unauthorized: Administrator credentials required." });
+      return;
+    }
     res.status(401).send(`
       <!DOCTYPE html>
       <html>
         <head><title>401 Unauthorized</title></head>
-        <body style="font-family: sans-serif; background: #0f172a; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
-          <div style="text-align: center; max-width: 400px; padding: 2rem; border: 1px solid #334155; border-radius: 12px; background: #1e293b;">
-            <h2 style="color: #ef4444; margin-top: 0;">401 Unauthorized</h2>
-            <p style="color: #94a3b8;">Administrator authentication required to access SmartGrocer production database.</p>
-            <a href="/admin" style="display: inline-block; margin-top: 1rem; padding: 8px 16px; background: #10b981; color: white; text-decoration: none; border-radius: 6px;">Try Again</a>
+        <body style="font-family: sans-serif; background: #000000; color: #FFFFFF; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+          <div style="text-align: center; max-width: 400px; padding: 2rem; border: 1px solid #333333; border-radius: 8px; background: #0a0a0a;">
+            <h2 style="color: #FFFFFF; margin-top: 0; text-transform: uppercase;">401 Unauthorized</h2>
+            <p style="color: #888888; font-size: 0.85rem; margin: 1rem 0;">Administrator authentication required to access SmartGrocer production database.</p>
+            <a href="/admin" style="display: inline-block; padding: 8px 16px; background: #FFFFFF; color: #000000; text-decoration: none; border-radius: 4px; font-weight: 700; font-size: 0.8rem;">LOGIN AGAIN</a>
           </div>
         </body>
       </html>
