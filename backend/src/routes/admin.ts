@@ -1432,7 +1432,16 @@ adminRouter.get("/", async (_req: Request, res: Response) => {
     function updateImagePreview(url) {
       const container = document.getElementById('img-preview-container');
       if (url && url.startsWith('http')) {
-        container.innerHTML = '<img src="' + url + '" onerror="this.onerror=null; this.parentElement.innerHTML=\\'<span style=\\\\'font-size:0.65rem; color:#555;\\\\'>Invalid URL</span>\\';">';
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.onerror = function() {
+          container.innerHTML = '<span style="font-size: 0.65rem; color: #777;">Invalid URL</span>';
+        };
+        container.innerHTML = '';
+        container.appendChild(img);
       } else {
         container.innerHTML = '<span style="font-size: 0.65rem; color: #555;">No Image</span>';
       }
