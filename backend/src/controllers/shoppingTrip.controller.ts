@@ -21,6 +21,19 @@ export const recordTripSchema = z.object({
   }),
 });
 
+function estimateShelfLifeDays(category?: string | null): number {
+  if (!category) return 14;
+  const c = category.toLowerCase();
+  if (c.includes("dair") || c.includes("milk") || c.includes("yogurt") || c.includes("cheese")) return 7;
+  if (c.includes("bread") || c.includes("bakery") || c.includes("pastry") || c.includes("sourdough")) return 5;
+  if (c.includes("fruit") || c.includes("vegetable") || c.includes("salad") || c.includes("produce")) return 6;
+  if (c.includes("meat") || c.includes("chicken") || c.includes("beef") || c.includes("fish")) return 4;
+  if (c.includes("snack") || c.includes("biscuit") || c.includes("crisp")) return 90;
+  if (c.includes("beverage") || c.includes("juice") || c.includes("tea") || c.includes("coffee")) return 30;
+  if (c.includes("cereal") || c.includes("grain") || c.includes("pasta") || c.includes("spread") || c.includes("jam")) return 180;
+  return 14;
+}
+
 export async function recordShoppingTrip(
   req: AuthenticatedRequest,
   res: Response,
@@ -72,16 +85,20 @@ export async function recordShoppingTrip(
         });
       }
 
-      // 3. If updatePantry is true, add or replenish pantry stock
+      // 3. If updatePantry is true, add or replenish pantry stock with automated shelf-life estimation
       if (updatePantry) {
         for (const it of items) {
           const product = await tx.product.findUnique({ where: { id: it.productId } });
+          const shelfLifeDays = estimateShelfLifeDays(product?.category);
+          const expiryDate = new Date(Date.now() + shelfLifeDays * 24 * 60 * 60 * 1000);
+
           await tx.pantryItem.create({
             data: {
               userId,
               productId: it.productId,
               quantity: new Prisma.Decimal(it.quantity),
               unit: product?.unit || "piece",
+              expiryDate,
               source: "SHOPPING_LIST",
             },
           });

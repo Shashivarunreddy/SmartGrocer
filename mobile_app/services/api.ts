@@ -129,6 +129,27 @@ export interface AlternativeItem {
   suggestedImageUrl?: string | null;
 }
 
+export interface ShoppingTripItem {
+  id: string;
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+  product: Product;
+}
+
+export interface ShoppingTripRecord {
+  id: string;
+  userId: string;
+  shoppingListId: string | null;
+  actualTotal: number;
+  currency: string;
+  notes: string | null;
+  purchasedAt: string;
+  items: ShoppingTripItem[];
+}
+
+
 export interface RecipeItem {
   id: string;
   title: string;
@@ -308,7 +329,7 @@ export const api = {
 
   // Shopping Trips
   getShoppingTrips: () =>
-    request<{ data: any[] }>("/shopping-trips"),
+    request<{ data: ShoppingTripRecord[]; meta?: any }>("/shopping-trips"),
 
   recordShoppingTrip: (data: {
     shoppingListId?: string;
