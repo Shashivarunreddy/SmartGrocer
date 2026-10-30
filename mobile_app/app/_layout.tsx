@@ -8,7 +8,9 @@ import { ClerkProvider, useAuth } from '@clerk/expo';
 import { tokenCache } from '@/services/tokenCache';
 import { setAuthTokenGetter } from '@/services/api';
 
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+const CLERK_PUBLISHABLE_KEY =
+  process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  'pk_test_Y29tcGxldGUtcGlwZWZpc2gtNjk5MC5jbGVyay5hY2NvdW50cy5kZXYk';
  
 // Suppress verbose console logs in production release builds (keep console.error & console.warn)
 if (!__DEV__) {

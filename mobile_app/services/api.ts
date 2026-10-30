@@ -3,23 +3,10 @@ import { Platform } from "react-native";
 
 function resolveApiBaseUrl(): string {
   const envUrl = process.env.EXPO_PUBLIC_API_URL;
-  if (envUrl && !envUrl.includes("localhost")) {
+  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("10.0.2.2")) {
     return envUrl;
   }
-
-  // Automatically detect development computer's LAN IP when running via Expo
-  const hostUri = Constants.expoConfig?.hostUri;
-  if (hostUri) {
-    const ip = hostUri.split(":")[0];
-    return `http://${ip}:5000/api/v1`;
-  }
-
-  // Android emulator loopback alias
-  if (Platform.OS === "android") {
-    return "http://10.0.2.2:5000/api/v1";
-  }
-
-  return "http://localhost:5000/api/v1";
+  return "http://65.0.242.245:5000/api/v1";
 }
 
 const API_BASE_URL = resolveApiBaseUrl();
