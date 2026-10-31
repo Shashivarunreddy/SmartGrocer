@@ -35,16 +35,20 @@ export default function HomeScreen() {
     try {
       setLoading(true);
 
-      // Fetch AI Replenishments, Expiring Items, and Active Lists concurrently
-      const [aiResult, pantryResult, listsResult] = await Promise.allSettled([
+      // Fetch AI Replenishments, Expiring Items, Active Lists, and Profile concurrently
+      const [aiResult, pantryResult, listsResult, profileResult] = await Promise.allSettled([
         api.getReplenishments().catch(() => null),
         api.getExpiringPantryItems().catch(() => ({ data: [] })),
         api.getShoppingLists().catch(() => ({ data: [] })),
+        api.getProfile().catch(() => null),
       ]);
 
       const aiRes = aiResult.status === 'fulfilled' ? aiResult.value : null;
       const pantryRes = pantryResult.status === 'fulfilled' ? pantryResult.value : null;
       const listsRes = listsResult.status === 'fulfilled' ? listsResult.value : null;
+      const profileRes = profileResult.status === 'fulfilled' ? profileResult.value : null;
+
+      const profileBudget = Number(profileRes?.data?.defaultBudget);
 
       if (aiRes?.data?.replenishments && aiRes.data.replenishments.length > 0) {
         setAiReplenishments(aiRes.data.replenishments);
@@ -68,16 +72,21 @@ export default function HomeScreen() {
           0
         );
 
+        const currentBudget =
+          !isNaN(profileBudget) && profileBudget > 0
+            ? profileBudget
+            : Number(first.budget) || 75;
+
         setStats({
           activeListCount: items.length || first._count?.items || 0,
           estimatedTotal: Number(totalCalculated.toFixed(2)),
-          budget: Number(first.budget) || 75,
+          budget: currentBudget,
         });
       } else {
         setStats({
           activeListCount: 0,
           estimatedTotal: 0,
-          budget: 75,
+          budget: !isNaN(profileBudget) && profileBudget > 0 ? profileBudget : 75,
         });
       }
     } catch (err) {

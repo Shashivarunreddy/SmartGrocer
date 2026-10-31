@@ -58,6 +58,17 @@ export async function updateProfile(
       },
     });
 
+    // Automatically synchronize any active shopping list with the new target budget and household size
+    if (defaultBudget !== undefined || householdSize !== undefined) {
+      await prisma.shoppingList.updateMany({
+        where: { userId: profileId, status: "ACTIVE" },
+        data: {
+          ...(defaultBudget !== undefined && { budget: defaultBudget }),
+          ...(householdSize !== undefined && { householdSizeSnapshot: householdSize }),
+        },
+      });
+    }
+
     res.status(200).json({ data: updated });
   } catch (error) {
     next(error);

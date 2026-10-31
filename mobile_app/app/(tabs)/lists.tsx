@@ -37,6 +37,7 @@ export default function ListsScreen() {
 
   // List States
   const [activeList, setActiveList] = useState<ShoppingList | null>(null);
+  const [userTargetBudget, setUserTargetBudget] = useState<number | null>(null);
   const [estimate, setEstimate] = useState<BillEstimate | null>(null);
   const [alternatives, setAlternatives] = useState<AlternativeItem[]>([]);
   const [savings, setSavings] = useState(0);
@@ -72,8 +73,15 @@ export default function ListsScreen() {
     }
     try {
       setLoading(true);
-      const res = await api.getShoppingLists();
+      const [res, profileRes] = await Promise.all([
+        api.getShoppingLists(),
+        api.getProfile().catch(() => null),
+      ]);
       const lists = res.data || [];
+
+      if (profileRes?.data?.defaultBudget) {
+        setUserTargetBudget(Number(profileRes.data.defaultBudget));
+      }
 
       if (lists.length > 0) {
         const fullListRes = await api.getShoppingList(lists[0].id);
@@ -137,7 +145,11 @@ export default function ListsScreen() {
   const handleCreateList = async () => {
     if (!newListName.trim()) return;
     try {
-      const res = await api.createShoppingList(newListName.trim(), 75, 'GBP');
+      const res = await api.createShoppingList(
+        newListName.trim(),
+        userTargetBudget || 75,
+        'GBP'
+      );
       setActiveList(res.data);
       setShowCreateModal(false);
       setNewListName('');
@@ -265,7 +277,7 @@ export default function ListsScreen() {
     (sum, i) => sum + (Number(i.product?.defaultUnitPrice) || 0) * (Number(i.quantity) || 1),
     0
   );
-  const budget = Number(activeList?.budget) || 75;
+  const budget = userTargetBudget || Number(activeList?.budget) || 75;
   const isOverBudget = totalCalculated > budget;
   const checkedItemsCount = items.filter((i) => i.isPurchased).length;
 
