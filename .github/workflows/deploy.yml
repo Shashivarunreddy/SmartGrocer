@@ -79,6 +79,9 @@ jobs:
             echo "Seeding/updating product catalogue in production database..."
             docker compose exec -T backend npm run seed
 
+            echo "Seeding/updating demo user profiles and AI history in production database..."
+            docker compose exec -T backend npm run seed:users
+
             echo "Cleaning unused Docker images..."
             docker image prune -f
 
