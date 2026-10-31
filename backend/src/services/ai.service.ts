@@ -1,6 +1,6 @@
 import { prisma } from "../config/prisma";
 import { ENV } from "../config/env";
-import { geminiService, RecipeItem, ReceiptScanResult } from "./gemini.service";
+import { geminiService, RecipeItem, ChatAssistantResponse } from "./gemini.service";
 
 export interface ReplenishmentItem {
   productId: string;
@@ -455,10 +455,47 @@ class AIService {
   }
 
   /**
-   * Scans a supermarket receipt image using Gemini Multimodal Vision.
+   * AI Assistant Chatbot: Answers user questions based on live Python predictions,
+   * current pantry stock, active shopping list, and Gemini API.
    */
-  async scanReceipt(imageBase64: string, mimeType?: string): Promise<ReceiptScanResult> {
-    return geminiService.scanReceipt(imageBase64, mimeType || "image/jpeg");
+  async chatWithAssistant(userId: string, message: string): Promise<ChatAssistantResponse> {
+    const [profile, replenishmentsRes, wasteRes, pantryItems, activeList] = await Promise.all([
+      prisma.userProfile.findUnique({ where: { id: userId } }),
+      this.getReplenishmentPredictions(userId).catch(() => ({ replenishments: [] as ReplenishmentItem[] })),
+      this.getWasteRiskAnalysis(userId).catch(() => ({ atRiskItems: [] as WasteRiskItem[] })),
+      prisma.pantryItem.findMany({
+        where: { userId },
+        include: { product: true },
+        orderBy: { expiryDate: "asc" },
+      }),
+      prisma.shoppingList.findFirst({
+        where: { userId, status: "ACTIVE" },
+        include: { items: { include: { product: true } } },
+      }),
+    ]);
+
+    const formattedPantry = pantryItems.map((p) => ({
+      name: p.product.name,
+      quantity: Number(p.quantity),
+      unit: p.unit || p.product.unit || "unit",
+      expiryDate: p.expiryDate,
+    }));
+
+    const activeItems = activeList?.items || [];
+    const actualSpending = activeItems.reduce(
+      (sum, i) => sum + (Number(i.product?.defaultUnitPrice) || 0) * (Number(i.quantity) || 1),
+      0
+    );
+
+    return geminiService.chatWithAssistant(message, {
+      householdSize: profile?.householdSize || 2,
+      budget: Number(profile?.defaultBudget) || Number(activeList?.budget) || 75,
+      actualSpending,
+      pantryItems: formattedPantry,
+      replenishments: replenishmentsRes.replenishments,
+      wasteRisks: wasteRes.atRiskItems,
+      activeListItems: activeItems,
+    });
   }
 }
 

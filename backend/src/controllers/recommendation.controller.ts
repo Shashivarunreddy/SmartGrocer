@@ -58,14 +58,19 @@ export async function getRecipeRecommendations(
   }
 }
 
-export async function scanReceipt(
+export async function chatAssistant(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> {
   try {
-    const { image, mimeType } = req.body;
-    const result = await aiService.scanReceipt(image, mimeType);
+    const userId = req.userProfile!.id;
+    const { message } = req.body;
+    if (!message || typeof message !== "string") {
+      res.status(400).json({ error: "Message string is required." });
+      return;
+    }
+    const result = await aiService.chatWithAssistant(userId, message);
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);
