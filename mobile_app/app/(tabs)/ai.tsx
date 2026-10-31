@@ -53,6 +53,8 @@ export default function AIScreen() {
   const [recipes, setRecipes] = useState<RecipeItem[]>([]);
   const [recipesSource, setRecipesSource] = useState<string>('');
   const [expandedRecipeId, setExpandedRecipeId] = useState<string | null>(null);
+  const [addingRecipeId, setAddingRecipeId] = useState<string | null>(null);
+  const [addedRecipesMap, setAddedRecipesMap] = useState<Record<string, boolean>>({});
 
   // Insights States
   const [replenishments, setReplenishments] = useState<ReplenishmentItem[]>([]);
@@ -119,7 +121,9 @@ export default function AIScreen() {
   // RECIPES LOGIC: Add Missing Ingredients to Active List
   // ----------------------------------------------------
   const handleAddMissingToList = async (recipe: RecipeItem) => {
+    const recipeKey = recipe.id || recipe.title;
     try {
+      setAddingRecipeId(recipeKey);
       const listsRes = await api.getShoppingLists();
       const lists = listsRes?.data || [];
       let targetList = lists.find(
@@ -151,6 +155,16 @@ export default function AIScreen() {
         }
       }
 
+      // Mark recipe as added and remove missing ingredients from the UI
+      setAddedRecipesMap((prev) => ({ ...prev, [recipeKey]: true }));
+      setRecipes((prev) =>
+        prev.map((r) =>
+          r.id === recipe.id || r.title === recipe.title
+            ? { ...r, missingIngredients: [] }
+            : r
+        )
+      );
+
       showToast(`✓ Added ${addedCount} missing ingredient(s) to "${targetList.name}"!`);
       Alert.alert(
         'Added to Shopping List! 🛒',
@@ -158,6 +172,58 @@ export default function AIScreen() {
       );
     } catch (err: any) {
       Alert.alert('Error', 'Could not add items to your shopping list: ' + err.message);
+    } finally {
+      setAddingRecipeId(null);
+    }
+  };
+
+  const handleAddSingleMissingToList = async (
+    recipe: RecipeItem,
+    item: RecipeItem['missingIngredients'][0]
+  ) => {
+    const recipeKey = recipe.id || recipe.title;
+    try {
+      const listsRes = await api.getShoppingLists();
+      const lists = listsRes?.data || [];
+      let targetList = lists.find(
+        (l: any) => l.status === 'ACTIVE' || l.status === 'DRAFT'
+      );
+
+      if (!targetList) {
+        const createRes = await api.createShoppingList('My Smart List', 50, 'GBP');
+        targetList = createRes.data;
+      }
+
+      let prodId = item.matchedProductId;
+      if (!prodId) {
+        try {
+          const searchRes = await api.getProducts({ search: item.name, pageSize: 1 });
+          if (searchRes?.data && searchRes.data.length > 0) {
+            prodId = searchRes.data[0].id;
+          }
+        } catch {}
+      }
+
+      if (prodId) {
+        await api.addItemToList(targetList.id, prodId, 1, `For: ${recipe.title}`);
+        showToast(`✓ Added "${item.name}" to "${targetList.name}"!`);
+
+        // Remove only this single item from recipe's missingIngredients
+        setRecipes((prev) =>
+          prev.map((r) => {
+            if (r.id === recipe.id || r.title === recipe.title) {
+              const updatedMissing = r.missingIngredients.filter((m) => m.name !== item.name);
+              if (updatedMissing.length === 0) {
+                setAddedRecipesMap((p) => ({ ...p, [recipeKey]: true }));
+              }
+              return { ...r, missingIngredients: updatedMissing };
+            }
+            return r;
+          })
+        );
+      }
+    } catch (err: any) {
+      Alert.alert('Error', 'Could not add item to your shopping list: ' + err.message);
     }
   };
 
@@ -530,7 +596,7 @@ export default function AIScreen() {
                               </View>
 
                               {/* Missing Ingredients & One-Tap Add */}
-                              {recipe.missingIngredients.length > 0 && (
+                              {recipe.missingIngredients && recipe.missingIngredients.length > 0 ? (
                                 <View style={styles.missingBox}>
                                   <View style={styles.missingHeaderRow}>
                                     <Text style={styles.sectionHeader}>Missing Groceries:</Text>
@@ -544,25 +610,45 @@ export default function AIScreen() {
 
                                   <View style={styles.tagsContainer}>
                                     {recipe.missingIngredients.map((m, idx) => (
-                                      <View key={idx} style={styles.missingTag}>
+                                      <TouchableOpacity
+                                        key={idx}
+                                        style={styles.missingTag}
+                                        onPress={() => handleAddSingleMissingToList(recipe, m)}>
                                         <Ionicons name="add-circle" size={13} color="#DC2626" />
                                         <Text style={styles.missingTagText}>
                                           {m.name} (£{(Number(m.estimatedPriceGbp) || 1.5).toFixed(2)})
                                         </Text>
-                                      </View>
+                                      </TouchableOpacity>
                                     ))}
                                   </View>
 
                                   <TouchableOpacity
-                                    style={styles.btnAddMissing}
+                                    style={[
+                                      styles.btnAddMissing,
+                                      addingRecipeId === (recipe.id || recipe.title) && { opacity: 0.7 },
+                                    ]}
+                                    disabled={addingRecipeId === (recipe.id || recipe.title)}
                                     onPress={() => handleAddMissingToList(recipe)}>
-                                    <Ionicons name="cart-outline" size={16} color="#FFF" />
-                                    <Text style={styles.btnAddMissingText}>
-                                      Add Missing Ingredients to Shopping List
-                                    </Text>
+                                    {addingRecipeId === (recipe.id || recipe.title) ? (
+                                      <ActivityIndicator size="small" color="#FFF" />
+                                    ) : (
+                                      <>
+                                        <Ionicons name="cart-outline" size={16} color="#FFF" />
+                                        <Text style={styles.btnAddMissingText}>
+                                          Add Missing Ingredients to Shopping List
+                                        </Text>
+                                      </>
+                                    )}
                                   </TouchableOpacity>
                                 </View>
-                              )}
+                              ) : addedRecipesMap[recipe.id || recipe.title] ? (
+                                <View style={styles.missingAddedBox}>
+                                  <Ionicons name="checkmark-circle" size={16} color="#059669" />
+                                  <Text style={styles.missingAddedText}>
+                                    Missing ingredients added to your active shopping list!
+                                  </Text>
+                                </View>
+                              ) : null}
 
                               {/* Step-by-Step Instructions */}
                               <Text style={styles.sectionHeader}>Instructions:</Text>
@@ -960,6 +1046,22 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 12,
     fontWeight: '700',
+    marginLeft: 6,
+  },
+  missingAddedBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0FDF4',
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 10,
+  },
+  missingAddedText: {
+    color: '#166534',
+    fontSize: 12,
+    fontWeight: '600',
     marginLeft: 6,
   },
   stepRow: {
