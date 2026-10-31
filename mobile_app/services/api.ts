@@ -188,24 +188,14 @@ export interface RecipeItem {
   wasteReductionScore: number;
 }
 
-export interface ExtractedReceiptItem {
-  rawName: string;
-  matchedProductId: string | null;
-  matchedProductName: string | null;
-  category: string;
-  quantity: number;
-  unitPriceGbp: number;
-  totalPriceGbp: number;
-  confidence: number;
-}
-
-export interface ReceiptScanResult {
-  storeName: string;
-  transactionDate: string;
-  totalGbp: number;
-  items: ExtractedReceiptItem[];
-  matchedCatalogueCount: number;
-  source: "GEMINI_VISION" | "DEMO_UK_RECEIPT_SIMULATOR";
+export interface ChatAssistantResponse {
+  reply: string;
+  suggestedProducts?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    reason: string;
+  }>;
 }
 
 
@@ -394,13 +384,13 @@ export const api = {
       };
     }>("/recommendations/recipes"),
 
-  // Smart Receipt Scanner (Gemini Multimodal Vision OCR)
-  scanReceipt: (image: string, mimeType: string = "image/jpeg") =>
+  // AI Grocery Assistant Chatbot (Gemini + Python Analysis)
+  chatWithAssistant: (message: string) =>
     request<{
-      data: ReceiptScanResult;
-    }>("/recommendations/receipt-scan", {
+      data: ChatAssistantResponse;
+    }>("/recommendations/chat", {
       method: "POST",
-      body: JSON.stringify({ image, mimeType }),
+      body: JSON.stringify({ message }),
     }),
 
   // Spending & Food-Waste Analytics (Phase B)

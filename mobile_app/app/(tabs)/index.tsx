@@ -14,9 +14,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { BrandColors } from '@/constants/Colors';
 import { api, Product, PantryItem, ReplenishmentItem } from '@/services/api';
+import AIChatModal from '@/components/AIChatModal';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [showChatModal, setShowChatModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [suggestedProducts, setSuggestedProducts] = useState<Product[]>([]);
@@ -31,9 +33,9 @@ export default function HomeScreen() {
     budget: 75,
   });
 
-  const loadDashboard = async () => {
+  const loadDashboard = async (silent: boolean = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
 
       // Fetch AI Replenishments, Expiring Items, Active Lists, and Profile concurrently
       const [aiResult, pantryResult, listsResult, profileResult] = await Promise.allSettled([
@@ -115,11 +117,22 @@ export default function HomeScreen() {
         [item.productId]: (prev[item.productId] || 0) + 1,
       }));
 
+      // Optimistically update estimated total and count without waiting
+      const itemCost = Number(item.defaultUnitPrice || 1.99) * Math.max(1, Math.round(item.suggestedQuantity));
+      setStats((prev) => ({
+        ...prev,
+        activeListCount: prev.activeListCount + 1,
+        estimatedTotal: Number((prev.estimatedTotal + itemCost).toFixed(2)),
+      }));
+
       let listId = activeListId;
       if (!listId) {
         const listsRes = await api.getShoppingLists();
-        if (listsRes?.data && listsRes.data.length > 0) {
-          listId = listsRes.data[0].id;
+        const activeList = listsRes?.data?.find(
+          (l: any) => l.status === 'ACTIVE' || l.status === 'DRAFT'
+        );
+        if (activeList) {
+          listId = activeList.id;
           setActiveListId(listId);
         } else {
           const newList = await api.createShoppingList('My Weekly Grocery', 75, 'GBP');
@@ -128,7 +141,7 @@ export default function HomeScreen() {
         }
       }
       await api.addItemToList(listId, item.productId, Math.max(1, Math.round(item.suggestedQuantity)));
-      loadDashboard();
+      loadDashboard(true);
     } catch {
       setAddedMap((prev) => {
         const copy = { ...prev };
@@ -136,6 +149,7 @@ export default function HomeScreen() {
         else copy[item.productId] -= 1;
         return copy;
       });
+      loadDashboard(true);
     } finally {
       setAddingId(null);
     }
@@ -152,10 +166,11 @@ export default function HomeScreen() {
   );
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[BrandColors.primary]} />}>
+    <View style={{ flex: 1, backgroundColor: '#F8FAF5' }}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[BrandColors.primary]} />}>
       {/* BigBasket Brand Greeting Banner */}
       <View style={styles.heroCard}>
         <View style={styles.heroTextContainer}>
@@ -346,7 +361,11 @@ export default function HomeScreen() {
                       disabled={isAdding}
                       onPress={() => handleAddRecommended(r)}>
                       {isAdding ? (
-                        <ActivityIndicator size="small" color={addedCount > 0 ? '#FFFFFF' : '#689F38'} />
+                        <ActivityIndicator
+                          size="small"
+                          color={addedCount > 0 ? '#FFFFFF' : '#689F38'}
+                          style={{ width: 18, height: 18 }}
+                        />
                       ) : addedCount > 0 ? (
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
                           <Ionicons name="checkmark" size={12} color="#FFFFFF" />
@@ -393,6 +412,20 @@ export default function HomeScreen() {
         </View>
       )}
     </ScrollView>
+
+    {/* Floating AI Chatbot Button */}
+    <TouchableOpacity
+      style={styles.floatingChatBtn}
+      onPress={() => setShowChatModal(true)}>
+      <Ionicons name="sparkles" size={18} color="#FFF" />
+      <Text style={styles.floatingChatBtnText}>Ask AI</Text>
+    </TouchableOpacity>
+
+    <AIChatModal
+      visible={showChatModal}
+      onClose={() => setShowChatModal(false)}
+    />
+  </View>
   );
 }
 
@@ -631,6 +664,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 12,
+    minHeight: 74,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -691,12 +725,15 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   addBtn: {
+    height: 32,
+    minWidth: 70,
     borderWidth: 1.5,
     borderColor: '#84C225',
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 6,
     borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   addBtnInList: {
     backgroundColor: '#84C225',
@@ -725,5 +762,27 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: '800',
     color: '#166534',
+  },
+  floatingChatBtn: {
+    position: 'absolute',
+    bottom: 20,
+    right: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#059669',
+    paddingHorizontal: 16,
+    paddingVertical: 11,
+    borderRadius: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+    gap: 6,
+  },
+  floatingChatBtnText: {
+    color: '#FFF',
+    fontSize: 13,
+    fontWeight: '800',
   },
 });

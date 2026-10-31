@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,18 +10,39 @@ import {
   Platform,
   RefreshControl,
   Image,
+  TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { BrandColors } from '@/constants/Colors';
 import {
   api,
   RecipeItem,
-  ReceiptScanResult,
   ReplenishmentItem,
   WasteRiskItem,
+  ChatAssistantResponse,
 } from '@/services/api';
 
-type TabMode = 'recipes' | 'scanner' | 'insights';
+type TabMode = 'recipes' | 'assistant' | 'insights';
+
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
+  products?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    reason: string;
+  }>;
+}
+
+const QUICK_PROMPTS = [
+  '🛒 What do I need to buy?',
+  '⏳ What is expiring soon?',
+  '🍳 Suggest a meal from my pantry',
+  '💰 How is my grocery budget?',
+];
 
 export default function AIScreen() {
   const [activeTab, setActiveTab] = useState<TabMode>('recipes');
@@ -33,13 +54,22 @@ export default function AIScreen() {
   const [recipesSource, setRecipesSource] = useState<string>('');
   const [expandedRecipeId, setExpandedRecipeId] = useState<string | null>(null);
 
-  // Scanner States
-  const [scanResult, setScanResult] = useState<ReceiptScanResult | null>(null);
-  const [scanning, setScanning] = useState<boolean>(false);
-
   // Insights States
   const [replenishments, setReplenishments] = useState<ReplenishmentItem[]>([]);
   const [wasteRisks, setWasteRisks] = useState<WasteRiskItem[]>([]);
+
+  // Chat Assistant States
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: 'welcome',
+      role: 'assistant',
+      text: "Hello! 👋 I'm your SmartGrocer Assistant. Powered by Gemini and live Python forecasting, ask me 'What do I need?' or 'What's expiring?' to stay ahead on your groceries!",
+    },
+  ]);
+  const [inputText, setInputText] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatAddedMap, setChatAddedMap] = useState<Record<string, boolean>>({});
+  const chatScrollRef = useRef<any>(null);
 
   // Action status toast
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
@@ -91,7 +121,10 @@ export default function AIScreen() {
   const handleAddMissingToList = async (recipe: RecipeItem) => {
     try {
       const listsRes = await api.getShoppingLists();
-      let targetList = listsRes.data[0];
+      const lists = listsRes?.data || [];
+      let targetList = lists.find(
+        (l: any) => l.status === 'ACTIVE' || l.status === 'DRAFT'
+      );
 
       if (!targetList) {
         const createRes = await api.createShoppingList('My Smart List', 50, 'GBP');
@@ -100,74 +133,102 @@ export default function AIScreen() {
 
       let addedCount = 0;
       for (const item of recipe.missingIngredients) {
-        if (item.matchedProductId) {
-          await api.addItemToList(targetList.id, item.matchedProductId, 1, `For: ${recipe.title}`);
+        let prodId = item.matchedProductId;
+
+        if (!prodId) {
+          // Fallback fuzzy search by name
+          try {
+            const searchRes = await api.getProducts({ search: item.name, pageSize: 1 });
+            if (searchRes?.data && searchRes.data.length > 0) {
+              prodId = searchRes.data[0].id;
+            }
+          } catch {}
+        }
+
+        if (prodId) {
+          await api.addItemToList(targetList.id, prodId, 1, `For: ${recipe.title}`);
           addedCount++;
         }
       }
 
-      showToast(`✓ Added ${addedCount || recipe.missingIngredients.length} item(s) to "${targetList.name}"!`);
+      showToast(`✓ Added ${addedCount} missing ingredient(s) to "${targetList.name}"!`);
+      Alert.alert(
+        'Added to Shopping List! 🛒',
+        `Successfully added ${addedCount} missing ingredients for "${recipe.title}" to your active shopping list.`
+      );
     } catch (err: any) {
       Alert.alert('Error', 'Could not add items to your shopping list: ' + err.message);
     }
   };
 
   // ----------------------------------------------------
-  // RECEIPT SCANNER LOGIC
+  // CHAT ASSISTANT LOGIC
   // ----------------------------------------------------
-  const handleSimulateScan = async (store: 'tesco' | 'sainsburys') => {
+  const handleSendChatMessage = async (textToSend?: string) => {
+    const query = (textToSend || inputText).trim();
+    if (!query || chatLoading) return;
+
+    const userMsg: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      text: query,
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    if (!textToSend) setInputText('');
+    setChatLoading(true);
+
+    setTimeout(() => {
+      chatScrollRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+
     try {
-      setScanning(true);
-      // Calls Gemini vision endpoint (with simulated base64 in demo)
-      const res = await api.scanReceipt(
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP...',
-        'image/jpeg'
-      );
-      setScanResult(res.data);
-      showToast(`✓ Parsed receipt from ${res.data.storeName}!`);
+      const res = await api.chatWithAssistant(query);
+      const data: ChatAssistantResponse = res.data;
+
+      const aiMsg: ChatMessage = {
+        id: `ai-${Date.now()}`,
+        role: 'assistant',
+        text: data.reply,
+        products: data.suggestedProducts,
+      };
+
+      setMessages((prev) => [...prev, aiMsg]);
     } catch (err: any) {
-      Alert.alert('Scan Failed', err.message);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `err-${Date.now()}`,
+          role: 'assistant',
+          text: `Sorry, I couldn't reach the grocery intelligence service: ${err.message || 'Unknown error'}. Please try again!`,
+        },
+      ]);
     } finally {
-      setScanning(false);
+      setChatLoading(false);
+      setTimeout(() => {
+        chatScrollRef.current?.scrollToEnd({ animated: true });
+      }, 100);
     }
   };
 
-  const handleSaveReceiptToPantry = async () => {
-    if (!scanResult) return;
-    try {
-      let saved = 0;
-      for (const item of scanResult.items) {
-        if (item.matchedProductId) {
-          await api.addPantryItem(item.matchedProductId, item.quantity, 'unit');
-          saved++;
-        }
-      }
-      showToast(`✓ Transferred ${saved} item(s) to your active pantry!`);
-    } catch (err: any) {
-      Alert.alert('Error', err.message);
-    }
-  };
-
-  const handleAddReceiptToList = async () => {
-    if (!scanResult) return;
+  const handleAddChatProductToList = async (prod: { id: string; name: string }) => {
     try {
       const listsRes = await api.getShoppingLists();
-      let targetList = listsRes.data[0];
+      const lists = listsRes?.data || [];
+      let targetList = lists.find(
+        (l: any) => l.status === 'ACTIVE' || l.status === 'DRAFT'
+      );
+
       if (!targetList) {
-        const createRes = await api.createShoppingList('Receipt Restock', 40, 'GBP');
+        const createRes = await api.createShoppingList('My Smart List', 50, 'GBP');
         targetList = createRes.data;
       }
 
-      let added = 0;
-      for (const item of scanResult.items) {
-        if (item.matchedProductId) {
-          await api.addItemToList(targetList.id, item.matchedProductId, item.quantity);
-          added++;
-        }
-      }
-      showToast(`✓ Added ${added} item(s) to "${targetList.name}"!`);
+      await api.addItemToList(targetList.id, prod.id, 1, 'Added via AI Chat');
+      setChatAddedMap((prev) => ({ ...prev, [prod.id]: true }));
+      showToast(`✓ Added ${prod.name} to "${targetList.name}"!`);
     } catch (err: any) {
-      Alert.alert('Error', err.message);
+      Alert.alert('Error', 'Could not add to list: ' + err.message);
     }
   };
 
@@ -177,7 +238,10 @@ export default function AIScreen() {
   const handleAddReplenishmentToList = async (item: ReplenishmentItem) => {
     try {
       const listsRes = await api.getShoppingLists();
-      let targetList = listsRes.data[0];
+      const lists = listsRes?.data || [];
+      let targetList = lists.find(
+        (l: any) => l.status === 'ACTIVE' || l.status === 'DRAFT'
+      );
       if (!targetList) {
         const createRes = await api.createShoppingList('Weekly Restock', 40, 'GBP');
         targetList = createRes.data;
@@ -215,15 +279,15 @@ export default function AIScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.segmentBtn, activeTab === 'scanner' && styles.segmentBtnActive]}
-          onPress={() => setActiveTab('scanner')}>
+          style={[styles.segmentBtn, activeTab === 'assistant' && styles.segmentBtnActive]}
+          onPress={() => setActiveTab('assistant')}>
           <Ionicons
-            name="scan-outline"
+            name="chatbubble-ellipses-outline"
             size={16}
-            color={activeTab === 'scanner' ? '#FFF' : '#6B7280'}
+            color={activeTab === 'assistant' ? '#FFF' : '#6B7280'}
           />
-          <Text style={[styles.segmentText, activeTab === 'scanner' && styles.segmentTextActive]}>
-            Receipt OCR
+          <Text style={[styles.segmentText, activeTab === 'assistant' && styles.segmentTextActive]}>
+            AI Chatbot
           </Text>
         </TouchableOpacity>
 
@@ -241,374 +305,390 @@ export default function AIScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Main Scroll Content */}
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-        {loading && !refreshing ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={BrandColors.primary} />
-            <Text style={styles.loadingText}>Connecting to SmartGrocer AI...</Text>
-          </View>
-        ) : (
-          <>
-            {/* ======================================================== */}
-            {/* VIEW 1: ZERO-WASTE CHEF RECIPES                         */}
-            {/* ======================================================== */}
-            {activeTab === 'recipes' && (
-              <View>
-                <View style={styles.heroCard}>
-                  <View style={styles.heroIconBox}>
-                    <Ionicons name="sparkles" size={24} color="#FFF" />
+      {/* Main Content */}
+      {activeTab === 'assistant' ? (
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <ScrollView
+            ref={chatScrollRef}
+            contentContainerStyle={styles.chatScrollContent}
+            showsVerticalScrollIndicator={false}>
+            {messages.map((m) => (
+              <View
+                key={m.id}
+                style={[
+                  styles.chatMsgRow,
+                  m.role === 'user' ? styles.chatMsgRowUser : styles.chatMsgRowAi,
+                ]}>
+                {m.role === 'assistant' && (
+                  <View style={styles.chatBotAvatar}>
+                    <Ionicons name="sparkles" size={13} color="#FFF" />
                   </View>
-                  <View style={styles.heroTextBox}>
-                    <Text style={styles.heroTitle}>Zero-Waste Chef</Text>
-                    <Text style={styles.heroSubtitle}>
-                      {recipesSource === 'GEMINI_AI'
-                        ? '⚡ Powered by Google Gemini AI · Optimized for your pantry'
-                        : '🌿 Curated British Kitchen · Prioritizing expiring stock'}
-                    </Text>
-                  </View>
-                </View>
+                )}
+                <View
+                  style={[
+                    styles.chatBubble,
+                    m.role === 'user' ? styles.chatBubbleUser : styles.chatBubbleAi,
+                  ]}>
+                  <Text
+                    style={[
+                      styles.chatBubbleText,
+                      m.role === 'user' ? styles.chatBubbleTextUser : styles.chatBubbleTextAi,
+                    ]}>
+                    {m.text}
+                  </Text>
 
-                {recipes.length === 0 ? (
-                  <View style={styles.emptyCard}>
-                    <Ionicons name="nutrition-outline" size={48} color="#9CA3AF" />
-                    <Text style={styles.emptyTitle}>No Pantry Items Found</Text>
-                    <Text style={styles.emptySub}>
-                      Add groceries to your pantry to receive personalized zero-waste recipes!
-                    </Text>
-                  </View>
-                ) : (
-                  recipes.map((recipe) => {
-                    const isExpanded = expandedRecipeId === recipe.id;
-                    return (
-                      <View key={recipe.id} style={styles.recipeCard}>
-                        {/* Recipe Header */}
-                        <View style={styles.recipeCardHeader}>
-                          <View style={{ flex: 1 }}>
-                            <Text style={styles.recipeTitle}>{recipe.title}</Text>
-                            <Text style={styles.recipeDesc}>{recipe.description}</Text>
-                          </View>
-                          <View style={styles.scoreBadge}>
-                            <Text style={styles.scoreText}>{recipe.wasteReductionScore}%</Text>
-                            <Text style={styles.scoreLabel}>Save</Text>
-                          </View>
-                        </View>
-
-                        {/* Meta Tags */}
-                        <View style={styles.metaRow}>
-                          <View style={styles.metaPill}>
-                            <Ionicons name="time-outline" size={14} color="#4B5563" />
-                            <Text style={styles.metaPillText}>{recipe.prepTimeMinutes} mins</Text>
-                          </View>
-                          <View style={styles.metaPill}>
-                            <Ionicons name="bar-chart-outline" size={14} color="#4B5563" />
-                            <Text style={styles.metaPillText}>{recipe.difficulty}</Text>
-                          </View>
-                          <View style={styles.metaPill}>
-                            <Ionicons name="people-outline" size={14} color="#4B5563" />
-                            <Text style={styles.metaPillText}>{recipe.servings} Servings</Text>
-                          </View>
-                        </View>
-
-                        {/* Pantry Ingredients Used */}
-                        <View style={styles.sectionBlock}>
-                          <Text style={styles.sectionHeader}>In Your Pantry:</Text>
-                          <View style={styles.tagsWrap}>
-                            {recipe.usedPantryItems.map((ing, idx) => (
-                              <View key={idx} style={styles.pantryTag}>
-                                <Ionicons name="checkmark-circle" size={14} color="#059669" />
-                                <Text style={styles.pantryTagText}>
-                                  {ing.name} ({ing.quantity})
-                                </Text>
-                              </View>
-                            ))}
-                          </View>
-                        </View>
-
-                        {/* Missing Ingredients & One-Tap Add */}
-                        {recipe.missingIngredients.length > 0 && (
-                          <View style={styles.sectionBlock}>
-                            <View style={styles.missingHeaderRow}>
-                              <Text style={styles.sectionHeader}>Missing Groceries:</Text>
-                              <Text style={styles.missingPriceSummary}>
-                                ~£
-                                {recipe.missingIngredients
-                                  .reduce((acc, m) => acc + (m.estimatedPriceGbp || 1.5), 0)
-                                  .toFixed(2)}
+                  {m.products && m.products.length > 0 && (
+                    <View style={styles.chatProductsContainer}>
+                      <Text style={styles.chatProductsHeader}>Recommended to replenish:</Text>
+                      {m.products.map((p) => {
+                        const isAdded = chatAddedMap[p.id];
+                        return (
+                          <View key={p.id} style={styles.chatProductCard}>
+                            <View style={{ flex: 1 }}>
+                              <Text style={styles.chatProductName} numberOfLines={1}>
+                                {p.name}
+                              </Text>
+                              <Text style={styles.chatProductReason}>
+                                £{Number(p.price).toFixed(2)} · {p.reason}
                               </Text>
                             </View>
-
-                            <View style={styles.tagsWrap}>
-                              {recipe.missingIngredients.map((m, idx) => (
-                                <View key={idx} style={styles.missingTag}>
-                                  <Ionicons name="add-circle-outline" size={14} color="#D97706" />
-                                  <Text style={styles.missingTagText}>
-                                    {m.name} (~£{Number(m.estimatedPriceGbp || 1.5).toFixed(2)})
-                                  </Text>
-                                </View>
-                              ))}
-                            </View>
-
                             <TouchableOpacity
-                              style={styles.btnAddMissing}
-                              onPress={() => handleAddMissingToList(recipe)}>
-                              <Ionicons name="cart-outline" size={16} color="#FFF" />
-                              <Text style={styles.btnAddMissingText}>
-                                Add Missing Ingredients to Shopping List
+                              style={[styles.btnChatAdd, isAdded && styles.btnChatAdded]}
+                              disabled={isAdded}
+                              onPress={() => handleAddChatProductToList(p)}>
+                              <Text
+                                style={[
+                                  styles.btnChatAddText,
+                                  isAdded && styles.btnChatAddedText,
+                                ]}>
+                                {isAdded ? '✓ Added' : '+ Add'}
                               </Text>
                             </TouchableOpacity>
                           </View>
-                        )}
-
-                        {/* Instructions Toggle */}
-                        <TouchableOpacity
-                          style={styles.btnToggleInstructions}
-                          onPress={() => setExpandedRecipeId(isExpanded ? null : recipe.id)}>
-                          <Text style={styles.btnToggleText}>
-                            {isExpanded ? 'Hide Cooking Instructions ▲' : 'View Cooking Steps ▼'}
-                          </Text>
-                        </TouchableOpacity>
-
-                        {/* Expanded Step-by-Step Instructions */}
-                        {isExpanded && (
-                          <View style={styles.instructionsContainer}>
-                            {recipe.instructions.map((step, idx) => (
-                              <View key={idx} style={styles.stepRow}>
-                                <View style={styles.stepNumberBadge}>
-                                  <Text style={styles.stepNumberText}>{idx + 1}</Text>
-                                </View>
-                                <Text style={styles.stepText}>{step}</Text>
-                              </View>
-                            ))}
-
-                            {recipe.chefTip && (
-                              <View style={styles.tipCard}>
-                                <Ionicons name="bulb-outline" size={18} color="#B45309" />
-                                <Text style={styles.tipText}>
-                                  <Text style={{ fontWeight: '700' }}>Chef Tip: </Text>
-                                  {recipe.chefTip}
-                                </Text>
-                              </View>
-                            )}
-                          </View>
-                        )}
-                      </View>
-                    );
-                  })
-                )}
-              </View>
-            )}
-
-            {/* ======================================================== */}
-            {/* VIEW 2: SMART RECEIPT SCANNER                           */}
-            {/* ======================================================== */}
-            {activeTab === 'scanner' && (
-              <View>
-                <View style={styles.heroCard}>
-                  <View style={[styles.heroIconBox, { backgroundColor: '#3B82F6' }]}>
-                    <Ionicons name="camera-reverse-outline" size={24} color="#FFF" />
-                  </View>
-                  <View style={styles.heroTextBox}>
-                    <Text style={styles.heroTitle}>Supermarket Receipt Scanner</Text>
-                    <Text style={styles.heroSubtitle}>
-                      Powered by Gemini Multimodal Vision · Auto-matches 525 UK Items
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Scan Simulator Card */}
-                <View style={styles.scanActionCard}>
-                  <Text style={styles.scanPromptText}>
-                    Snap or upload a photo of your paper receipt from Tesco, Sainsbury's, or Asda to
-                    instantly update your pantry or track actual spending.
-                  </Text>
-
-                  {scanning ? (
-                    <View style={styles.scanningBox}>
-                      <ActivityIndicator size="large" color="#3B82F6" />
-                      <Text style={styles.scanningText}>
-                        Gemini Vision is analyzing receipt line items & prices...
-                      </Text>
-                    </View>
-                  ) : (
-                    <View style={styles.btnScanRow}>
-                      <TouchableOpacity
-                        style={[styles.btnScan, { backgroundColor: '#0284C7' }]}
-                        onPress={() => handleSimulateScan('tesco')}>
-                        <Ionicons name="receipt-outline" size={18} color="#FFF" />
-                        <Text style={styles.btnScanText}>Demo Tesco Receipt</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={[styles.btnScan, { backgroundColor: '#EA580C' }]}
-                        onPress={() => handleSimulateScan('sainsburys')}>
-                        <Ionicons name="document-text-outline" size={18} color="#FFF" />
-                        <Text style={styles.btnScanText}>Demo Sainsbury's</Text>
-                      </TouchableOpacity>
+                        );
+                      })}
                     </View>
                   )}
                 </View>
+              </View>
+            ))}
 
-                {/* Scan Results View */}
-                {scanResult && (
-                  <View style={styles.resultCard}>
-                    <View style={styles.resultHeader}>
-                      <View>
-                        <Text style={styles.resultStore}>{scanResult.storeName}</Text>
-                        <Text style={styles.resultDate}>Date: {scanResult.transactionDate}</Text>
-                      </View>
-                      <View style={styles.resultTotalBox}>
-                        <Text style={styles.resultTotalLabel}>Total</Text>
-                        <Text style={styles.resultTotalVal}>
-                          £{Number(scanResult.totalGbp).toFixed(2)}
-                        </Text>
-                      </View>
+            {chatLoading && (
+              <View style={[styles.chatMsgRow, styles.chatMsgRowAi]}>
+                <View style={styles.chatBotAvatar}>
+                  <Ionicons name="sparkles" size={13} color="#FFF" />
+                </View>
+                <View style={[styles.chatBubble, styles.chatBubbleAi, { flexDirection: 'row', alignItems: 'center', gap: 8 }]}>
+                  <ActivityIndicator size="small" color={BrandColors.primary} />
+                  <Text style={{ fontSize: 12, color: '#6B7280', fontStyle: 'italic' }}>
+                    Gemini is analyzing your consumption & pantry...
+                  </Text>
+                </View>
+              </View>
+            )}
+          </ScrollView>
+
+          {/* Quick Prompts */}
+          <View style={styles.chatQuickPromptsBar}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}>
+              {QUICK_PROMPTS.map((q, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  style={styles.chatQuickPromptChip}
+                  onPress={() => handleSendChatMessage(q)}>
+                  <Text style={styles.chatQuickPromptText}>{q}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* Input Bar */}
+          <View style={styles.chatInputBar}>
+            <TextInput
+              style={styles.chatTextInput}
+              placeholder="Ask: 'What do I need?' or 'What's expiring?'..."
+              placeholderTextColor="#9CA3AF"
+              value={inputText}
+              onChangeText={setInputText}
+              onSubmitEditing={() => handleSendChatMessage()}
+              returnKeyType="send"
+            />
+            <TouchableOpacity
+              style={[
+                styles.btnChatSend,
+                (!inputText.trim() || chatLoading) && { opacity: 0.4 },
+              ]}
+              disabled={!inputText.trim() || chatLoading}
+              onPress={() => handleSendChatMessage()}>
+              <Ionicons name="send" size={16} color="#FFF" />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+          {loading && !refreshing ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={BrandColors.primary} />
+              <Text style={styles.loadingText}>Fetching grocery intelligence...</Text>
+            </View>
+          ) : (
+            <View>
+              {/* ======================================================== */}
+              {/* VIEW 1: CHEF RECIPES                                     */}
+              {/* ======================================================== */}
+              {activeTab === 'recipes' && (
+                <View>
+                  <View style={styles.heroCard}>
+                    <View style={styles.heroIconBox}>
+                      <Ionicons name="sparkles" size={24} color="#FFF" />
                     </View>
+                    <View style={styles.heroTextBox}>
+                      <Text style={styles.heroTitle}>Zero-Waste Kitchen Chef</Text>
+                      <Text style={styles.heroSubtitle}>
+                        {recipesSource === 'GEMINI_AI'
+                          ? 'Personalized British Recipes generated by Gemini AI'
+                          : 'Zero-waste British recipes tailored to your pantry stock'}
+                      </Text>
+                    </View>
+                  </View>
 
-                    <Text style={styles.matchedBanner}>
-                      ✓ {scanResult.matchedCatalogueCount} of {scanResult.items.length} items
-                      matched to UK Database
-                    </Text>
+                  {recipes.length === 0 ? (
+                    <View style={styles.emptyContainer}>
+                      <Ionicons name="restaurant-outline" size={54} color="#9CA3AF" />
+                      <Text style={styles.emptyTitle}>No Recipes Available Yet</Text>
+                      <Text style={styles.emptySubtitle}>
+                        Add items to your pantry to unlock customized recipes.
+                      </Text>
+                    </View>
+                  ) : (
+                    recipes.map((recipe) => {
+                      const isExpanded = expandedRecipeId === recipe.id;
+                      return (
+                        <View key={recipe.id} style={styles.recipeCard}>
+                          <TouchableOpacity
+                            style={styles.recipeHeader}
+                            onPress={() =>
+                              setExpandedRecipeId(isExpanded ? null : recipe.id)
+                            }>
+                            <View style={{ flex: 1 }}>
+                              <View style={styles.badgeRow}>
+                                <View style={styles.wasteScoreBadge}>
+                                  <Ionicons name="leaf" size={12} color="#059669" />
+                                  <Text style={styles.wasteScoreText}>
+                                    {recipe.wasteReductionScore}% Zero-Waste
+                                  </Text>
+                                </View>
+                                <Text style={styles.cuisineText}>{recipe.cuisine}</Text>
+                              </View>
 
-                    {/* Extracted Items List */}
-                    {scanResult.items.map((item, idx) => (
-                      <View key={idx} style={styles.extractedItemRow}>
-                        <View style={{ flex: 1 }}>
-                          <Text style={styles.itemRawText}>{item.rawName}</Text>
-                          {item.matchedProductName && (
-                            <Text style={styles.itemMatchedText}>
-                              ↳ Matched: {item.matchedProductName}
-                            </Text>
+                              <Text style={styles.recipeTitle}>{recipe.title}</Text>
+                              <Text style={styles.recipeDesc} numberOfLines={isExpanded ? 0 : 2}>
+                                {recipe.description}
+                              </Text>
+
+                              <View style={styles.metaRow}>
+                                <View style={styles.metaItem}>
+                                  <Ionicons name="time-outline" size={14} color="#6B7280" />
+                                  <Text style={styles.metaText}>{recipe.prepTimeMinutes} mins</Text>
+                                </View>
+                                <View style={styles.metaItem}>
+                                  <Ionicons name="people-outline" size={14} color="#6B7280" />
+                                  <Text style={styles.metaText}>{recipe.servings} servings</Text>
+                                </View>
+                                <View style={styles.metaItem}>
+                                  <Ionicons name="speedometer-outline" size={14} color="#6B7280" />
+                                  <Text style={styles.metaText}>{recipe.difficulty}</Text>
+                                </View>
+                              </View>
+                            </View>
+
+                            <Ionicons
+                              name={isExpanded ? 'chevron-up' : 'chevron-down'}
+                              size={20}
+                              color="#6B7280"
+                              style={{ marginLeft: 8 }}
+                            />
+                          </TouchableOpacity>
+
+                          {isExpanded && (
+                            <View style={styles.recipeExpandedContent}>
+                              {/* Pantry Items Used */}
+                              <Text style={styles.sectionHeader}>Ingredients from Pantry:</Text>
+                              <View style={styles.tagsContainer}>
+                                {recipe.usedPantryItems.map((ing, idx) => (
+                                  <View key={idx} style={styles.pantryTag}>
+                                    <Ionicons name="checkmark-circle" size={13} color="#059669" />
+                                    <Text style={styles.pantryTagText}>
+                                      {ing.name} ({ing.quantity})
+                                    </Text>
+                                  </View>
+                                ))}
+                              </View>
+
+                              {/* Missing Ingredients & One-Tap Add */}
+                              {recipe.missingIngredients.length > 0 && (
+                                <View style={styles.missingBox}>
+                                  <View style={styles.missingHeaderRow}>
+                                    <Text style={styles.sectionHeader}>Missing Groceries:</Text>
+                                    <Text style={styles.missingPriceSummary}>
+                                      +£
+                                      {recipe.missingIngredients
+                                        .reduce((acc, m) => acc + (Number(m.estimatedPriceGbp) || 0), 0)
+                                        .toFixed(2)}
+                                    </Text>
+                                  </View>
+
+                                  <View style={styles.tagsContainer}>
+                                    {recipe.missingIngredients.map((m, idx) => (
+                                      <View key={idx} style={styles.missingTag}>
+                                        <Ionicons name="add-circle" size={13} color="#DC2626" />
+                                        <Text style={styles.missingTagText}>
+                                          {m.name} (£{(Number(m.estimatedPriceGbp) || 1.5).toFixed(2)})
+                                        </Text>
+                                      </View>
+                                    ))}
+                                  </View>
+
+                                  <TouchableOpacity
+                                    style={styles.btnAddMissing}
+                                    onPress={() => handleAddMissingToList(recipe)}>
+                                    <Ionicons name="cart-outline" size={16} color="#FFF" />
+                                    <Text style={styles.btnAddMissingText}>
+                                      Add Missing Ingredients to Shopping List
+                                    </Text>
+                                  </TouchableOpacity>
+                                </View>
+                              )}
+
+                              {/* Step-by-Step Instructions */}
+                              <Text style={styles.sectionHeader}>Instructions:</Text>
+                              {recipe.instructions.map((step, idx) => (
+                                <View key={idx} style={styles.stepRow}>
+                                  <View style={styles.stepNumberBadge}>
+                                    <Text style={styles.stepNumberText}>{idx + 1}</Text>
+                                  </View>
+                                  <Text style={styles.stepText}>{step}</Text>
+                                </View>
+                              ))}
+
+                              {recipe.chefTip && (
+                                <View style={styles.tipCard}>
+                                  <Ionicons name="bulb-outline" size={18} color="#B45309" />
+                                  <Text style={styles.tipText}>
+                                    <Text style={{ fontWeight: '700' }}>Chef Tip: </Text>
+                                    {recipe.chefTip}
+                                  </Text>
+                                </View>
+                              )}
+                            </View>
                           )}
                         </View>
-                        <View style={{ alignItems: 'flex-end' }}>
-                          <Text style={styles.itemPriceText}>
-                            £{Number(item.totalPriceGbp).toFixed(2)}
-                          </Text>
-                          <Text style={styles.itemQtyText}>Qty: {item.quantity}</Text>
-                        </View>
-                      </View>
-                    ))}
+                      );
+                    })
+                  )}
+                </View>
+              )}
 
-                    {/* Batch Actions */}
-                    <View style={styles.batchActionsRow}>
-                      <TouchableOpacity
-                        style={[styles.btnBatch, { backgroundColor: '#059669' }]}
-                        onPress={handleSaveReceiptToPantry}>
-                        <Ionicons name="nutrition" size={16} color="#FFF" />
-                        <Text style={styles.btnBatchText}>Add All to Pantry</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={[styles.btnBatch, { backgroundColor: BrandColors.dark }]}
-                        onPress={handleAddReceiptToList}>
-                        <Ionicons name="list" size={16} color="#FFF" />
-                        <Text style={styles.btnBatchText}>Add to Shopping List</Text>
-                      </TouchableOpacity>
+              {/* ======================================================== */}
+              {/* VIEW 3: SMART REPLENISHMENT & WASTE INSIGHTS             */}
+              {/* ======================================================== */}
+              {activeTab === 'insights' && (
+                <View>
+                  <View style={styles.heroCard}>
+                    <View style={[styles.heroIconBox, { backgroundColor: '#10B981' }]}>
+                      <Ionicons name="analytics-outline" size={24} color="#FFF" />
+                    </View>
+                    <View style={styles.heroTextBox}>
+                      <Text style={styles.heroTitle}>Household Intelligence</Text>
+                      <Text style={styles.heroSubtitle}>
+                        Replenishment forecasting & spoilage risk detection
+                      </Text>
                     </View>
                   </View>
-                )}
-              </View>
-            )}
 
-            {/* ======================================================== */}
-            {/* VIEW 3: SMART REPLENISHMENT & WASTE INSIGHTS             */}
-            {/* ======================================================== */}
-            {activeTab === 'insights' && (
-              <View>
-                <View style={styles.heroCard}>
-                  <View style={[styles.heroIconBox, { backgroundColor: '#10B981' }]}>
-                    <Ionicons name="analytics-outline" size={24} color="#FFF" />
-                  </View>
-                  <View style={styles.heroTextBox}>
-                    <Text style={styles.heroTitle}>Household Intelligence</Text>
-                    <Text style={styles.heroSubtitle}>
-                      Replenishment forecasting & spoilage risk detection
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Section A: Food Waste Risk Alerts */}
-                <Text style={styles.groupHeading}>⚠️ Food Spoilage Risk Alerts</Text>
-                {wasteRisks.length === 0 ? (
-                  <View style={styles.safeCard}>
-                    <Ionicons name="shield-checkmark" size={24} color="#059669" />
-                    <Text style={styles.safeText}>
-                      No immediate spoilage risks detected. Your pantry is well-balanced!
-                    </Text>
-                  </View>
-                ) : (
-                  wasteRisks.map((item, idx) => (
-                    <View key={idx} style={styles.riskCard}>
-                      <View style={styles.riskHeader}>
-                        <Text style={styles.riskTitle}>{item.productName}</Text>
-                        <View
-                          style={[
-                            styles.urgencyPill,
-                            {
-                              backgroundColor:
-                                item.riskLevel === 'CRITICAL' ? '#FEE2E2' : '#FEF3C7',
-                            },
-                          ]}>
-                          <Text
+                  {/* Section A: Food Waste Risk Alerts */}
+                  <Text style={styles.groupHeading}>⚠️ Food Spoilage Risk Alerts</Text>
+                  {wasteRisks.length === 0 ? (
+                    <View style={styles.safeCard}>
+                      <Ionicons name="shield-checkmark" size={24} color="#059669" />
+                      <Text style={styles.safeText}>
+                        No immediate spoilage risks detected. Your pantry is well-balanced!
+                      </Text>
+                    </View>
+                  ) : (
+                    wasteRisks.map((w, idx) => (
+                      <View key={idx} style={styles.riskCard}>
+                        <View style={styles.riskHeader}>
+                          <Text style={styles.riskTitle}>{w.productName}</Text>
+                          <View
                             style={[
-                              styles.urgencyText,
+                              styles.urgencyPill,
                               {
-                                color: item.riskLevel === 'CRITICAL' ? '#B91C1C' : '#B45309',
+                                backgroundColor:
+                                  w.riskLevel === 'CRITICAL' ? '#FEE2E2' : '#FEF3C7',
                               },
                             ]}>
-                            {item.riskLevel}
+                            <Text
+                              style={[
+                                styles.urgencyText,
+                                {
+                                  color:
+                                    w.riskLevel === 'CRITICAL' ? '#DC2626' : '#D97706',
+                                },
+                              ]}>
+                              {w.riskLevel}
+                            </Text>
+                          </View>
+                        </View>
+                        <Text style={styles.riskSub}>
+                          {w.quantity} {w.unit} remaining · Expires in {w.daysUntilExpiry} days
+                        </Text>
+                        <Text style={styles.riskAction}>💡 {w.suggestedAction}</Text>
+                      </View>
+                    ))
+                  )}
+
+                  {/* Section B: Automated Replenishments */}
+                  <Text style={[styles.groupHeading, { marginTop: 24 }]}>
+                    📦 Predicted Household Replenishments
+                  </Text>
+                  {replenishments.length === 0 ? (
+                    <View style={styles.safeCard}>
+                      <Ionicons name="checkmark-done" size={24} color="#059669" />
+                      <Text style={styles.safeText}>
+                        All pantry essentials are sufficiently stocked based on consumption patterns.
+                      </Text>
+                    </View>
+                  ) : (
+                    replenishments.map((rep) => (
+                      <View key={rep.productId} style={styles.repCard}>
+                        <View style={{ flex: 1 }}>
+                          <Text style={styles.repTitle}>{rep.productName}</Text>
+                          <Text style={styles.repReason}>{rep.reason}</Text>
+                          <Text style={styles.repMeta}>
+                            Suggested: {rep.suggestedQuantity} {rep.unit} · Depletes in ~
+                            {rep.estimatedDaysUntilDepleted}d
                           </Text>
                         </View>
+                        <TouchableOpacity
+                          style={styles.btnRepAdd}
+                          onPress={() => handleAddReplenishmentToList(rep)}>
+                          <Ionicons name="cart" size={16} color="#FFF" />
+                          <Text style={styles.btnRepAddText}>+ Add</Text>
+                        </TouchableOpacity>
                       </View>
-
-                      <Text style={styles.riskSub}>
-                        Stock: {item.quantity} {item.unit} · Expires in {item.daysUntilExpiry} days
-                      </Text>
-                      <Text style={styles.riskAction}>💡 {item.suggestedAction}</Text>
-                    </View>
-                  ))
-                )}
-
-                {/* Section B: Predicted Replenishments */}
-                <Text style={[styles.groupHeading, { marginTop: 24 }]}>
-                  🛒 Predicted Restock Items
-                </Text>
-                {replenishments.length === 0 ? (
-                  <View style={styles.safeCard}>
-                    <Ionicons name="checkmark-done" size={24} color="#059669" />
-                    <Text style={styles.safeText}>
-                      All essential staples are currently stocked. Next forecast runs tomorrow.
-                    </Text>
-                  </View>
-                ) : (
-                  replenishments.map((rep, idx) => (
-                    <View key={idx} style={styles.repCard}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={styles.repTitle}>{rep.productName}</Text>
-                        <Text style={styles.repReason}>{rep.reason}</Text>
-                        <Text style={styles.repMeta}>
-                          Suggested: {rep.suggestedQuantity} {rep.unit} · Depletes in ~
-                          {rep.estimatedDaysUntilDepleted}d
-                        </Text>
-                      </View>
-
-                      <TouchableOpacity
-                        style={styles.btnRepAdd}
-                        onPress={() => handleAddReplenishmentToList(rep)}>
-                        <Ionicons name="add" size={18} color="#FFF" />
-                        <Text style={styles.btnRepAddText}>Add</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))
-                )}
-              </View>
-            )}
-          </>
-        )}
-      </ScrollView>
+                    ))
+                  )}
+                </View>
+              )}
+            </View>
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -619,24 +699,33 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   toastBanner: {
-    backgroundColor: '#111827',
+    position: 'absolute',
+    top: 10,
+    left: 20,
+    right: 20,
+    backgroundColor: '#065F46',
     paddingVertical: 10,
     paddingHorizontal: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 8,
+    zIndex: 999,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
   },
   toastText: {
     color: '#FFF',
     fontSize: 13,
     fontWeight: '600',
+    textAlign: 'center',
   },
   segmentedHeader: {
     flexDirection: 'row',
-    backgroundColor: '#FFF',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    backgroundColor: '#E5E7EB',
+    padding: 4,
+    borderRadius: 10,
+    margin: 12,
   },
   segmentBtn: {
     flex: 1,
@@ -645,11 +734,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 8,
     borderRadius: 8,
-    marginHorizontal: 3,
-    backgroundColor: '#F3F4F6',
   },
   segmentBtnActive: {
-    backgroundColor: BrandColors.dark,
+    backgroundColor: BrandColors.primary,
   },
   segmentText: {
     fontSize: 12,
@@ -659,35 +746,37 @@ const styles = StyleSheet.create({
   },
   segmentTextActive: {
     color: '#FFF',
+    fontWeight: '700',
   },
   scrollContent: {
-    padding: 16,
+    padding: 12,
     paddingBottom: 40,
   },
   loadingContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 60,
+    paddingVertical: 40,
   },
   loadingText: {
-    marginTop: 12,
-    color: '#6B7280',
+    marginTop: 10,
     fontSize: 14,
-    fontWeight: '500',
+    color: '#6B7280',
   },
   heroCard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1E293B',
+    backgroundColor: '#FFF',
     padding: 16,
-    borderRadius: 14,
+    borderRadius: 12,
     marginBottom: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   heroIconBox: {
     width: 44,
     height: 44,
     borderRadius: 10,
-    backgroundColor: '#F59E0B',
+    backgroundColor: BrandColors.primary,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -696,125 +785,111 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   heroTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '800',
+    color: BrandColors.dark,
   },
   heroSubtitle: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: '#6B7280',
     marginTop: 2,
+    lineHeight: 16,
   },
-  emptyCard: {
-    backgroundColor: '#FFF',
-    padding: 32,
-    borderRadius: 14,
+  emptyContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    paddingVertical: 40,
   },
   emptyTitle: {
     fontSize: 16,
     fontWeight: '700',
     color: '#374151',
-    marginTop: 12,
+    marginTop: 10,
   },
-  emptySub: {
+  emptySubtitle: {
     fontSize: 13,
     color: '#6B7280',
     textAlign: 'center',
-    marginTop: 6,
-    lineHeight: 18,
+    marginTop: 4,
   },
+
+  // Recipes Styles
   recipeCard: {
     backgroundColor: '#FFF',
-    borderRadius: 14,
-    padding: 16,
-    marginBottom: 16,
+    borderRadius: 12,
+    marginBottom: 12,
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 6,
-        shadowOffset: { width: 0, height: 2 },
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    overflow: 'hidden',
   },
-  recipeCardHeader: {
+  recipeHeader: {
     flexDirection: 'row',
+    padding: 16,
     alignItems: 'flex-start',
-    marginBottom: 10,
   },
-  recipeTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: BrandColors.dark,
-    lineHeight: 22,
+  badgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
   },
-  recipeDesc: {
-    fontSize: 13,
-    color: '#6B7280',
-    marginTop: 3,
-    lineHeight: 18,
-  },
-  scoreBadge: {
+  wasteScoreBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#ECFDF5',
     paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginLeft: 8,
-    borderWidth: 1,
-    borderColor: '#A7F3D0',
-  },
-  scoreText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#059669',
-  },
-  scoreLabel: {
-    fontSize: 9,
-    fontWeight: '700',
-    color: '#047857',
-    textTransform: 'uppercase',
-  },
-  metaRow: {
-    flexDirection: 'row',
-    marginBottom: 12,
-  },
-  metaPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 3,
     borderRadius: 6,
     marginRight: 8,
   },
-  metaPillText: {
+  wasteScoreText: {
     fontSize: 11,
-    fontWeight: '600',
-    color: '#4B5563',
+    fontWeight: '700',
+    color: '#059669',
     marginLeft: 4,
   },
-  sectionBlock: {
+  cuisineText: {
+    fontSize: 11,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
+  recipeTitle: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: BrandColors.dark,
+  },
+  recipeDesc: {
+    fontSize: 12,
+    color: '#4B5563',
+    marginTop: 4,
+    lineHeight: 16,
+  },
+  metaRow: {
+    flexDirection: 'row',
     marginTop: 10,
   },
+  metaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  metaText: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginLeft: 4,
+  },
+  recipeExpandedContent: {
+    padding: 16,
+    paddingTop: 0,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+  },
   sectionHeader: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
     color: '#374151',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    marginTop: 12,
     marginBottom: 6,
   },
-  tagsWrap: {
+  tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
@@ -824,17 +899,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0FDF4',
     borderWidth: 1,
     borderColor: '#BBF7D0',
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 6,
+    borderRadius: 8,
     marginRight: 6,
     marginBottom: 6,
   },
   pantryTagText: {
-    fontSize: 12,
-    fontWeight: '500',
+    fontSize: 11,
     color: '#166534',
+    fontWeight: '600',
     marginLeft: 4,
+  },
+  missingBox: {
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+    borderRadius: 10,
+    padding: 12,
+    marginTop: 10,
   },
   missingHeaderRow: {
     flexDirection: 'row',
@@ -844,58 +927,40 @@ const styles = StyleSheet.create({
   missingPriceSummary: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#B45309',
+    color: '#DC2626',
   },
   missingTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFBEB',
+    backgroundColor: '#FFF',
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: '#FCA5A5',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
     marginRight: 6,
-    marginBottom: 6,
+    marginTop: 6,
   },
   missingTagText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#92400E',
+    fontSize: 11,
+    color: '#991B1B',
+    fontWeight: '600',
     marginLeft: 4,
   },
   btnAddMissing: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: BrandColors.primary,
-    paddingVertical: 9,
+    backgroundColor: '#DC2626',
+    paddingVertical: 10,
     borderRadius: 8,
-    marginTop: 8,
+    marginTop: 12,
   },
   btnAddMissingText: {
     color: '#FFF',
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
     marginLeft: 6,
-  },
-  btnToggleInstructions: {
-    marginTop: 12,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-    alignItems: 'center',
-  },
-  btnToggleText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#4B5563',
-  },
-  instructionsContainer: {
-    marginTop: 10,
-    backgroundColor: '#F9FAFB',
-    padding: 12,
-    borderRadius: 8,
   },
   stepRow: {
     flexDirection: 'row',
@@ -903,14 +968,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   stepNumberBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: '#E5E7EB',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
-    marginTop: 1,
+    marginRight: 8,
+    marginTop: 2,
   },
   stepNumberText: {
     fontSize: 11,
@@ -919,165 +984,26 @@ const styles = StyleSheet.create({
   },
   stepText: {
     flex: 1,
-    fontSize: 13,
+    fontSize: 12,
     color: '#374151',
-    lineHeight: 19,
+    lineHeight: 18,
   },
   tipCard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FEF3C7',
-    padding: 10,
+    backgroundColor: '#FFFBEB',
+    borderWidth: 1,
+    borderColor: '#FDE68A',
     borderRadius: 8,
-    marginTop: 8,
+    padding: 10,
+    marginTop: 10,
+    alignItems: 'center',
   },
   tipText: {
-    fontSize: 12,
+    flex: 1,
+    fontSize: 11,
     color: '#92400E',
     marginLeft: 8,
-    flex: 1,
-    lineHeight: 17,
-  },
-
-  // Scanner Styles
-  scanActionCard: {
-    backgroundColor: '#FFF',
-    padding: 18,
-    borderRadius: 14,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  scanPromptText: {
-    fontSize: 13,
-    color: '#4B5563',
-    lineHeight: 19,
-    marginBottom: 16,
-  },
-  scanningBox: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 20,
-  },
-  scanningText: {
-    marginTop: 10,
-    color: '#3B82F6',
-    fontSize: 13,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  btnScanRow: {
-    flexDirection: 'row',
-  },
-  btnScan: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginHorizontal: 4,
-  },
-  btnScanText: {
-    color: '#FFF',
-    fontSize: 13,
-    fontWeight: '700',
-    marginLeft: 6,
-  },
-  resultCard: {
-    backgroundColor: '#FFF',
-    padding: 16,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  resultHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  resultStore: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: BrandColors.dark,
-  },
-  resultDate: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 2,
-  },
-  resultTotalBox: {
-    alignItems: 'flex-end',
-  },
-  resultTotalLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#6B7280',
-    textTransform: 'uppercase',
-  },
-  resultTotalVal: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#059669',
-  },
-  matchedBanner: {
-    backgroundColor: '#F0FDF4',
-    color: '#166534',
-    fontSize: 12,
-    fontWeight: '600',
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 6,
-    marginVertical: 12,
-  },
-  extractedItemRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F9FAFB',
-  },
-  itemRawText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  itemMatchedText: {
-    fontSize: 11,
-    color: '#059669',
-    marginTop: 2,
-  },
-  itemPriceText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#111827',
-  },
-  itemQtyText: {
-    fontSize: 11,
-    color: '#6B7280',
-  },
-  batchActionsRow: {
-    flexDirection: 'row',
-    marginTop: 16,
-  },
-  btnBatch: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 11,
-    borderRadius: 8,
-    marginHorizontal: 4,
-  },
-  btnBatchText: {
-    color: '#FFF',
-    fontSize: 12,
-    fontWeight: '700',
-    marginLeft: 6,
+    lineHeight: 16,
   },
 
   // Insights Styles
@@ -1182,5 +1108,160 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     marginLeft: 2,
+  },
+
+  // Assistant Chat Styles
+  chatScrollContent: {
+    padding: 16,
+    gap: 12,
+  },
+  chatMsgRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+  },
+  chatMsgRowUser: {
+    justifyContent: 'flex-end',
+  },
+  chatMsgRowAi: {
+    justifyContent: 'flex-start',
+  },
+  chatBotAvatar: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#059669',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 2,
+  },
+  chatBubble: {
+    maxWidth: '82%',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
+  },
+  chatBubbleUser: {
+    backgroundColor: BrandColors.primary,
+    borderBottomRightRadius: 4,
+  },
+  chatBubbleAi: {
+    backgroundColor: '#FFF',
+    borderBottomLeftRadius: 4,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  chatBubbleText: {
+    fontSize: 13.5,
+    lineHeight: 20,
+  },
+  chatBubbleTextUser: {
+    color: '#FFFFFF',
+    fontWeight: '500',
+  },
+  chatBubbleTextAi: {
+    color: '#1F2937',
+  },
+  chatProductsContainer: {
+    marginTop: 10,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+    gap: 6,
+  },
+  chatProductsHeader: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#4B5563',
+    marginBottom: 2,
+  },
+  chatProductCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F9FAFB',
+    padding: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  chatProductName: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  chatProductReason: {
+    fontSize: 10,
+    color: '#059669',
+    marginTop: 1,
+  },
+  btnChatAdd: {
+    backgroundColor: '#ECFDF5',
+    borderWidth: 1,
+    borderColor: '#A7F3D0',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  btnChatAdded: {
+    backgroundColor: '#F3F4F6',
+    borderColor: '#D1D5DB',
+  },
+  btnChatAddText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#059669',
+  },
+  btnChatAddedText: {
+    color: '#6B7280',
+  },
+  chatQuickPromptsBar: {
+    paddingVertical: 6,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    backgroundColor: '#FFF',
+  },
+  chatQuickPromptChip: {
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  chatQuickPromptText: {
+    fontSize: 12,
+    color: '#374151',
+    fontWeight: '600',
+  },
+  chatInputBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#FFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+    gap: 8,
+  },
+  chatTextInput: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    fontSize: 13,
+    color: '#111827',
+  },
+  btnChatSend: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: BrandColors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
