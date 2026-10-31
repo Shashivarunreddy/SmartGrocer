@@ -1,0 +1,39 @@
+{
+  "name": "smartgrocer-e2e-testing",
+  "version": "1.0.0",
+  "description": "End-to-End Playwright & Cucumber BDD test suite for SmartGrocer full-stack (Web UI, Backend APIs, AI Service)",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "test:api": "cucumber-js --tags @api",
+    "test:ui": "cucumber-js --tags @ui",
+    "test:ai": "cucumber-js --tags @ai",
+    "test:e2e": "cucumber-js --tags @e2e",
+    "report": "node generate-report.js",
+    "test:all": "cucumber-js --exit || npm run report",
+    "test:coverage": "node run-coverage.js"
+  },
+  "keywords": [
+    "playwright",
+    "cucumber",
+    "bdd",
+    "smartgrocer",
+    "testing",
+    "e2e",
+    "api"
+  ],
+  "author": "SmartGrocer Team",
+  "license": "ISC",
+  "dependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "cucumber-html-reporter": "^7.1.1",
+    "dotenv": "^16.4.7",
+    "playwright": "^1.50.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^22.13.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

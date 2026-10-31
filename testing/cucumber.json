@@ -1,0 +1,17 @@
+{
+  "default": {
+    "requireModule": ["ts-node/register"],
+    "require": ["src/support/**/*.ts", "src/step-definitions/**/*.ts"],
+    "paths": ["src/features/**/*.feature"],
+    "format": [
+      "progress-bar",
+      "summary",
+      "json:reports/cucumber-report.json"
+    ],
+    "formatOptions": {
+      "snippetInterface": "async-await"
+    },
+    "parallel": 1
+  }
+}
+

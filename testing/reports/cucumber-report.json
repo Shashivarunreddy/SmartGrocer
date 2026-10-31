@@ -1,0 +1,2405 @@
+[
+  {
+    "description": "  As an authenticated SmartGrocer user\n  I want AI-powered grocery insights and pantry-based recipes\n  So that I never run out of essentials and minimize kitchen waste",
+    "elements": [
+      {
+        "description": "",
+        "id": "ai-recommendations,-replenishment-forecasting,-and-chef-gemini-apis;fetch-ai-replenishment-predictions",
+        "keyword": "Scenario",
+        "line": 10,
+        "name": "Fetch AI replenishment predictions",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 35497699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 18747899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I request replenishment predictions",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2187901799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "the response should contain predicted grocery items",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12301199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 13,
+            "name": "each prediction should include an urgency level and confidence score",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:42"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13463900
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 7556599
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@ai",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "ai-recommendations,-replenishment-forecasting,-and-chef-gemini-apis;request-food-waste-risk-analysis",
+        "keyword": "Scenario",
+        "line": 15,
+        "name": "Request food waste risk analysis",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3748999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 845100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 16,
+            "name": "I request food waste risk analysis",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:51"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1198599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 17,
+            "name": "the response should return evaluated pantry waste risks",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:61"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5406199
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2681099
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@ai",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "ai-recommendations,-replenishment-forecasting,-and-chef-gemini-apis;generate-zero-waste-chef-gemini-recipes",
+        "keyword": "Scenario",
+        "line": 19,
+        "name": "Generate zero-waste Chef Gemini recipes",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2905800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 399999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "I request chef recipes based on current pantry inventory",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:66"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2418099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 21,
+            "name": "the response should contain recipes with used pantry items and waste reduction scores",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:77"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6989799
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 27133799
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@ai",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "ai-recommendations,-replenishment-forecasting,-and-chef-gemini-apis;query-ai-assistant-chatbot-with-grocery-intent",
+        "keyword": "Scenario",
+        "line": 23,
+        "name": "Query AI Assistant chatbot with grocery intent",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2295399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 243800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 24,
+            "name": "I send a message \"What do I need to buy for dinner?\" to the AI Assistant",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:84"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2172000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 25,
+            "name": "the assistant reply should be relevant to groceries and food",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:91"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2153000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 26,
+            "name": "the response should not be refused",
+            "match": {
+              "location": "src\\step-definitions\\ai_steps.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1464200
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1940200
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@ai",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "ai-recommendations,-replenishment-forecasting,-and-chef-gemini-apis",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "AI Recommendations, Replenishment Forecasting, and Chef Gemini APIs",
+    "tags": [
+      {
+        "name": "@api",
+        "line": 1
+      },
+      {
+        "name": "@ai",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\api_ai_predictions.feature"
+  },
+  {
+    "description": "  As an authenticated or guest client\n  I want to check system health and browse products\n  So that I can view available UK groceries",
+    "elements": [
+      {
+        "description": "",
+        "id": "product-catalogue-&-backend-health-apis;verify-backend-service-health-probe",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Verify backend service health probe",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1813100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "I send a GET request to \"/health\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 310875700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:49"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2888299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "the response body should contain status \"ok\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:77"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3647600
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2024999
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@products",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "product-catalogue-&-backend-health-apis;retrieve-active-uk-product-catalogue",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Retrieve active UK product catalogue",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1427100
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "page",
+                      "1"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "pageSize",
+                      "20"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "When ",
+            "line": 13,
+            "name": "I send a GET request to \"/products\" with query parameters:",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:29"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1767808699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:49"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1343399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "the response should contain a list of products",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:81"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1802799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "the product count should be at least 1",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:85"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1791499
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1899199
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@products",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "product-catalogue-&-backend-health-apis;filter-products-by-search-keyword",
+        "keyword": "Scenario",
+        "line": 20,
+        "name": "Filter products by search keyword",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1912599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 21,
+            "name": "I send a GET request to \"/products\" with query parameter \"search\" as \"milk\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:40"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1089700600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 22,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:49"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1112399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 23,
+            "name": "every returned product name or category should match \"milk\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:89"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16408499
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1860700
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@products",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "product-catalogue-&-backend-health-apis;filter-products-by-category",
+        "keyword": "Scenario",
+        "line": 25,
+        "name": "Filter products by category",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1572000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 26,
+            "name": "I send a GET request to \"/products\" with query parameter \"category\" as \"Milks\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:40"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 59724599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 27,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:49"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1336699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 28,
+            "name": "every returned product category should contain \"Milk\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:102"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9237799
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2257799
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@products",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "product-catalogue-&-backend-health-apis;retrieve-single-product-details-by-valid-id",
+        "keyword": "Scenario",
+        "line": 30,
+        "name": "Retrieve single product details by valid ID",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1807599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 31,
+            "name": "I fetch the first available product ID",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:110"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 54718300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 32,
+            "name": "I send a GET request to \"/products/{productId}\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29823800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 33,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:49"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1499499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 34,
+            "name": "the product details should match the requested ID",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:118"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3135800
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2983799
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@products",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "product-catalogue-&-backend-health-apis",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Product Catalogue & Backend Health APIs",
+    "tags": [
+      {
+        "name": "@api",
+        "line": 1
+      },
+      {
+        "name": "@products",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\api_health_products.feature"
+  },
+  {
+    "description": "  As an authenticated SmartGrocer user\n  I want to track pantry items and log food consumption\n  So that I can prevent food waste and review spending analytics",
+    "elements": [
+      {
+        "description": "",
+        "id": "pantry-expiry-tracking-&-waste-analytics-apis;add-an-item-to-pantry-and-query-expiring-items",
+        "keyword": "Scenario",
+        "line": 10,
+        "name": "Add an item to pantry and query expiring items",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2875500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 292400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 11,
+            "name": "I pick an available product from the catalogue",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 54750900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I add the product to my pantry with expiry date in 3 days",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:191"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3049600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "the pantry item should be created successfully",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:199"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3288000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "I query expiring pantry items",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:203"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1107600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "the response should contain items expiring within 5 days",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:210"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4788300
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3396099
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@pantry",
+            "line": 1
+          },
+          {
+            "name": "@analytics",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "pantry-expiry-tracking-&-waste-analytics-apis;log-food-consumption-and-verify-inventory-deduction",
+        "keyword": "Scenario",
+        "line": 17,
+        "name": "Log food consumption and verify inventory deduction",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2636599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 287800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 18,
+            "name": "I pick an available product from the catalogue",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 55258400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 19,
+            "name": "I add the product to my pantry with quantity 2",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:195"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2637099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "I log consumption of 1 unit consumed and 1 unit wasted with reason \"Expired before use\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:216"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4611799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 21,
+            "name": "the consumption should be recorded with status 201",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:223"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3796299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 22,
+            "name": "the analytics summary should reflect total savings and waste avoidance metrics",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:227"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3679299
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3806099
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@pantry",
+            "line": 1
+          },
+          {
+            "name": "@analytics",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "pantry-expiry-tracking-&-waste-analytics-apis",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Pantry Expiry Tracking & Waste Analytics APIs",
+    "tags": [
+      {
+        "name": "@api",
+        "line": 1
+      },
+      {
+        "name": "@pantry",
+        "line": 1
+      },
+      {
+        "name": "@analytics",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\api_pantry_analytics.feature"
+  },
+  {
+    "description": "  As an authenticated SmartGrocer user\n  I want to create and manage shopping lists and estimate my bill\n  So that I can stay on budget during my grocery trips",
+    "elements": [
+      {
+        "description": "",
+        "id": "shopping-list-management-&-bill-estimation-apis;create-and-fetch-user-shopping-lists",
+        "keyword": "Scenario",
+        "line": 10,
+        "name": "Create and fetch user shopping lists",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3578800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 320400
+            }
+          },
+          {
+            "arguments": [
+              {
+                "content": "{\n  \"name\": \"E2E Test Weekly Run\",\n  \"budget\": 75,\n  \"currency\": \"GBP\"\n}",
+                "line": 12
+              }
+            ],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I send an authenticated POST request to \"/shopping-lists\" with payload:",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:122"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 63534900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 19,
+            "name": "the response status code should be 201 or 401",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:56"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4020200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 20,
+            "name": "the shopping list name should be \"E2E Test Weekly Run\" if authenticated",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:61"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4974299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 21,
+            "name": "the shopping list budget should be 75 if authenticated",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3758899
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3696900
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@shopping_lists",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "shopping-list-management-&-bill-estimation-apis;add-an-item,-update-quantity,-and-calculate-bill-estimate",
+        "keyword": "Scenario",
+        "line": 23,
+        "name": "Add an item, update quantity, and calculate bill estimate",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2779000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 355299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 24,
+            "name": "I have an active shopping list",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:146"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1350700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 25,
+            "name": "I pick an available product from the catalogue",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 54323899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 26,
+            "name": "I add the product to the shopping list with quantity 2",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:157"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2970799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 27,
+            "name": "the list item should be added successfully",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:161"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3048500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I calculate the bill estimate for the shopping list",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:165"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1568299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the estimate should return a positive total",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:173"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2668200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the estimate should contain budget adherence status",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:177"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2845999
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3030799
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@shopping_lists",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "shopping-list-management-&-bill-estimation-apis;enforce-bola-authorization-on-list-item-modification",
+        "keyword": "Scenario",
+        "line": 32,
+        "name": "Enforce BOLA authorization on list item modification",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2775400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I am authenticated as test user \"user1@gmail.com\"",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 318400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 33,
+            "name": "I have an active shopping list",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:146"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 204000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 34,
+            "name": "an unauthorized user attempts to delete a list item",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:181"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 55333800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 35,
+            "name": "the API should reject the request with 404 or 401",
+            "match": {
+              "location": "src\\step-definitions\\api_steps.ts:186"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2682099
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2439499
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 1
+          },
+          {
+            "name": "@shopping_lists",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "shopping-list-management-&-bill-estimation-apis",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Shopping List Management & Bill Estimation APIs",
+    "tags": [
+      {
+        "name": "@api",
+        "line": 1
+      },
+      {
+        "name": "@shopping_lists",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\api_shopping_lists.feature"
+  },
+  {
+    "description": "  As a shopper on the SmartGrocer Web App\n  I want to see the brand onboarding screen and log in with 1-click test credentials\n  So that I can immediately manage my groceries",
+    "elements": [
+      {
+        "description": "",
+        "id": "web-ui-authentication-&-test-user-onboarding;render-landing-hero-banner-and-quick-test-login-drawer",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Render landing hero banner and quick test login drawer",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 380394500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I navigate to the SmartGrocer Web App",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 74862999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "I should see the \"SmartGrocer\" branding with Leaf Basket icon",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3306899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "I should see the quick test login accounts \"User 1\" through \"User 10\"",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:29"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3298899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 11,
+            "name": "I should see the live bill predictor and expiry alerts badges",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:44"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1505300
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 34568899
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@auth",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "web-ui-authentication-&-test-user-onboarding;authenticate-using-seeded-test-account",
+        "keyword": "Scenario",
+        "line": 13,
+        "name": "Authenticate using seeded test account",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 118045000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 14,
+            "name": "I navigate to the SmartGrocer Web App",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11279300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 15,
+            "name": "I click the quick test login for \"User 1\"",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1618200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "I should be signed into the dashboard with my grocery overview",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1651299
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 12833499
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@auth",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "web-ui-authentication-&-test-user-onboarding",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Web UI Authentication & Test User Onboarding",
+    "tags": [
+      {
+        "name": "@ui",
+        "line": 1
+      },
+      {
+        "name": "@auth",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\ui_authentication.feature"
+  },
+  {
+    "description": "  As an authenticated SmartGrocer user\n  I want to browse and filter 1,000+ UK catalogue items\n  So that I can add items to my active shopping list",
+    "elements": [
+      {
+        "description": "",
+        "id": "web-ui-catalogue-search-&-product-filtering;browse-products-and-filter-by-category",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Browse products and filter by category",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 98406399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I navigate to the catalogue page",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13361399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "I should see the category filter pills including \"Dairy & Eggs\"",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:71"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2642599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 10,
+            "name": "I select the \"Dairy & Eggs\" category pill",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:80"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1235400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 11,
+            "name": "the displayed product cards should be updated with dairy items",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:87"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1452400
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 13400900
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@catalogue",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "web-ui-catalogue-search-&-product-filtering;live-search-and-one-click-add-to-cart",
+        "keyword": "Scenario",
+        "line": 13,
+        "name": "Live search and one-click add to cart",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 101090200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 14,
+            "name": "I navigate to the catalogue page",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11818199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 15,
+            "name": "I search for \"bread\" in the catalogue search box",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:91"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2475899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "the search results should display bread products",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:98"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2308600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 17,
+            "name": "I click \"+ Add\" on the first product card",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:102"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2149100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 18,
+            "name": "the button state should update to show the item is in my list",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:109"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2371700
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 12974299
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@catalogue",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "web-ui-catalogue-search-&-product-filtering",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Web UI Catalogue Search & Product Filtering",
+    "tags": [
+      {
+        "name": "@ui",
+        "line": 1
+      },
+      {
+        "name": "@catalogue",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\ui_catalogue.feature"
+  },
+  {
+    "description": "  As an authenticated SmartGrocer user\n  I want to view zero-waste recipes using my pantry items\n  And add missing ingredients directly to my active list",
+    "elements": [
+      {
+        "description": "",
+        "id": "web-ui-chef-gemini-recipes-&-one-tap-add;add-missing-ingredients-and-remove-box-from-recipe-card",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Add missing ingredients and remove box from recipe card",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 106935600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I navigate to the Chef AI page",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:148"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12820200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "I should see recipes with zero-waste scores and used pantry items",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:155"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2434500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 10,
+            "name": "I click \"Add Missing Ingredients to Shopping List\" on an eligible recipe",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:159"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1283999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 11,
+            "name": "the missing groceries section should be removed from that recipe card",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:166"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1666800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 12,
+            "name": "a confirmation badge \"Missing ingredients added\" should be displayed",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:170"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2252500
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 13801800
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@chef",
+            "line": 1
+          },
+          {
+            "name": "@ai",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "web-ui-chef-gemini-recipes-&-one-tap-add;open-floating-ai-assistant-from-any-screen",
+        "keyword": "Scenario",
+        "line": 14,
+        "name": "Open floating AI Assistant from any screen",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 105310999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "I navigate to the SmartGrocer Web App",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11189799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 16,
+            "name": "I click the floating \"Ask Chef Gemini\" button in the corner",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:174"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1629300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 17,
+            "name": "the AI Assistant chat drawer should open with quick prompt suggestions",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:178"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1647100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 18,
+            "name": "I select the quick prompt \"What do I need to buy?\"",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:182"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1181900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 19,
+            "name": "the conversation history should display the assistant recommendations",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:186"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1441000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 11591199
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@chef",
+            "line": 1
+          },
+          {
+            "name": "@ai",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "web-ui-chef-gemini-recipes-&-one-tap-add",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Web UI Chef Gemini Recipes & One-Tap Add",
+    "tags": [
+      {
+        "name": "@ui",
+        "line": 1
+      },
+      {
+        "name": "@chef",
+        "line": 1
+      },
+      {
+        "name": "@ai",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\ui_chef_gemini.feature"
+  },
+  {
+    "description": "  As a SmartGrocer household user\n  I want to view my pantry inventory with real-time expiry alerts\n  So that I can prevent food spoilage and log consumption",
+    "elements": [
+      {
+        "description": "",
+        "id": "web-ui---pantry-inventory-and-expiry-tracking;viewing-pantry-inventory-and-expiry-status-indicators",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Viewing pantry inventory and expiry status indicators",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 93851900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I navigate to the pantry page",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:190"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12638699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "I should see the pantry inventory list with expiry countdown badges",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:197"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1696100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "I should see filters for \"All\", \"Expiring Soon\", and \"Fresh\"",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:201"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4234500
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 11595400
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@pantry",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "web-ui---pantry-inventory-and-expiry-tracking;filtering-pantry-items-by-expiry-status",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Filtering pantry items by expiry status",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 104283400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "I navigate to the pantry page",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:190"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11405699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "I click the \"Expiring Soon\" pantry filter pill",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:217"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1901800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "only items with high spoilage risk should be visible",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:224"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1652400
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 11788600
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@pantry",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "web-ui---pantry-inventory-and-expiry-tracking",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Web UI - Pantry Inventory and Expiry Tracking",
+    "tags": [
+      {
+        "name": "@ui",
+        "line": 1
+      },
+      {
+        "name": "@pantry",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\ui_pantry_analytics.feature"
+  },
+  {
+    "description": "  As an authenticated SmartGrocer user\n  I want to review my shopping list, check off items, and track live bill estimates\n  So that I know my total cost before checking out",
+    "elements": [
+      {
+        "description": "",
+        "id": "web-ui-shopping-list-&-bill-predictor;live-bill-prediction-and-item-management",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Live bill prediction and item management",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 118926300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "I navigate to the active shopping list page",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11609599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "I should see the Live Bill Predictor with Subtotal and Target Budget",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:120"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1845599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "I should see the list items with checkboxes and quantity adjusters",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:124"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1511300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I click the checkbox on the first item",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:128"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 601599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "the item should be marked as purchased",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:132"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1201399
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 12961300
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@lists",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "web-ui-shopping-list-&-bill-predictor;complete-shopping-run-and-restock-pantry",
+        "keyword": "Scenario",
+        "line": 14,
+        "name": "Complete shopping run and restock pantry",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 109563399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "I navigate to the active shopping list page",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11923800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 16,
+            "name": "I click \"Complete Shopping Run\"",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:136"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1227599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 17,
+            "name": "the confirmation modal should appear with my actual total",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:140"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1664800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "the option to restock pantry should be selected",
+            "match": {
+              "location": "src\\step-definitions\\ui_steps.ts:144"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1352199
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 43572000
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@ui",
+            "line": 1
+          },
+          {
+            "name": "@lists",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "web-ui-shopping-list-&-bill-predictor",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Web UI Shopping List & Bill Predictor",
+    "tags": [
+      {
+        "name": "@ui",
+        "line": 1
+      },
+      {
+        "name": "@lists",
+        "line": 1
+      }
+    ],
+    "uri": "src\\features\\ui_shopping_lists.feature"
+  }
+]
