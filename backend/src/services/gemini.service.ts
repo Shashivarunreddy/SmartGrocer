@@ -209,7 +209,7 @@ Respond ONLY with a valid JSON array of recipes matching this structure:
 
     // Whitelist of valid domain topics: food, pantry, shopping, cooking, recipes, budgeting, or greetings
     const groceryIntentPattern =
-      /\b(need|buy|replenish|shop|shopping|grocer|grocery|groceries|food|pantry|stock|shelf|expir|expiry|spoil|waste|cook|cooking|recipe|recipes|meal|meals|eat|dinner|lunch|breakfast|snack|dish|ingredient|ingredients|budget|cost|costs|price|pricing|spend|spending|save|savings|bill|supermarket|tesco|sainsbury|asda|aldi|lidl|morrisons|cart|basket|item|items|hi|hello|hey|help|smartgrocer|diet|calorie|nutrition)\b/i;
+      /\b(need\w*|buy\w*|replenish\w*|shop\w*|grocer\w*|food\w*|pantry\w*|stock\w*|shelf\w*|shelves|expir\w*|spoil\w*|waste\w*|cook\w*|recipe\w*|meal\w*|eat\w*|dinner\w*|lunch\w*|breakfast\w*|snack\w*|dish\w*|ingredient\w*|budget\w*|cost\w*|price\w*|spend\w*|save\w*|saving\w*|bill\w*|supermarket\w*|tesco|sainsbury\w*|asda|aldi|lidl|morrisons|cart\w*|basket\w*|item\w*|product\w*|fridge|refrigerator|use-by|best-before|soon|hi|hello|hey|help|smartgrocer|diet\w*|calorie\w*|nutrition\w*)\b/i;
 
     // Obvious prompt injection / jailbreak patterns
     const injectionPattern =
@@ -267,9 +267,33 @@ Respond ONLY with a valid JSON array of recipes matching this structure:
       )
       .join("\n");
 
-    const pantrySummary = context.pantryItems
-      .slice(0, 20)
-      .map((p) => `- ${p.name} (${p.quantity} ${p.unit})`)
+    const now = Date.now();
+    const sortedPantry = [...context.pantryItems].sort((a, b) => {
+      if (!a.expiryDate) return 1;
+      if (!b.expiryDate) return -1;
+      return new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime();
+    });
+
+    const pantrySummary = sortedPantry
+      .slice(0, 25)
+      .map((p) => {
+        let expiryNote = "No expiry date";
+        if (p.expiryDate) {
+          const daysLeft = Math.round((new Date(p.expiryDate).getTime() - now) / (1000 * 60 * 60 * 24));
+          if (daysLeft < 0) {
+            expiryNote = `⚠️ EXPIRED ${Math.abs(daysLeft)}d ago`;
+          } else if (daysLeft === 0) {
+            expiryNote = `⚡ Expires TODAY`;
+          } else if (daysLeft <= 3) {
+            expiryNote = `⚡ Expires in ${daysLeft} days (CRITICAL)`;
+          } else if (daysLeft <= 7) {
+            expiryNote = `Expires in ${daysLeft} days (SOON)`;
+          } else {
+            expiryNote = `Expires in ${daysLeft} days`;
+          }
+        }
+        return `- ${p.name} (${p.quantity} ${p.unit}) -> [${expiryNote}]`;
+      })
       .join("\n");
 
     const listSummary = context.activeListItems
@@ -309,7 +333,7 @@ USER QUESTION: "${userMessage}"
 
 INSTRUCTIONS:
 1. When asked "What do I need?" or "What should I buy?", answer clearly starting with "You need this:" followed by the top depleted items from the Python demand predictions. Mention how many days until empty based on household consumption.
-2. If asked about expiring items or food waste, alert them to what is expiring soon and suggest a simple meal idea using them.
+2. When asked "What is expiring soon?" or about food waste, inspect the pantry stock and expiry dates listed above. Tell the user which items expire soonest and how many days they have left to consume them. If an item has already expired, warn them. Suggest cooking with these items today to avoid food waste.
 3. If asked about budget, let them know whether they are under or over their £${(context.budget || 75).toFixed(2)} budget.
 4. If asked for recipe ideas, use items from their current pantry.
 5. Keep answers friendly, conversational, concise (under 4 sentences), and always use GBP (£).`;
@@ -384,7 +408,41 @@ INSTRUCTIONS:
 
     const lower = userMessage.toLowerCase();
 
-    if (lower.includes("need") || lower.includes("buy") || lower.includes("replenish") || lower.includes("what")) {
+    if (lower.includes("expir") || lower.includes("waste") || lower.includes("spoil") || lower.includes("use-by") || lower.includes("shelf")) {
+      const now = Date.now();
+      const itemsWithDates = context.pantryItems
+        .filter((p) => p.expiryDate)
+        .map((p) => {
+          const days = Math.round((new Date(p.expiryDate).getTime() - now) / (1000 * 60 * 60 * 24));
+          return { name: p.name, days };
+        })
+        .sort((a, b) => a.days - b.days);
+
+      if (itemsWithDates.length > 0) {
+        const topExpiring = itemsWithDates.slice(0, 4).map((i) => {
+          if (i.days < 0) return `${i.name} (expired ${Math.abs(i.days)}d ago)`;
+          if (i.days === 0) return `${i.name} (expires TODAY!)`;
+          if (i.days === 1) return `${i.name} (expires tomorrow)`;
+          return `${i.name} (expires in ${i.days} days)`;
+        });
+
+        return {
+          reply: `Here are the items expiring soonest in your pantry:\n${topExpiring.map((s) => `• ${s}`).join("\n")}\n\nI recommend using these first to avoid food waste! Would you like a quick recipe using any of these?`,
+        };
+      }
+
+      if (context.pantryItems.length > 0) {
+        return {
+          reply: `You currently have ${context.pantryItems.length} items in your pantry, but none have an immediate expiration date recorded. They all appear stable!`,
+        };
+      }
+
+      return {
+        reply: "Your pantry is currently empty, so there are no expiring items. Once you complete a shopping trip, items and estimated shelf lives will be tracked here automatically!",
+      };
+    }
+
+    if (lower.includes("need") || lower.includes("buy") || lower.includes("replenish")) {
       if (context.replenishments.length > 0) {
         const top = context.replenishments.slice(0, 3);
         const names = top.map((r) => `${r.productName} (empty in ${r.estimatedDaysUntilDepleted}d)`).join(", ");
@@ -400,19 +458,6 @@ INSTRUCTIONS:
       }
       return {
         reply: "You're all stocked up on your usual essentials! Your pantry inventory looks solid for the next few days.",
-      };
-    }
-
-    if (lower.includes("expir") || lower.includes("waste") || lower.includes("spoil")) {
-      if (context.wasteRisks.length > 0) {
-        const exp = context.wasteRisks.slice(0, 3);
-        const details = exp.map((w) => `${w.productName} (expires in ${w.daysUntilExpiry}d)`).join(", ");
-        return {
-          reply: `Heads up! These items in your pantry are expiring soon: ${details}. I recommend using them in today's meals to prevent food waste.`,
-        };
-      }
-      return {
-        reply: "Good news! None of your pantry items are at immediate risk of expiring.",
       };
     }
 
