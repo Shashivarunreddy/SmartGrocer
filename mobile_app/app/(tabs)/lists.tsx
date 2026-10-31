@@ -64,7 +64,7 @@ export default function ListsScreen() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  const fetchActiveList = async () => {
+  const fetchActiveList = async (silent: boolean = false) => {
     if (!isSignedIn) {
       setActiveList(null);
       setAlternatives([]);
@@ -72,7 +72,9 @@ export default function ListsScreen() {
       return;
     }
     try {
-      setLoading(true);
+      if (!silent) {
+        setLoading(true);
+      }
       const [res, profileRes] = await Promise.all([
         api.getShoppingLists(),
         api.getProfile().catch(() => null),
@@ -83,33 +85,43 @@ export default function ListsScreen() {
         setUserTargetBudget(Number(profileRes.data.defaultBudget));
       }
 
-      if (lists.length > 0) {
-        const fullListRes = await api.getShoppingList(lists[0].id);
+      // Find an ACTIVE or DRAFT list (never pick a COMPLETED or ARCHIVED list)
+      const activeCandidate = lists.find(
+        (l) => l.status === 'ACTIVE' || l.status === 'DRAFT'
+      );
+
+      if (activeCandidate) {
+        const fullListRes = await api.getShoppingList(activeCandidate.id);
         setActiveList(fullListRes.data);
 
-        // Fetch estimate
-        const estimateRes = await api.estimateBill(lists[0].id).catch(() => null);
-        if (estimateRes?.data) {
-          setEstimate(estimateRes.data);
-        }
+        // Fetch estimate and alternatives in background without blocking
+        api.estimateBill(activeCandidate.id).then((estimateRes) => {
+          if (estimateRes?.data) {
+            setEstimate(estimateRes.data);
+          }
+        }).catch(() => null);
 
-        // Fetch AI alternative recommendations
-        const altsRes = await api.getAlternatives(lists[0].id).catch(() => null);
-        if (altsRes?.data?.substitutions) {
-          setAlternatives(altsRes.data.substitutions);
-          setSavings(altsRes.data.potentialTotalSavings || 0);
-        } else {
-          setAlternatives([]);
-          setSavings(0);
-        }
+        api.getAlternatives(activeCandidate.id).then((altsRes) => {
+          if (altsRes?.data?.substitutions) {
+            setAlternatives(altsRes.data.substitutions);
+            setSavings(altsRes.data.potentialTotalSavings || 0);
+          } else {
+            setAlternatives([]);
+            setSavings(0);
+          }
+        }).catch(() => null);
       } else {
         setActiveList(null);
+        setEstimate(null);
         setAlternatives([]);
+        setSavings(0);
       }
     } catch (err: any) {
       console.log('Error fetching list:', err.message);
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
     }
   };
 
@@ -166,18 +178,31 @@ export default function ListsScreen() {
     const newQty = currentQty + delta;
 
     if (newQty <= 0) {
-      await api.deleteListItem(activeList.id, item.id);
+      // Optimistically remove item from UI immediately
+      setActiveList((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          items: prev.items.filter((i) => i.id !== item.id),
+        };
+      });
       showToast(`Removed ${item.product?.name || 'item'}`);
+      await api.deleteListItem(activeList.id, item.id).catch(() => {});
+      fetchActiveList(true);
     } else {
-      await api.updateListItem(activeList.id, item.id, { quantity: newQty });
+      // Optimistically update quantity in UI immediately
+      setActiveList((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          items: prev.items.map((i) =>
+            i.id === item.id ? { ...i, quantity: newQty } : i
+          ),
+        };
+      });
+      await api.updateListItem(activeList.id, item.id, { quantity: newQty }).catch(() => {});
+      fetchActiveList(true);
     }
-    fetchActiveList();
-  };
-
-  const handleTogglePurchased = async (item: ListItem) => {
-    if (!activeList) return;
-    await api.updateListItem(activeList.id, item.id, { isPurchased: !item.isPurchased });
-    fetchActiveList();
   };
 
   const handleSwapItem = async (alt: AlternativeItem) => {
@@ -192,9 +217,9 @@ export default function ListsScreen() {
         await api.deleteListItem(activeList.id, originalItem.id);
       }
       showToast(`✓ Swapped to ${alt.suggestedProductName} (Saved £${alt.estimatedSavings.toFixed(2)})`);
-      fetchActiveList();
+      fetchActiveList(true);
     } catch (err: any) {
-      fetchActiveList();
+      fetchActiveList(true);
     } finally {
       setSwappingId(null);
     }
@@ -225,6 +250,12 @@ export default function ListsScreen() {
       });
 
       setShowCheckoutModal(false);
+      // Clear active list state immediately so user sees a clean empty state
+      setActiveList(null);
+      setEstimate(null);
+      setAlternatives([]);
+      setSavings(0);
+
       showToast('🎉 Shopping trip completed! Items restocked in Pantry.');
       Alert.alert(
         'Checkout Complete! 🎉',
@@ -279,7 +310,6 @@ export default function ListsScreen() {
   );
   const budget = userTargetBudget || Number(activeList?.budget) || 75;
   const isOverBudget = totalCalculated > budget;
-  const checkedItemsCount = items.filter((i) => i.isPurchased).length;
 
   return (
     <View style={styles.container}>
@@ -345,8 +375,8 @@ export default function ListsScreen() {
               <Text style={[styles.estimateAmount, isOverBudget && { color: BrandColors.accentRed }]}>
                 £{totalCalculated.toFixed(2)}
               </Text>
-              <Text style={styles.checkedCountText}>
-                {checkedItemsCount} of {items.length} in cart
+              <Text style={styles.itemCountText}>
+                {items.length} {items.length === 1 ? 'item' : 'items'} in list
               </Text>
             </View>
 
@@ -444,17 +474,7 @@ export default function ListsScreen() {
                 const lineTotal = unitPrice * itemQuantity;
 
                 return (
-                  <View style={[styles.itemCard, item.isPurchased && styles.itemCardPurchased]}>
-                    <TouchableOpacity
-                      style={styles.checkTouch}
-                      onPress={() => handleTogglePurchased(item)}>
-                      <Ionicons
-                        name={item.isPurchased ? 'checkbox' : 'square-outline'}
-                        size={22}
-                        color={item.isPurchased ? BrandColors.primary : '#9CA3AF'}
-                      />
-                    </TouchableOpacity>
-
+                  <View style={styles.itemCard}>
                     <Image
                       source={{
                         uri: product?.imageUrl || 'https://placehold.co/40x40/111/444?text=-',
@@ -463,9 +483,7 @@ export default function ListsScreen() {
                     />
 
                     <View style={styles.itemDetails}>
-                      <Text
-                        style={[styles.itemName, item.isPurchased && styles.itemNamePurchased]}
-                        numberOfLines={1}>
+                      <Text style={styles.itemName} numberOfLines={1}>
                         {product?.name || 'Item'}
                       </Text>
                       <Text style={styles.itemBrand}>
@@ -654,16 +672,29 @@ export default function ListsScreen() {
               {/* Items Snapshot */}
               <Text style={styles.inputSectionLabel}>Purchased Items ({items.length})</Text>
               <View style={styles.checkoutItemsBox}>
-                {items.map((it, idx) => (
-                  <View key={idx} style={styles.checkoutItemLine}>
-                    <Text style={styles.checkoutItemName} numberOfLines={1}>
-                      {it.quantity}x {it.product?.name}
-                    </Text>
-                    <Text style={styles.checkoutItemPrice}>
-                      £{((Number(it.product?.defaultUnitPrice) || 0) * (Number(it.quantity) || 1)).toFixed(2)}
-                    </Text>
-                  </View>
-                ))}
+                <ScrollView
+                  nestedScrollEnabled={true}
+                  style={styles.checkoutItemsScroll}
+                  showsVerticalScrollIndicator={true}>
+                  {items.map((it, idx) => (
+                    <View
+                      key={idx}
+                      style={[
+                        styles.checkoutItemLine,
+                        idx < items.length - 1 && styles.checkoutItemBorder,
+                      ]}>
+                      <View style={styles.checkoutQtyBadge}>
+                        <Text style={styles.checkoutQtyText}>{it.quantity}x</Text>
+                      </View>
+                      <Text style={styles.checkoutItemName} numberOfLines={1}>
+                        {it.product?.name}
+                      </Text>
+                      <Text style={styles.checkoutItemPrice}>
+                        £{((Number(it.product?.defaultUnitPrice) || 0) * (Number(it.quantity) || 1)).toFixed(2)}
+                      </Text>
+                    </View>
+                  ))}
+                </ScrollView>
               </View>
 
               {/* Store Notes */}
@@ -830,9 +861,9 @@ const styles = StyleSheet.create({
     color: BrandColors.dark,
     marginTop: 2,
   },
-  checkedCountText: {
+  itemCountText: {
     fontSize: 11,
-    color: '#059669',
+    color: '#4B5563',
     fontWeight: '600',
     marginTop: 2,
   },
@@ -939,13 +970,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E7EB',
   },
-  itemCardPurchased: {
-    opacity: 0.65,
-    backgroundColor: '#F9FAFB',
-  },
-  checkTouch: {
-    marginRight: 10,
-  },
   prodThumb: {
     width: 44,
     height: 44,
@@ -960,10 +984,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     color: BrandColors.dark,
-  },
-  itemNamePurchased: {
-    textDecorationLine: 'line-through',
-    color: '#6B7280',
   },
   itemBrand: {
     fontSize: 11,
@@ -1242,25 +1262,49 @@ const styles = StyleSheet.create({
   },
   checkoutItemsBox: {
     backgroundColor: '#F9FAFB',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 14,
-    maxHeight: 120,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  checkoutItemsScroll: {
+    maxHeight: 160,
   },
   checkoutItemLine: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 3,
+    paddingVertical: 7,
+  },
+  checkoutItemBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  checkoutQtyBadge: {
+    backgroundColor: '#E0E7FF',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  checkoutQtyText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#4338CA',
   },
   checkoutItemName: {
-    fontSize: 12,
-    color: '#4B5563',
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#374151',
     flex: 1,
     marginRight: 10,
   },
   checkoutItemPrice: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '700',
     color: '#111827',
   },
   modalTextInput: {

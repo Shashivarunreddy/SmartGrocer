@@ -35,8 +35,15 @@ export async function listShoppingLists(
 ): Promise<void> {
   try {
     const userId = req.userProfile!.id;
+    const { status } = req.query;
+
+    const where: Prisma.ShoppingListWhereInput = {
+      userId,
+      ...(status ? { status: status as any } : {}),
+    };
+
     const lists = await prisma.shoppingList.findMany({
-      where: { userId },
+      where,
       include: {
         _count: { select: { items: true } },
         items: {

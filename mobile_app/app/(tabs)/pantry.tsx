@@ -22,14 +22,16 @@ export default function PantryScreen() {
   const [filter, setFilter] = useState<'all' | 'expiring'>('all');
   const [loading, setLoading] = useState(true);
 
-  const fetchPantry = async () => {
+  const fetchPantry = async (silent: boolean = false) => {
     if (!isSignedIn) {
       setItems([]);
       setLoading(false);
       return;
     }
     try {
-      setLoading(true);
+      if (!silent) {
+        setLoading(true);
+      }
       if (filter === 'expiring') {
         const res = await api.getExpiringPantryItems();
         setItems(res.data || []);
@@ -40,13 +42,15 @@ export default function PantryScreen() {
     } catch (err: any) {
       console.log('Error fetching pantry:', err.message);
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
     }
   };
 
   useFocusEffect(
     useCallback(() => {
-      fetchPantry();
+      fetchPantry(false);
     }, [filter])
   );
 
@@ -58,10 +62,18 @@ export default function PantryScreen() {
         'Item Consumed',
         `Did you finish ${item.product?.name}? Would you like to add it back to your shopping list?`,
         [
-          { text: 'Just Remove', onPress: () => deleteItem(item.id) },
+          {
+            text: 'Just Remove',
+            onPress: () => {
+              // Optimistically remove
+              setItems((prev) => prev.filter((i) => i.id !== item.id));
+              deleteItem(item.id);
+            },
+          },
           {
             text: 'Add to List & Remove',
             onPress: async () => {
+              setItems((prev) => prev.filter((i) => i.id !== item.id));
               await deleteItem(item.id);
               const lists = await api.getShoppingLists().catch(() => ({ data: [] }));
               if (lists.data && lists.data.length > 0) {
@@ -73,14 +85,18 @@ export default function PantryScreen() {
         ]
       );
     } else {
-      await api.updatePantryItem(item.id, { quantity: newQty });
-      fetchPantry();
+      // Optimistically update quantity in UI
+      setItems((prev) =>
+        prev.map((i) => (i.id === item.id ? { ...i, quantity: newQty } : i))
+      );
+      await api.updatePantryItem(item.id, { quantity: newQty }).catch(() => {});
+      fetchPantry(true);
     }
   };
 
   const deleteItem = async (pantryItemId: string) => {
-    await api.deletePantryItem(pantryItemId);
-    fetchPantry();
+    await api.deletePantryItem(pantryItemId).catch(() => {});
+    fetchPantry(true);
   };
 
   return (

@@ -74,7 +74,7 @@ export async function recordShoppingTrip(
         },
       });
 
-      // 2. If linked to shopping list, update list to COMPLETED
+      // 2. If linked to shopping list, update list to COMPLETED and clear its items
       if (shoppingListId) {
         await tx.shoppingList.updateMany({
           where: { id: shoppingListId, userId },
@@ -82,6 +82,11 @@ export async function recordShoppingTrip(
             status: "COMPLETED",
             completedAt: new Date(),
           },
+        });
+
+        // Clear items from the completed shopping list so the active list becomes clean/empty
+        await tx.shoppingListItem.deleteMany({
+          where: { shoppingListId },
         });
       }
 

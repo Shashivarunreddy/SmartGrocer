@@ -62,31 +62,35 @@ export default function HomeScreen() {
       setExpiringItems(pantryRes?.data || []);
 
       const lists = listsRes?.data || [];
-      if (lists.length > 0) {
-        const first = lists[0];
-        setActiveListId(first.id);
-        const items = first.items || [];
+      const activeCandidate = lists.find(
+        (l: any) => l.status === 'ACTIVE' || l.status === 'DRAFT'
+      );
+
+      const currentBudget =
+        !isNaN(profileBudget) && profileBudget > 0
+          ? profileBudget
+          : (activeCandidate && Number(activeCandidate.budget)) || 75;
+
+      if (activeCandidate && activeCandidate.items && activeCandidate.items.length > 0) {
+        setActiveListId(activeCandidate.id);
+        const items = activeCandidate.items;
         const totalCalculated = items.reduce(
           (sum: number, i: any) =>
             sum + (Number(i.product?.defaultUnitPrice) || 0) * (Number(i.quantity) || 1),
           0
         );
 
-        const currentBudget =
-          !isNaN(profileBudget) && profileBudget > 0
-            ? profileBudget
-            : Number(first.budget) || 75;
-
         setStats({
-          activeListCount: items.length || first._count?.items || 0,
+          activeListCount: items.length || activeCandidate._count?.items || 0,
           estimatedTotal: Number(totalCalculated.toFixed(2)),
           budget: currentBudget,
         });
       } else {
+        setActiveListId(null);
         setStats({
           activeListCount: 0,
           estimatedTotal: 0,
-          budget: !isNaN(profileBudget) && profileBudget > 0 ? profileBudget : 75,
+          budget: currentBudget,
         });
       }
     } catch (err) {

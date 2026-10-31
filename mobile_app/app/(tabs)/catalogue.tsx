@@ -102,14 +102,17 @@ export default function CatalogueScreen() {
   const syncBasket = async () => {
     try {
       const res = await api.getShoppingLists();
-      if (res.data && res.data.length > 0) {
-        const first = res.data[0];
-        setActiveListId(first.id);
+      const active = res.data?.find((l) => l.status === 'ACTIVE' || l.status === 'DRAFT');
+      if (active) {
+        setActiveListId(active.id);
         const map: Record<string, number> = {};
-        for (const item of first.items || []) {
+        for (const item of active.items || []) {
           map[item.productId] = Number(item.quantity) || 1;
         }
         setBasketCounts(map);
+      } else {
+        setActiveListId(null);
+        setBasketCounts({});
       }
     } catch {
       // ignore
@@ -141,8 +144,9 @@ export default function CatalogueScreen() {
       let listId = activeListId;
       if (!listId) {
         const res = await api.getShoppingLists();
-        if (res.data && res.data.length > 0) {
-          listId = res.data[0].id;
+        const active = res.data?.find((l) => l.status === 'ACTIVE' || l.status === 'DRAFT');
+        if (active) {
+          listId = active.id;
           setActiveListId(listId);
         } else {
           const newList = await api.createShoppingList('My Weekly Grocery', 75, 'GBP');

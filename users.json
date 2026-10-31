@@ -3,60 +3,60 @@
     "firstName": "User",
     "lastName": "One",
     "email": "user1@gmail.com",
-    "password": "Password@1"
+    "password": "GrocerPass@1"
   },
   {
     "firstName": "User",
     "lastName": "Two",
     "email": "user2@gmail.com",
-    "password": "Password@2"
+    "password": "GrocerPass@2"
   },
   {
     "firstName": "User",
     "lastName": "Three",
     "email": "user3@gmail.com",
-    "password": "Password@3"
+    "password": "GrocerPass@3"
   },
   {
     "firstName": "User",
     "lastName": "Four",
     "email": "user4@gmail.com",
-    "password": "Password@4"
+    "password": "GrocerPass@4"
   },
   {
     "firstName": "User",
     "lastName": "Five",
     "email": "user5@gmail.com",
-    "password": "Password@5"
+    "password": "GrocerPass@5"
   },
   {
     "firstName": "User",
     "lastName": "Six",
     "email": "user6@gmail.com",
-    "password": "Password@6"
+    "password": "GrocerPass@6"
   },
   {
     "firstName": "User",
     "lastName": "Seven",
     "email": "user7@gmail.com",
-    "password": "Password@7"
+    "password": "GrocerPass@7"
   },
   {
     "firstName": "User",
     "lastName": "Eight",
     "email": "user8@gmail.com",
-    "password": "Password@8"
+    "password": "GrocerPass@8"
   },
   {
     "firstName": "User",
     "lastName": "Nine",
     "email": "user9@gmail.com",
-    "password": "Password@9"
+    "password": "GrocerPass@9"
   },
   {
     "firstName": "User",
     "lastName": "Ten",
     "email": "user10@gmail.com",
-    "password": "Password@10"
+    "password": "GrocerPass@10"
   }
 ]
