@@ -169,9 +169,11 @@ export async function logConsumption(
         },
       });
 
-      // 2. Decrement or remove from pantry if linked
+      // 2. Decrement or remove from pantry if linked (verifying ownership)
       if (pantryItemId) {
-        const item = await tx.pantryItem.findUnique({ where: { id: pantryItemId } });
+        const item = await tx.pantryItem.findFirst({
+          where: { id: pantryItemId, userId },
+        });
         if (item) {
           const totalLogged = quantityConsumed + quantityWasted;
           const currentQty = Number(item.quantity);

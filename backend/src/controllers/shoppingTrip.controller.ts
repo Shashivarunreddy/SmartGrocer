@@ -74,20 +74,26 @@ export async function recordShoppingTrip(
         },
       });
 
-      // 2. If linked to shopping list, update list to COMPLETED and clear its items
+      // 2. If linked to shopping list, verify tenant ownership, update list to COMPLETED, and clear its items
       if (shoppingListId) {
-        await tx.shoppingList.updateMany({
+        const userList = await tx.shoppingList.findFirst({
           where: { id: shoppingListId, userId },
-          data: {
-            status: "COMPLETED",
-            completedAt: new Date(),
-          },
         });
 
-        // Clear items from the completed shopping list so the active list becomes clean/empty
-        await tx.shoppingListItem.deleteMany({
-          where: { shoppingListId },
-        });
+        if (userList) {
+          await tx.shoppingList.update({
+            where: { id: shoppingListId },
+            data: {
+              status: "COMPLETED",
+              completedAt: new Date(),
+            },
+          });
+
+          // Clear items only from the verified shopping list belonging to this user
+          await tx.shoppingListItem.deleteMany({
+            where: { shoppingListId: userList.id },
+          });
+        }
       }
 
       // 3. If updatePantry is true, add or replenish pantry stock with automated shelf-life estimation

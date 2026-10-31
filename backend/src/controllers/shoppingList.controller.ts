@@ -333,6 +333,15 @@ export async function updateListItem(
       return;
     }
 
+    const existingItem = await prisma.shoppingListItem.findFirst({
+      where: { id: itemId, shoppingListId: listId },
+    });
+
+    if (!existingItem) {
+      res.status(404).json({ code: "ITEM_NOT_FOUND", message: "Item not found in shopping list." });
+      return;
+    }
+
     const updated = await prisma.shoppingListItem.update({
       where: { id: itemId },
       data: {
@@ -364,6 +373,15 @@ export async function deleteListItem(
 
     if (!list) {
       res.status(404).json({ code: "LIST_NOT_FOUND", message: "Shopping list not found." });
+      return;
+    }
+
+    const existingItem = await prisma.shoppingListItem.findFirst({
+      where: { id: itemId, shoppingListId: listId },
+    });
+
+    if (!existingItem) {
+      res.status(404).json({ code: "ITEM_NOT_FOUND", message: "Item not found in shopping list." });
       return;
     }
 

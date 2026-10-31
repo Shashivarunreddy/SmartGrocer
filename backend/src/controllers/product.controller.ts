@@ -2,13 +2,28 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "../config/prisma";
 import { Prisma } from "@prisma/client";
 
-// Simple high-performance in-memory cache with 60s TTL
+// High-performance bounded in-memory cache with LRU eviction and 60s TTL
 interface CacheEntry {
   data: any;
   expiresAt: number;
 }
+const MAX_CACHE_ENTRIES = 500;
 const productCache = new Map<string, CacheEntry>();
 const CACHE_TTL_MS = 60 * 1000; // 60 seconds
+
+function setInCache(key: string, data: any): void {
+  // Enforce bounded cache size to prevent memory exhaustion attacks
+  if (productCache.size >= MAX_CACHE_ENTRIES) {
+    const oldestKey = productCache.keys().next().value;
+    if (oldestKey) {
+      productCache.delete(oldestKey);
+    }
+  }
+  productCache.set(key, {
+    data,
+    expiresAt: Date.now() + CACHE_TTL_MS,
+  });
+}
 
 export async function listProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
@@ -74,11 +89,8 @@ export async function listProducts(req: Request, res: Response, next: NextFuncti
       },
     };
 
-    // Store in cache
-    productCache.set(cacheKey, {
-      data: responsePayload,
-      expiresAt: Date.now() + CACHE_TTL_MS,
-    });
+    // Store in bounded cache
+    setInCache(cacheKey, responsePayload);
 
     res.status(200).json(responsePayload);
   } catch (error) {

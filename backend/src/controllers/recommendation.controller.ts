@@ -36,8 +36,9 @@ export async function getAlternativeSuggestions(
   next: NextFunction
 ): Promise<void> {
   try {
+    const userId = req.userProfile!.id;
     const { listId } = req.params;
-    const result = await aiService.getAlternativesForList(listId);
+    const result = await aiService.getAlternativesForList(listId, userId);
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);

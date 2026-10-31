@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import rateLimit from "express-rate-limit";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../config/prisma";
 import { adminAuth } from "../middlewares/adminAuth";
@@ -7,7 +8,20 @@ import path from "path";
 
 const adminRouter = Router();
 
-// Protect all /admin endpoints with Basic Authentication
+// Rate limit admin access to mitigate brute-force credential attacks (SEC-07)
+const adminRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // 50 requests per 15 minutes per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: "Too many admin requests from this IP. Please try again after 15 minutes.",
+  },
+});
+
+// Protect all /admin endpoints with Rate Limiting and Basic Authentication
+adminRouter.use(adminRateLimiter);
 adminRouter.use(adminAuth);
 
 /**

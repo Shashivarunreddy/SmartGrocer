@@ -301,15 +301,15 @@ class AIService {
   /**
    * Finds cheaper product alternatives for a shopping list.
    */
-  async getAlternativesForList(listId: string): Promise<{
+  async getAlternativesForList(listId: string, userId?: string): Promise<{
     source: "AI_SERVICE" | "RULE_BASED_FALLBACK";
     potentialTotalSavings: number;
     substitutions: AlternativeItem[];
     summary: string;
   }> {
     const [list, catalogue] = await Promise.all([
-      prisma.shoppingList.findUnique({
-        where: { id: listId },
+      prisma.shoppingList.findFirst({
+        where: { id: listId, ...(userId && { userId }) },
         include: { items: { include: { product: true } } },
       }),
       prisma.product.findMany({ where: { isActive: true } }),
