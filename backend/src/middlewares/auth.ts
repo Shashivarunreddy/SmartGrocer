@@ -37,13 +37,34 @@ export async function requireAuth(
     });
 
     if (!userProfile) {
-      userProfile = await prisma.userProfile.create({
-        data: {
-          clerkUserId,
-          householdSize: 1,
-          currency: "GBP",
-        },
+      try {
+        userProfile = await prisma.userProfile.upsert({
+          where: { clerkUserId },
+          update: {},
+          create: {
+            clerkUserId,
+            householdSize: 1,
+            currency: "GBP",
+          },
+        });
+      } catch (err: any) {
+        // Handle race condition when multiple parallel requests try to create the profile simultaneously
+        if (err.code === "P2002" || err.message?.includes("Unique constraint")) {
+          userProfile = await prisma.userProfile.findUnique({
+            where: { clerkUserId },
+          });
+        } else {
+          throw err;
+        }
+      }
+    }
+
+    if (!userProfile) {
+      res.status(500).json({
+        code: "USER_PROFILE_NOT_FOUND",
+        message: "Failed to initialize or retrieve user profile.",
       });
+      return;
     }
 
     req.userProfile = userProfile;

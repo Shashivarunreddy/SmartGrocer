@@ -17,44 +17,58 @@ async function main() {
   console.log(`Found ${products.length} products to seed.`);
 
   let count = 0;
-  for (const p of products) {
-    if (!p.code || !p.product_name) continue;
+  const CHUNK_SIZE = 25;
 
-    const tags = Array.isArray(p.categories_tags_en) ? p.categories_tags_en : [];
-    const mainCategory = tags.length > 0 ? tags[tags.length - 1] : "Groceries";
+  for (let i = 0; i < products.length; i += CHUNK_SIZE) {
+    const chunk = products.slice(i, i + CHUNK_SIZE);
 
-    await prisma.product.upsert({
-      where: { code: String(p.code) },
-      update: {
-        name: p.product_name,
-        brands: p.brands || null,
-        category: mainCategory,
-        categoriesTags: tags,
-        imageUrl: p.image_url || null,
-        unit: p.product_quantity_unit || "piece",
-        productQuantity: p.product_quantity ? new Prisma.Decimal(p.product_quantity) : null,
-        defaultUnitPrice: new Prisma.Decimal(p.price && p.price !== "" ? p.price : 1.99),
-        currency: p.currency || "GBP",
-        isActive: true,
-        isFood: true,
-      },
-      create: {
-        code: String(p.code),
-        name: p.product_name,
-        brands: p.brands || null,
-        category: mainCategory,
-        categoriesTags: tags,
-        imageUrl: p.image_url || null,
-        unit: p.product_quantity_unit || "piece",
-        productQuantity: p.product_quantity ? new Prisma.Decimal(p.product_quantity) : null,
-        defaultUnitPrice: new Prisma.Decimal(p.price && p.price !== "" ? p.price : 1.99),
-        currency: p.currency || "GBP",
-        isActive: true,
-        isFood: true,
-      },
-    });
+    await Promise.all(
+      chunk.map(async (p: any) => {
+        if (!p.code || !p.product_name) return;
 
-    count++;
+        const tags = Array.isArray(p.categories_tags_en) ? p.categories_tags_en : [];
+        const mainCategory = tags.length > 0 ? tags[tags.length - 1] : "Groceries";
+
+        await prisma.product.upsert({
+          where: { code: String(p.code) },
+          update: {
+            name: p.product_name,
+            brands: p.brands || null,
+            category: mainCategory,
+            categoriesTags: tags,
+            imageUrl: p.image_url || null,
+            unit: p.product_quantity_unit || "piece",
+            productQuantity: p.product_quantity ? new Prisma.Decimal(p.product_quantity) : null,
+            defaultUnitPrice: new Prisma.Decimal(
+              p.price !== undefined && p.price !== null && p.price !== "" ? p.price : 1.99
+            ),
+            currency: p.currency || "GBP",
+            isActive: true,
+            isFood: true,
+          },
+          create: {
+            code: String(p.code),
+            name: p.product_name,
+            brands: p.brands || null,
+            category: mainCategory,
+            categoriesTags: tags,
+            imageUrl: p.image_url || null,
+            unit: p.product_quantity_unit || "piece",
+            productQuantity: p.product_quantity ? new Prisma.Decimal(p.product_quantity) : null,
+            defaultUnitPrice: new Prisma.Decimal(
+              p.price !== undefined && p.price !== null && p.price !== "" ? p.price : 1.99
+            ),
+            currency: p.currency || "GBP",
+            isActive: true,
+            isFood: true,
+          },
+        });
+
+        count++;
+      })
+    );
+
+    console.log(`Seeded ${count}/${products.length} products...`);
   }
 
   console.log(`Successfully seeded ${count} products into the database.`);
