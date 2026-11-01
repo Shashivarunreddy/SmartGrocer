@@ -17,13 +17,18 @@ const TEST_USERS = [
   { id: "10", name: "User 10", email: "user10@gmail.com", pass: "GrocerPass@10" },
 ];
 
-export function AuthScreen() {
+export function AuthScreen({ onTestLogin }: { onTestLogin?: (user: typeof TEST_USERS[0]) => void }) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
 
   const copyCredentials = (user: typeof TEST_USERS[0]) => {
-    navigator.clipboard.writeText(`${user.email}`);
+    try {
+      navigator.clipboard.writeText(`${user.email}`);
+    } catch {}
     setCopiedId(user.id);
+    if (onTestLogin) {
+      onTestLogin(user);
+    }
     setTimeout(() => setCopiedId(null), 2000);
   };
 

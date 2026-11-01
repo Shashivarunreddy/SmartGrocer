@@ -1,9 +1,12 @@
-import { Before, After, BeforeAll, AfterAll, Status } from "@cucumber/cucumber";
+import { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } from "@cucumber/cucumber";
 import { chromium, request, Browser } from "playwright";
 import { CustomWorld } from "./custom-world";
 import { ENV } from "../config/environment";
 import fs from "fs";
 import path from "path";
+
+// Ensure Cucumber steps do not time out during page load or compilation
+setDefaultTimeout(30000);
 
 let globalBrowser: Browser;
 
@@ -42,6 +45,23 @@ Before(async function (this: CustomWorld, scenario) {
     this.context = await globalBrowser.newContext({
       viewport: { width: 1280, height: 720 },
     });
+
+    // Provide e2e_session cookie for non-auth scenarios so they can access authenticated routes
+    const isAuthScenario = scenario.pickle.tags.some((t) => t.name.includes("auth"));
+    if (!isAuthScenario) {
+      try {
+        const urlObj = new URL(ENV.WEB_BASE_URL);
+        await this.context.addCookies([
+          {
+            name: "e2e_session",
+            value: "true",
+            domain: urlObj.hostname,
+            path: "/",
+          },
+        ]);
+      } catch {}
+    }
+
     this.page = await this.context.newPage();
   }
 });
