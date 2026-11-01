@@ -13,7 +13,7 @@ Feature: Web UI Chef Gemini Recipes & One-Tap Add
 
   Scenario: Open floating AI Assistant from any screen
     Given I navigate to the SmartGrocer Web App
-    When I click the floating "Ask Chef Gemini" button in the corner
+    When I click the floating "Ask AI" button in the corner
     Then the AI Assistant chat drawer should open with quick prompt suggestions
     When I select the quick prompt "What do I need to buy?"
     Then the conversation history should display the assistant recommendations

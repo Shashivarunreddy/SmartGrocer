@@ -1,7 +1,13 @@
 // SmartGrocer API Client for Web App
 // Replicates mobile_app/services/api.ts with Clerk Bearer token integration
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://65.0.242.245:5000/api/v1";
+function getApiBaseUrl(): string {
+  // When running over HTTPS (such as on Vercel), route requests through the same-origin Next.js proxy to prevent Mixed Content blocking
+  if (typeof window !== "undefined" && window.location.protocol === "https:") {
+    return "/api/proxy";
+  }
+  return process.env.NEXT_PUBLIC_API_URL || "http://65.0.242.245:5000/api/v1";
+}
 
 let authTokenGetter: (() => Promise<string | null>) | null = null;
 
@@ -223,7 +229,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     throw new Error("Authentication token is missing. Please sign in via Clerk.");
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const response = await fetch(`${getApiBaseUrl()}${endpoint}`, {
     ...options,
     headers,
   });
