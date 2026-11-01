@@ -246,77 +246,112 @@ export default function ListsPage() {
                 {items.map((item) => {
                   const unitPrice = Number(item.product?.defaultUnitPrice || 1.99);
                   const lineTotal = unitPrice * Number(item.quantity);
+                  const matchingAlt = alternatives.find(
+                    (a) =>
+                      a.originalProductId === item.productId ||
+                      (a.originalProductName &&
+                        item.product?.name &&
+                        item.product.name.toLowerCase().includes(a.originalProductName.toLowerCase()))
+                  );
 
                   return (
                     <div
                       key={item.id}
-                      className={`py-3.5 flex items-center justify-between gap-3 transition-opacity ${
+                      className={`py-3.5 transition-opacity ${
                         item.isPurchased ? "opacity-50" : "opacity-100"
                       }`}
                     >
-                      {/* Checkbox & Product Name */}
-                      <div className="flex items-center gap-3 min-w-0">
-                        <button
-                          type="button"
-                          onClick={() => handleTogglePurchased(item)}
-                          className="text-[#84C225] hover:text-[#689F38] cursor-pointer shrink-0"
-                        >
-                          {item.isPurchased ? (
-                            <CheckCircle2 className="w-5 h-5 fill-emerald-100 text-[#84C225]" />
-                          ) : (
-                            <Circle className="w-5 h-5 text-gray-300" />
-                          )}
-                        </button>
-
-                        <div className="min-w-0">
-                          <h4
-                            className={`text-xs sm:text-sm font-bold text-gray-900 truncate ${
-                              item.isPurchased ? "line-through text-gray-400" : ""
-                            }`}
+                      <div className="flex items-center justify-between gap-3">
+                        {/* Checkbox & Product Name */}
+                        <div className="flex items-center gap-3 min-w-0">
+                          <button
+                            type="button"
+                            onClick={() => handleTogglePurchased(item)}
+                            className="text-[#84C225] hover:text-[#689F38] cursor-pointer shrink-0"
                           >
-                            {item.product?.name || "Product"}
-                          </h4>
-                          <span className="text-[11px] text-gray-400 font-medium">
-                            £{unitPrice.toFixed(2)} each • {item.product?.category || "Pantry"}
+                            {item.isPurchased ? (
+                              <CheckCircle2 className="w-5 h-5 fill-emerald-100 text-[#84C225]" />
+                            ) : (
+                              <Circle className="w-5 h-5 text-gray-300" />
+                            )}
+                          </button>
+
+                          <div className="min-w-0">
+                            <h4
+                              className={`text-xs sm:text-sm font-bold text-gray-900 truncate ${
+                                item.isPurchased ? "line-through text-gray-400" : ""
+                              }`}
+                            >
+                              {item.product?.name || "Product"}
+                            </h4>
+                            <span className="text-[11px] text-gray-400 font-medium">
+                              £{unitPrice.toFixed(2)} each • {item.product?.category || "Pantry"}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Quantity Controller & Price */}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateQuantity(item, -1)}
+                              className="px-2.5 py-1 text-xs font-bold text-gray-600 hover:bg-gray-100 cursor-pointer"
+                            >
+                              -
+                            </button>
+                            <span className="px-2 text-xs font-bold text-gray-800">
+                              {item.quantity}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateQuantity(item, 1)}
+                              className="px-2.5 py-1 text-xs font-bold text-gray-600 hover:bg-gray-100 cursor-pointer"
+                            >
+                              +
+                            </button>
+                          </div>
+
+                          <span className="text-xs sm:text-sm font-black text-gray-900 w-16 text-right">
+                            £{lineTotal.toFixed(2)}
                           </span>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteItem(item.id)}
+                            className="p-1.5 text-gray-300 hover:text-red-500 transition-colors cursor-pointer"
+                            title="Remove item"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
 
-                      {/* Quantity Controller & Price */}
-                      <div className="flex items-center gap-3 shrink-0">
-                        <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
+                      {/* Automated Cheaper Brand Alternative Savings Chip */}
+                      {matchingAlt && !item.isPurchased && (
+                        <div className="mt-2.5 ml-8 p-3 rounded-2xl bg-amber-50/90 border border-amber-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
+                          <div className="space-y-0.5 min-w-0">
+                            <div className="flex items-center gap-1.5 text-xs font-black text-amber-900">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                              <span>Cheaper Own-Brand Alternative</span>
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black">
+                                Save £{Number(matchingAlt.estimatedSavings).toFixed(2)}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-gray-600 font-medium truncate">
+                              Swap with <span className="font-bold text-gray-900">{matchingAlt.suggestedProductName}</span> (£{Number(matchingAlt.suggestedPrice).toFixed(2)})
+                            </p>
+                          </div>
+
                           <button
                             type="button"
-                            onClick={() => handleUpdateQuantity(item, -1)}
-                            className="px-2.5 py-1 text-xs font-bold text-gray-600 hover:bg-gray-100 cursor-pointer"
+                            onClick={() => handleApplyAlternative(matchingAlt)}
+                            className="px-3.5 py-1.5 rounded-xl bg-[#84C225] hover:bg-[#689F38] text-white text-xs font-bold shrink-0 transition-all shadow-2xs hover:shadow-sm cursor-pointer self-start sm:self-auto"
                           >
-                            -
-                          </button>
-                          <span className="px-2 text-xs font-bold text-gray-800">
-                            {item.quantity}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleUpdateQuantity(item, 1)}
-                            className="px-2.5 py-1 text-xs font-bold text-gray-600 hover:bg-gray-100 cursor-pointer"
-                          >
-                            +
+                            Swap Now
                           </button>
                         </div>
-
-                        <span className="text-xs sm:text-sm font-black text-gray-900 w-16 text-right">
-                          £{lineTotal.toFixed(2)}
-                        </span>
-
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteItem(item.id)}
-                          className="p-1.5 text-gray-300 hover:text-red-500 transition-colors cursor-pointer"
-                          title="Remove item"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                      )}
                     </div>
                   );
                 })}

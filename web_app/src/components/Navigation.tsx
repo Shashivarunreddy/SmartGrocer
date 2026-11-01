@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser, useAuth, SignInButton, SignUpButton, SignOutButton } from "@clerk/nextjs";
@@ -14,6 +14,7 @@ import {
   LogOut,
   ShoppingBasket,
   LogIn,
+  Download,
 } from "lucide-react";
 
 const AUTH_NAV_ITEMS = [
@@ -34,6 +35,28 @@ export function Navigation() {
   const pathname = usePathname();
   const { user } = useUser();
   const { isSignedIn, isLoaded } = useAuth();
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstall = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") {
+      setIsInstallable(false);
+    }
+    setDeferredPrompt(null);
+  };
 
   const navItems = isSignedIn ? AUTH_NAV_ITEMS : PUBLIC_NAV_ITEMS;
 
@@ -85,6 +108,17 @@ export function Navigation() {
 
           {/* User Bar & Auth Actions */}
           <div className="flex items-center gap-2.5">
+            {isInstallable && (
+              <button
+                type="button"
+                onClick={handleInstallClick}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F8E9] text-[#689F38] border border-[#C5E1A5] text-xs font-bold hover:bg-[#84C225] hover:text-white transition-all cursor-pointer shadow-2xs"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Install App</span>
+              </button>
+            )}
+
             {isLoaded && isSignedIn && user && (
               <>
                 <Link

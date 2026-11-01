@@ -125,7 +125,12 @@ export function AIChatModal() {
     setLoading(true);
 
     try {
-      const res = await api.chatWithAssistant(query);
+      const recentHistory = messages
+        .filter((m) => m.id !== "welcome")
+        .slice(-6)
+        .map((m) => ({ role: m.role, text: m.text }));
+
+      const res = await api.chatWithAssistant(query, recentHistory);
       const assistantMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",

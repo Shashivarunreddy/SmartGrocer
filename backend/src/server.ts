@@ -1,6 +1,7 @@
 import app from "./app";
 import { ENV } from "./config/env";
 import { prisma } from "./config/prisma";
+import { initSpoilageRadarCron } from "./jobs/spoilageRadar.job";
 
 const HOST = "0.0.0.0";
 const server = app.listen(ENV.PORT, HOST, () => {
@@ -13,6 +14,9 @@ const server = app.listen(ENV.PORT, HOST, () => {
   console.log(`🛡️  Admin Dashboard: http://localhost:${ENV.PORT}/admin`);
   console.log(`📦 Environment: ${ENV.NODE_ENV}`);
   console.log(`=========================================`);
+
+  // Initialize automated nightly Spoilage Radar cron job
+  initSpoilageRadarCron();
 });
 
 // Graceful shutdown

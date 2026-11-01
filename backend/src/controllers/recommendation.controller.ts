@@ -66,12 +66,12 @@ export async function chatAssistant(
 ): Promise<void> {
   try {
     const userId = req.userProfile?.id || "guest";
-    const { message } = req.body;
+    const { message, history } = req.body;
     if (!message || typeof message !== "string") {
       res.status(400).json({ error: "Message string is required." });
       return;
     }
-    const result = await aiService.chatWithAssistant(userId, message);
+    const result = await aiService.chatWithAssistant(userId, message, history);
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);

@@ -398,13 +398,16 @@ export const api = {
       };
     }>("/recommendations/recipes"),
 
-  // AI Grocery Assistant Chatbot
-  chatWithAssistant: (message: string) =>
+  // AI Grocery Assistant Chatbot (Multi-Turn Conversational Memory)
+  chatWithAssistant: (
+    message: string,
+    history?: Array<{ role: "user" | "assistant"; text: string }>
+  ) =>
     request<{
       data: ChatAssistantResponse;
     }>("/recommendations/chat", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, history }),
     }),
 
   // Spending & Food-Waste Analytics

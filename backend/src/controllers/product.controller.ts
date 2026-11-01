@@ -1,29 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../config/prisma";
 import { Prisma } from "@prisma/client";
+import { cacheGet, cacheSet } from "../config/redis";
 
-// High-performance bounded in-memory cache with LRU eviction and 60s TTL
-interface CacheEntry {
-  data: any;
-  expiresAt: number;
-}
-const MAX_CACHE_ENTRIES = 500;
-const productCache = new Map<string, CacheEntry>();
-const CACHE_TTL_MS = 60 * 1000; // 60 seconds
-
-function setInCache(key: string, data: any): void {
-  // Enforce bounded cache size to prevent memory exhaustion attacks
-  if (productCache.size >= MAX_CACHE_ENTRIES) {
-    const oldestKey = productCache.keys().next().value;
-    if (oldestKey) {
-      productCache.delete(oldestKey);
-    }
-  }
-  productCache.set(key, {
-    data,
-    expiresAt: Date.now() + CACHE_TTL_MS,
-  });
-}
+// Redis Cache 1-Hour TTL (3600 seconds) for Catalogue products
+const CACHE_TTL_SECONDS = 3600;
 
 export async function listProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
@@ -32,12 +13,14 @@ export async function listProducts(req: Request, res: Response, next: NextFuncti
     const search = (req.query.search as string)?.trim();
     const category = (req.query.category as string)?.trim();
 
-    const cacheKey = `${page}:${pageSize}:${search || ""}:${category || ""}`;
-    const cached = productCache.get(cacheKey);
-    if (cached && cached.expiresAt > Date.now()) {
-      res.status(200).json(cached.data);
+    const cacheKey = `products:list:${page}:${pageSize}:${search || "all"}:${category || "all"}`;
+    const cached = await cacheGet<any>(cacheKey);
+    if (cached) {
+      res.setHeader("X-Cache", "HIT");
+      res.status(200).json(cached);
       return;
     }
+    res.setHeader("X-Cache", "MISS");
 
     const where: Prisma.ProductWhereInput = {
       isActive: true,
@@ -89,8 +72,8 @@ export async function listProducts(req: Request, res: Response, next: NextFuncti
       },
     };
 
-    // Store in bounded cache
-    setInCache(cacheKey, responsePayload);
+    // Store in Redis / In-Memory cache with 1-hour TTL
+    await cacheSet(cacheKey, responsePayload, CACHE_TTL_SECONDS);
 
     res.status(200).json(responsePayload);
   } catch (error) {
@@ -101,6 +84,13 @@ export async function listProducts(req: Request, res: Response, next: NextFuncti
 export async function getProductById(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { productId } = req.params;
+    const cacheKey = `products:id:${productId}`;
+    const cached = await cacheGet<any>(cacheKey);
+    if (cached) {
+      res.setHeader("X-Cache", "HIT");
+      res.status(200).json({ data: cached });
+      return;
+    }
 
     const product = await prisma.product.findUnique({
       where: { id: productId },
@@ -114,6 +104,8 @@ export async function getProductById(req: Request, res: Response, next: NextFunc
       return;
     }
 
+    await cacheSet(cacheKey, product, CACHE_TTL_SECONDS);
+    res.setHeader("X-Cache", "MISS");
     res.status(200).json({ data: product });
   } catch (error) {
     next(error);

@@ -85,10 +85,40 @@ export default function PantryPage() {
   };
 
   const getStatusBadge = (days: number | null) => {
-    if (days === null) return { text: "No Expiry", color: "bg-gray-100 text-gray-600" };
-    if (days <= 2) return { text: days <= 0 ? "Expired" : `${days}d left!`, color: "bg-red-50 text-red-700 border border-red-200" };
-    if (days <= 5) return { text: `${days}d left`, color: "bg-amber-50 text-amber-700 border border-amber-200" };
-    return { text: `${days}d left`, color: "bg-emerald-50 text-emerald-700" };
+    if (days === null) {
+      return {
+        text: "Stable",
+        color: "bg-gray-100 text-gray-600 border border-gray-200",
+        beacon: "bg-gray-400",
+        pulse: false,
+        risk: "STABLE",
+      };
+    }
+    if (days <= 2) {
+      return {
+        text: days <= 0 ? "Expired" : `${days}d left (< 48h)`,
+        color: "bg-red-50 text-red-700 border border-red-200 shadow-xs",
+        beacon: "bg-red-500",
+        pulse: true,
+        risk: "CRITICAL",
+      };
+    }
+    if (days <= 5) {
+      return {
+        text: `${days}d left (Expiring Soon)`,
+        color: "bg-amber-50 text-amber-700 border border-amber-200",
+        beacon: "bg-amber-500",
+        pulse: false,
+        risk: "WARNING",
+      };
+    }
+    return {
+      text: `${days}d left (Fresh)`,
+      color: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+      beacon: "bg-emerald-500",
+      pulse: false,
+      risk: "FRESH",
+    };
   };
 
   const filteredItems = items.filter((item) => {
@@ -247,14 +277,30 @@ export default function PantryPage() {
             return (
               <div
                 key={item.id}
-                className="bg-white rounded-3xl p-4 border border-gray-100 shadow-2xs flex flex-col justify-between hover:shadow-xs transition-all"
+                className={`bg-white rounded-3xl p-4 border transition-all flex flex-col justify-between hover:shadow-md ${
+                  badge.pulse
+                    ? "border-red-200 shadow-xs ring-1 ring-red-100"
+                    : "border-gray-100 shadow-2xs hover:border-gray-200"
+                }`}
               >
                 <div>
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${badge.color}`}>
-                      {badge.text}
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span
+                      className={`inline-flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-full ${badge.color}`}
+                    >
+                      {/* Animated Pulse Beacon Indicator */}
+                      <span className="relative flex h-2 w-2">
+                        {badge.pulse && (
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                        )}
+                        <span
+                          className={`relative inline-flex rounded-full h-2 w-2 ${badge.beacon}`}
+                        />
+                      </span>
+                      <span>{badge.text}</span>
                     </span>
-                    <span className="text-[11px] font-semibold text-gray-400">
+
+                    <span className="text-[11px] font-semibold text-gray-500">
                       Qty: {Number(item.quantity)} {item.unit || "unit"}
                     </span>
                   </div>
@@ -265,6 +311,39 @@ export default function PantryPage() {
                   <span className="text-[11px] text-gray-400 font-medium block mt-0.5">
                     {item.product?.category || "Kitchen"}
                   </span>
+
+                  {/* Freshness Decay Meter Bar */}
+                  <div className="mt-3 pt-1">
+                    <div className="flex justify-between text-[10px] font-bold text-gray-400 mb-1">
+                      <span>Waste Risk Meter</span>
+                      <span
+                        className={
+                          badge.pulse
+                            ? "text-red-600 font-black animate-pulse"
+                            : "text-gray-500"
+                        }
+                      >
+                        {daysLeft === null
+                          ? "Stable"
+                          : daysLeft <= 0
+                          ? "Expired"
+                          : `${daysLeft}d remaining`}
+                      </span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          daysLeft === null
+                            ? "w-full bg-gray-300"
+                            : daysLeft <= 2
+                            ? "w-[20%] bg-red-500 animate-pulse"
+                            : daysLeft <= 5
+                            ? "w-[50%] bg-amber-500"
+                            : "w-[85%] bg-[#84C225]"
+                        }`}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">

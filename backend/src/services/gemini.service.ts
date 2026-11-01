@@ -251,7 +251,7 @@ Respond ONLY with a valid JSON array of recipes matching this structure:
 
   /**
    * AI Chatbot Assistant answering queries using Gemini and live Python predictions / pantry context.
-   * Protected with a generalized domain boundary security gateway.
+   * Supports multi-turn conversation memory history and domain boundary security gateway.
    */
   async chatWithAssistant(
     userMessage: string,
@@ -263,13 +263,21 @@ Respond ONLY with a valid JSON array of recipes matching this structure:
       activeListItems: any[];
       budget?: number;
       actualSpending?: number;
-    }
+    },
+    history?: Array<{ role: "user" | "assistant"; text: string }>
   ): Promise<ChatAssistantResponse> {
     const standardRefusal =
       "I am your SmartGrocer Assistant, designed specifically to help you with your groceries, pantry, recipes, and shopping budget. I can only answer questions related to food, groceries, and this app. How can I help with your groceries today?";
 
-    // Security Gateway Layer 1: Generalized Off-Topic Filter
-    if (this.isOffTopicQuery(userMessage)) {
+    // Security Gateway Layer 1: Allow natural follow-ups if previous history exists
+    const hasHistory = Array.isArray(history) && history.length > 0;
+    const isFollowUp =
+      hasHistory &&
+      /^(can|could|what about|make it|how to|add|substitute|why|how|and|also|replace|more|less|give me|tell me|instead)/i.test(
+        userMessage.trim()
+      );
+
+    if (!isFollowUp && this.isOffTopicQuery(userMessage)) {
       return {
         reply: standardRefusal,
       };
@@ -351,6 +359,16 @@ ${wasteRisksSummary || "No items near expiration"}
 - PANTRY STOCK:
 ${pantrySummary || "Pantry is currently empty"}
 
+${
+  hasHistory
+    ? `PREVIOUS CONVERSATION TURNS (Multi-Turn Context):
+${(history || [])
+  .slice(-6)
+  .map((h) => `${h.role === "user" ? "User" : "Assistant"}: ${h.text}`)
+  .join("\n")}
+`
+    : ""
+}
 USER QUESTION: "${userMessage}"
 
 INSTRUCTIONS:

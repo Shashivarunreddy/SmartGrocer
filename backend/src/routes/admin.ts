@@ -3,6 +3,8 @@ import rateLimit from "express-rate-limit";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../config/prisma";
 import { adminAuth } from "../middlewares/adminAuth";
+import { getCacheStats } from "../config/redis";
+import { runSpoilageRadarJob } from "../jobs/spoilageRadar.job";
 import fs from "fs";
 import path from "path";
 
@@ -58,9 +60,26 @@ adminRouter.get("/api/stats", async (_req: Request, res: Response) => {
         totalShoppingTrips,
         dbStatus: "ONLINE",
         dbLatencyMs,
+        cache: getCacheStats(),
         uptimeSeconds: Math.floor(process.uptime()),
         timestamp: new Date().toISOString(),
       },
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+/**
+ * POST /admin/api/cron/spoilage-run
+ * Trigger manual execution of the nightly Spoilage Radar cron job
+ */
+adminRouter.post("/api/cron/spoilage-run", async (_req: Request, res: Response) => {
+  try {
+    const result = await runSpoilageRadarJob();
+    res.json({
+      success: true,
+      data: result,
     });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
