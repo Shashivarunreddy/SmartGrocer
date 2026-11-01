@@ -1,17 +1,16 @@
 @ui @auth
-Feature: Web UI Authentication & Test User Onboarding
-  As a shopper on the SmartGrocer Web App
-  I want to see the brand onboarding screen and log in with 1-click test credentials
-  So that I can immediately manage my groceries
+Feature: Web UI Landing Page & Authentication Showcase
+  As a visitor on the SmartGrocer Web App
+  I want to see the brand landing page showcasing core features with top sign-in and sign-up buttons
+  So that I understand the application and can access my account
 
-  Scenario: Render landing hero banner and quick test login drawer
+  Scenario: Render public landing page with core feature showcase
     Given I navigate to the SmartGrocer Web App
     Then I should see the "SmartGrocer" branding with Leaf Basket icon
-    And I should see the quick test login accounts "User 1" through "User 10"
-    And I should see the live bill predictor and expiry alerts badges
+    And I should see the "Sign In" and "Sign Up" action buttons
+    And I should see the live bill predictor and expiry alerts feature cards
 
-  Scenario: Authenticate using seeded test account
+  Scenario: Access grocery dashboard via authentication
     Given I navigate to the SmartGrocer Web App
-    When I click the quick test login for "User 1"
-    Then I should be signed into the dashboard with my grocery overview
-
+    When I click "Sign In"
+    Then I should be able to access the grocery dashboard

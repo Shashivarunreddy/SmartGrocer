@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useUser, SignOutButton } from "@clerk/nextjs";
+import { AuthGate } from "@/components/AuthGate";
 import {
   User,
   Settings,
@@ -99,7 +100,11 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
+    <AuthGate
+      title="My Shopper Profile & Settings"
+      description="Sign in to customize your household settings, view grocery expenditure, and manage food waste reduction analytics."
+    >
+      <div className="space-y-6 max-w-3xl mx-auto">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 bg-[#166534] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-green-900/20 flex items-center gap-2">
@@ -329,6 +334,7 @@ export default function ProfilePage() {
         </div>
       )}
     </div>
+    </AuthGate>
   );
 }
 

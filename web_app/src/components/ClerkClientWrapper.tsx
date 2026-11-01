@@ -3,25 +3,11 @@
 import React, { useEffect } from "react";
 import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { setAuthTokenGetter } from "@/lib/api";
-import { AuthScreen } from "@/components/AuthScreen";
 import { Navigation } from "@/components/Navigation";
 import { AIChatModal } from "@/components/AIChatModal";
 
-function AuthenticatedApp({ children }: { children: React.ReactNode }) {
-  const { isLoaded, isSignedIn, getToken } = useAuth();
-  const [e2eUser, setE2eUser] = React.useState<boolean>(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isE2E =
-        document.cookie.includes("e2e_session=true") ||
-        window.location.search.includes("e2e=true") ||
-        window.localStorage.getItem("e2e_session") === "true";
-      if (isE2E) {
-        setE2eUser(true);
-      }
-    }
-  }, []);
+function AppLayout({ children }: { children: React.ReactNode }) {
+  const { getToken } = useAuth();
 
   useEffect(() => {
     setAuthTokenGetter(async () => {
@@ -32,41 +18,6 @@ function AuthenticatedApp({ children }: { children: React.ReactNode }) {
       }
     });
   }, [getToken]);
-
-  if (!isLoaded && !e2eUser) {
-    return (
-      <>
-        <div className="min-h-screen bg-[#F8FAF6] flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-10 h-10 border-4 border-[#84C225] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <span className="text-xs font-bold text-gray-500">Loading SmartGrocer...</span>
-          </div>
-        </div>
-        <div className="hidden" aria-hidden="true">
-          {children}
-        </div>
-      </>
-    );
-  }
-
-  if (!isSignedIn && !e2eUser) {
-    return (
-      <>
-        <AuthScreen
-          onTestLogin={() => {
-            if (typeof window !== "undefined") {
-              localStorage.setItem("e2e_session", "true");
-              document.cookie = "e2e_session=true; path=/; max-age=86400";
-            }
-            setE2eUser(true);
-          }}
-        />
-        <div className="hidden" aria-hidden="true">
-          {children}
-        </div>
-      </>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#F8FAF6] text-[#1F2937] flex flex-col antialiased pb-20 md:pb-6">
@@ -84,7 +35,8 @@ export function ClerkClientWrapper({ children }: { children: React.ReactNode }) 
 
   return (
     <ClerkProvider publishableKey={publishableKey}>
-      <AuthenticatedApp>{children}</AuthenticatedApp>
+      <AppLayout>{children}</AppLayout>
     </ClerkProvider>
   );
 }
+

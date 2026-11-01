@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { AuthGate } from "@/components/AuthGate";
 import {
   Sparkles,
   ChefHat,
@@ -252,7 +253,11 @@ export default function AIScreen() {
   };
 
   return (
-    <div className="space-y-6">
+    <AuthGate
+      title="Chef Gemini & AI Insights"
+      description="Sign in to generate custom zero-waste recipes from your ingredients and view replenishment recommendations."
+    >
+      <div className="space-y-6">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 bg-[#166534] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-green-900/20 flex items-center gap-2">
@@ -709,6 +714,7 @@ export default function AIScreen() {
         </div>
       )}
     </div>
+    </AuthGate>
   );
 }
 

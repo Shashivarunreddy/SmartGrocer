@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { AuthGate } from "@/components/AuthGate";
 import {
   ShoppingCart,
   Plus,
@@ -192,7 +193,11 @@ export default function ListsPage() {
   const isOverBudget = calculatedSubtotal > targetBudget;
 
   return (
-    <div className="space-y-6">
+    <AuthGate
+      title="My Shopping Lists"
+      description="Sign in to view, create, and manage your live shopping lists with real-time bill forecasting."
+    >
+      <div className="space-y-6">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 bg-[#166534] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-green-900/20 flex items-center gap-2">
@@ -483,6 +488,7 @@ export default function ListsPage() {
         </div>
       )}
     </div>
+    </AuthGate>
   );
 }
 

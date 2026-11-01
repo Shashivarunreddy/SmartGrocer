@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 49386099
+              "duration": 16349799
             }
           },
           {
@@ -27,7 +27,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 18441300
+              "duration": 11671499
             }
           },
           {
@@ -40,7 +40,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2183035299
+              "duration": 2183988399
             }
           },
           {
@@ -53,7 +53,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 5997499
+              "duration": 8081700
             }
           },
           {
@@ -66,7 +66,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 5738799
+              "duration": 5736699
             }
           },
           {
@@ -74,7 +74,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 3917499
+              "duration": 3621199
             }
           }
         ],
@@ -102,7 +102,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1370699
+              "duration": 1837800
             }
           },
           {
@@ -115,7 +115,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 476799
+              "duration": 626900
             }
           },
           {
@@ -128,7 +128,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1577200
+              "duration": 709399
             }
           },
           {
@@ -141,7 +141,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2096499
+              "duration": 2351300
             }
           },
           {
@@ -149,7 +149,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 936300
+              "duration": 1230899
             }
           }
         ],
@@ -177,7 +177,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1069999
+              "duration": 1188200
             }
           },
           {
@@ -190,7 +190,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 131600
+              "duration": 137999
             }
           },
           {
@@ -203,7 +203,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1102600
+              "duration": 1125799
             }
           },
           {
@@ -216,7 +216,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2863599
+              "duration": 3171999
             }
           },
           {
@@ -224,7 +224,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 859700
+              "duration": 1366600
             }
           }
         ],
@@ -252,7 +252,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1010800
+              "duration": 1315399
             }
           },
           {
@@ -265,7 +265,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 148199
+              "duration": 193499
             }
           },
           {
@@ -278,7 +278,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1459800
+              "duration": 1671900
             }
           },
           {
@@ -291,7 +291,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2652599
+              "duration": 1503099
             }
           },
           {
@@ -304,7 +304,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1693999
+              "duration": 891899
             }
           },
           {
@@ -312,7 +312,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1672599
+              "duration": 1480000
             }
           }
         ],
@@ -360,7 +360,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1680800
+              "duration": 1308299
             }
           },
           {
@@ -373,7 +373,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 446932100
+              "duration": 73812999
             }
           },
           {
@@ -386,7 +386,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1722400
+              "duration": 2285699
             }
           },
           {
@@ -399,7 +399,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2190899
+              "duration": 2701299
             }
           },
           {
@@ -407,7 +407,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 976300
+              "duration": 1690300
             }
           }
         ],
@@ -435,7 +435,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1084100
+              "duration": 1387900
             }
           },
           {
@@ -465,7 +465,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 173960799
+              "duration": 80391300
             }
           },
           {
@@ -478,7 +478,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 982499
+              "duration": 685800
             }
           },
           {
@@ -491,7 +491,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1494000
+              "duration": 1052900
             }
           },
           {
@@ -504,7 +504,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2548800
+              "duration": 1123400
             }
           },
           {
@@ -512,7 +512,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1805700
+              "duration": 876500
             }
           }
         ],
@@ -540,7 +540,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1780399
+              "duration": 1122299
             }
           },
           {
@@ -553,7 +553,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 146336299
+              "duration": 97525200
             }
           },
           {
@@ -566,7 +566,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 623799
+              "duration": 602399
             }
           },
           {
@@ -579,7 +579,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 7178499
+              "duration": 9144699
             }
           },
           {
@@ -587,7 +587,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1156499
+              "duration": 1677499
             }
           }
         ],
@@ -615,7 +615,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 698500
+              "duration": 840400
             }
           },
           {
@@ -628,7 +628,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 81609399
+              "duration": 86848400
             }
           },
           {
@@ -641,7 +641,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 482100
+              "duration": 659300
             }
           },
           {
@@ -654,7 +654,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 4362399
+              "duration": 4181499
             }
           },
           {
@@ -662,7 +662,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1370600
+              "duration": 1077299
             }
           }
         ],
@@ -690,7 +690,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 835900
+              "duration": 919199
             }
           },
           {
@@ -703,7 +703,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 73022600
+              "duration": 55313799
             }
           },
           {
@@ -716,7 +716,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 53155699
+              "duration": 31029000
             }
           },
           {
@@ -729,7 +729,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 628500
+              "duration": 720299
             }
           },
           {
@@ -742,7 +742,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1321700
+              "duration": 1832600
             }
           },
           {
@@ -750,7 +750,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1103999
+              "duration": 1740299
             }
           }
         ],
@@ -798,7 +798,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 970499
+              "duration": 933299
             }
           },
           {
@@ -811,7 +811,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 221700
+              "duration": 119099
             }
           },
           {
@@ -824,7 +824,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 49515099
+              "duration": 51288900
             }
           },
           {
@@ -837,7 +837,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1502300
+              "duration": 1006799
             }
           },
           {
@@ -850,7 +850,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1249099
+              "duration": 1196699
             }
           },
           {
@@ -863,7 +863,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 725999
+              "duration": 415599
             }
           },
           {
@@ -876,7 +876,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2297300
+              "duration": 1963099
             }
           },
           {
@@ -884,7 +884,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1359300
+              "duration": 1461599
             }
           }
         ],
@@ -916,7 +916,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1003600
+              "duration": 1178599
             }
           },
           {
@@ -929,7 +929,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 94399
+              "duration": 138000
             }
           },
           {
@@ -942,7 +942,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 48392299
+              "duration": 50793599
             }
           },
           {
@@ -955,7 +955,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 748399
+              "duration": 999200
             }
           },
           {
@@ -968,7 +968,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1202400
+              "duration": 1704899
             }
           },
           {
@@ -981,7 +981,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1460600
+              "duration": 1558599
             }
           },
           {
@@ -994,7 +994,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1430899
+              "duration": 1810900
             }
           },
           {
@@ -1002,7 +1002,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1410200
+              "duration": 1886400
             }
           }
         ],
@@ -1058,7 +1058,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1034700
+              "duration": 1047199
             }
           },
           {
@@ -1071,7 +1071,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 114199
+              "duration": 118999
             }
           },
           {
@@ -1089,7 +1089,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 63417599
+              "duration": 64801799
             }
           },
           {
@@ -1102,7 +1102,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1658499
+              "duration": 1186799
             }
           },
           {
@@ -1115,7 +1115,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1612000
+              "duration": 1675599
             }
           },
           {
@@ -1128,7 +1128,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1636300
+              "duration": 1283300
             }
           },
           {
@@ -1136,7 +1136,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1593899
+              "duration": 1211399
             }
           }
         ],
@@ -1164,7 +1164,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1165000
+              "duration": 731099
             }
           },
           {
@@ -1177,7 +1177,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 162299
+              "duration": 79500
             }
           },
           {
@@ -1190,7 +1190,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 591000
+              "duration": 325199
             }
           },
           {
@@ -1203,7 +1203,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 51043800
+              "duration": 51632200
             }
           },
           {
@@ -1216,7 +1216,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1327700
+              "duration": 865399
             }
           },
           {
@@ -1229,7 +1229,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1570700
+              "duration": 1007700
             }
           },
           {
@@ -1242,7 +1242,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 618099
+              "duration": 545700
             }
           },
           {
@@ -1255,7 +1255,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1164399
+              "duration": 970899
             }
           },
           {
@@ -1268,7 +1268,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 916600
+              "duration": 1095400
             }
           },
           {
@@ -1276,7 +1276,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1183800
+              "duration": 1310599
             }
           }
         ],
@@ -1304,7 +1304,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1578799
+              "duration": 1097499
             }
           },
           {
@@ -1317,7 +1317,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 206899
+              "duration": 147799
             }
           },
           {
@@ -1330,7 +1330,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 144099
+              "duration": 92999
             }
           },
           {
@@ -1343,7 +1343,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 49228000
+              "duration": 49238999
             }
           },
           {
@@ -1356,7 +1356,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2244099
+              "duration": 1171999
             }
           },
           {
@@ -1364,7 +1364,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1368500
+              "duration": 1129700
             }
           }
         ],
@@ -1398,21 +1398,21 @@
     "uri": "src\\features\\api_shopping_lists.feature"
   },
   {
-    "description": "  As a shopper on the SmartGrocer Web App\n  I want to see the brand onboarding screen and log in with 1-click test credentials\n  So that I can immediately manage my groceries",
+    "description": "  As a visitor on the SmartGrocer Web App\n  I want to see the brand landing page showcasing core features with top sign-in and sign-up buttons\n  So that I understand the application and can access my account",
     "elements": [
       {
         "description": "",
-        "id": "web-ui-authentication-&-test-user-onboarding;render-landing-hero-banner-and-quick-test-login-drawer",
+        "id": "web-ui-landing-page-&-authentication-showcase;render-public-landing-page-with-core-feature-showcase",
         "keyword": "Scenario",
         "line": 7,
-        "name": "Render landing hero banner and quick test login drawer",
+        "name": "Render public landing page with core feature showcase",
         "steps": [
           {
             "keyword": "Before",
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 147261400
+              "duration": 138444600
             }
           },
           {
@@ -1425,7 +1425,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 559027800
+              "duration": 469306400
             }
           },
           {
@@ -1438,33 +1438,33 @@
             },
             "result": {
               "status": "passed",
-              "duration": 245808700
+              "duration": 72418900
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
             "line": 10,
-            "name": "I should see the quick test login accounts \"User 1\" through \"User 10\"",
+            "name": "I should see the \"Sign In\" and \"Sign Up\" action buttons",
             "match": {
               "location": "src\\step-definitions\\ui_steps.ts:32"
             },
             "result": {
               "status": "passed",
-              "duration": 1644300800
+              "duration": 4092283199
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
             "line": 11,
-            "name": "I should see the live bill predictor and expiry alerts badges",
+            "name": "I should see the live bill predictor and expiry alerts feature cards",
             "match": {
               "location": "src\\step-definitions\\ui_steps.ts:53"
             },
             "result": {
               "status": "passed",
-              "duration": 72636200
+              "duration": 11928399
             }
           },
           {
@@ -1472,7 +1472,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 37767699
+              "duration": 20641700
             }
           }
         ],
@@ -1490,17 +1490,17 @@
       },
       {
         "description": "",
-        "id": "web-ui-authentication-&-test-user-onboarding;authenticate-using-seeded-test-account",
+        "id": "web-ui-landing-page-&-authentication-showcase;access-grocery-dashboard-via-authentication",
         "keyword": "Scenario",
         "line": 13,
-        "name": "Authenticate using seeded test account",
+        "name": "Access grocery dashboard via authentication",
         "steps": [
           {
             "keyword": "Before",
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 140212700
+              "duration": 62765699
             }
           },
           {
@@ -1513,33 +1513,33 @@
             },
             "result": {
               "status": "passed",
-              "duration": 259509200
+              "duration": 297699599
             }
           },
           {
             "arguments": [],
             "keyword": "When ",
             "line": 15,
-            "name": "I click the quick test login for \"User 1\"",
+            "name": "I click \"Sign In\"",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:67"
+              "location": "src\\step-definitions\\ui_steps.ts:151"
             },
             "result": {
               "status": "passed",
-              "duration": 1997019099
+              "duration": 3509399
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "line": 16,
-            "name": "I should be signed into the dashboard with my grocery overview",
+            "name": "I should be able to access the grocery dashboard",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:74"
+              "location": "src\\step-definitions\\ui_steps.ts:67"
             },
             "result": {
               "status": "passed",
-              "duration": 5882999
+              "duration": 2703100
             }
           },
           {
@@ -1547,7 +1547,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 103034900
+              "duration": 43193600
             }
           }
         ],
@@ -1564,10 +1564,10 @@
         "type": "scenario"
       }
     ],
-    "id": "web-ui-authentication-&-test-user-onboarding",
+    "id": "web-ui-landing-page-&-authentication-showcase",
     "line": 2,
     "keyword": "Feature",
-    "name": "Web UI Authentication & Test User Onboarding",
+    "name": "Web UI Landing Page & Authentication Showcase",
     "tags": [
       {
         "name": "@ui",
@@ -1595,7 +1595,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 114728799
+              "duration": 74424800
             }
           },
           {
@@ -1604,11 +1604,11 @@
             "line": 8,
             "name": "I navigate to the catalogue page",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:78"
+              "location": "src\\step-definitions\\ui_steps.ts:71"
             },
             "result": {
               "status": "passed",
-              "duration": 199281100
+              "duration": 133675400
             }
           },
           {
@@ -1617,11 +1617,11 @@
             "line": 9,
             "name": "I should see the category filter pills including \"Dairy & Eggs\"",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:85"
+              "location": "src\\step-definitions\\ui_steps.ts:78"
             },
             "result": {
               "status": "passed",
-              "duration": 661149800
+              "duration": 122553300
             }
           },
           {
@@ -1630,11 +1630,11 @@
             "line": 10,
             "name": "I select the \"Dairy & Eggs\" category pill",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:94"
+              "location": "src\\step-definitions\\ui_steps.ts:87"
             },
             "result": {
               "status": "passed",
-              "duration": 237693100
+              "duration": 410585800
             }
           },
           {
@@ -1643,11 +1643,11 @@
             "line": 11,
             "name": "the displayed product cards should be updated with dairy items",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:101"
+              "location": "src\\step-definitions\\ui_steps.ts:94"
             },
             "result": {
               "status": "passed",
-              "duration": 10751499
+              "duration": 2792900
             }
           },
           {
@@ -1655,7 +1655,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 61169499
+              "duration": 31543900
             }
           }
         ],
@@ -1683,7 +1683,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 168606900
+              "duration": 60492000
             }
           },
           {
@@ -1692,11 +1692,11 @@
             "line": 14,
             "name": "I navigate to the catalogue page",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:78"
+              "location": "src\\step-definitions\\ui_steps.ts:71"
             },
             "result": {
               "status": "passed",
-              "duration": 343998099
+              "duration": 130608799
             }
           },
           {
@@ -1705,11 +1705,11 @@
             "line": 15,
             "name": "I search for \"bread\" in the catalogue search box",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:105"
+              "location": "src\\step-definitions\\ui_steps.ts:98"
             },
             "result": {
               "status": "passed",
-              "duration": 743522999
+              "duration": 264949800
             }
           },
           {
@@ -1718,11 +1718,11 @@
             "line": 16,
             "name": "the search results should display bread products",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:116"
+              "location": "src\\step-definitions\\ui_steps.ts:109"
             },
             "result": {
               "status": "passed",
-              "duration": 5401800
+              "duration": 1323899
             }
           },
           {
@@ -1731,11 +1731,11 @@
             "line": 17,
             "name": "I click \"+ Add\" on the first product card",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:120"
+              "location": "src\\step-definitions\\ui_steps.ts:113"
             },
             "result": {
               "status": "passed",
-              "duration": 4018527799
+              "duration": 4009720999
             }
           },
           {
@@ -1744,11 +1744,11 @@
             "line": 18,
             "name": "the button state should update to show the item is in my list",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:131"
+              "location": "src\\step-definitions\\ui_steps.ts:124"
             },
             "result": {
               "status": "passed",
-              "duration": 1909299
+              "duration": 1581100
             }
           },
           {
@@ -1756,7 +1756,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 39449599
+              "duration": 8029699
             }
           }
         ],
@@ -1804,7 +1804,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 176719600
+              "duration": 59091500
             }
           },
           {
@@ -1813,11 +1813,11 @@
             "line": 8,
             "name": "I navigate to the Chef AI page",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:170"
+              "location": "src\\step-definitions\\ui_steps.ts:163"
             },
             "result": {
               "status": "passed",
-              "duration": 844823000
+              "duration": 193677700
             }
           },
           {
@@ -1826,11 +1826,11 @@
             "line": 9,
             "name": "I should see recipes with zero-waste scores and used pantry items",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:177"
+              "location": "src\\step-definitions\\ui_steps.ts:170"
             },
             "result": {
               "status": "passed",
-              "duration": 4716000
+              "duration": 3025600
             }
           },
           {
@@ -1839,11 +1839,11 @@
             "line": 10,
             "name": "I click \"Add Missing Ingredients to Shopping List\" on an eligible recipe",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:181"
+              "location": "src\\step-definitions\\ui_steps.ts:174"
             },
             "result": {
               "status": "passed",
-              "duration": 6667300
+              "duration": 2171999
             }
           },
           {
@@ -1852,11 +1852,11 @@
             "line": 11,
             "name": "the missing groceries section should be removed from that recipe card",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:188"
+              "location": "src\\step-definitions\\ui_steps.ts:181"
             },
             "result": {
               "status": "passed",
-              "duration": 7124299
+              "duration": 2325799
             }
           },
           {
@@ -1865,11 +1865,11 @@
             "line": 12,
             "name": "a confirmation badge \"Missing ingredients added\" should be displayed",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:192"
+              "location": "src\\step-definitions\\ui_steps.ts:185"
             },
             "result": {
               "status": "passed",
-              "duration": 14687799
+              "duration": 3322299
             }
           },
           {
@@ -1877,7 +1877,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 48503499
+              "duration": 44603699
             }
           }
         ],
@@ -1909,7 +1909,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 277211999
+              "duration": 67182200
             }
           },
           {
@@ -1922,7 +1922,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 582824099
+              "duration": 80262500
             }
           },
           {
@@ -1931,11 +1931,11 @@
             "line": 16,
             "name": "I click the floating \"Ask Chef Gemini\" button in the corner",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:196"
+              "location": "src\\step-definitions\\ui_steps.ts:189"
             },
             "result": {
               "status": "passed",
-              "duration": 5278999
+              "duration": 1791900
             }
           },
           {
@@ -1944,11 +1944,11 @@
             "line": 17,
             "name": "the AI Assistant chat drawer should open with quick prompt suggestions",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:200"
+              "location": "src\\step-definitions\\ui_steps.ts:193"
             },
             "result": {
               "status": "passed",
-              "duration": 4548600
+              "duration": 2148900
             }
           },
           {
@@ -1957,11 +1957,11 @@
             "line": 18,
             "name": "I select the quick prompt \"What do I need to buy?\"",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:204"
+              "location": "src\\step-definitions\\ui_steps.ts:197"
             },
             "result": {
               "status": "passed",
-              "duration": 3465099
+              "duration": 2031699
             }
           },
           {
@@ -1970,11 +1970,11 @@
             "line": 19,
             "name": "the conversation history should display the assistant recommendations",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:208"
+              "location": "src\\step-definitions\\ui_steps.ts:201"
             },
             "result": {
               "status": "passed",
-              "duration": 4853399
+              "duration": 1773600
             }
           },
           {
@@ -1982,7 +1982,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 765496499
+              "duration": 37420799
             }
           }
         ],
@@ -2038,7 +2038,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 177833700
+              "duration": 78276300
             }
           },
           {
@@ -2047,11 +2047,11 @@
             "line": 8,
             "name": "I navigate to the pantry page",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:212"
+              "location": "src\\step-definitions\\ui_steps.ts:205"
             },
             "result": {
               "status": "passed",
-              "duration": 381484499
+              "duration": 165070299
             }
           },
           {
@@ -2060,11 +2060,11 @@
             "line": 9,
             "name": "I should see the pantry inventory list with expiry countdown badges",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:219"
+              "location": "src\\step-definitions\\ui_steps.ts:212"
             },
             "result": {
               "status": "passed",
-              "duration": 9019199
+              "duration": 3172500
             }
           },
           {
@@ -2073,11 +2073,11 @@
             "line": 10,
             "name": "I should see filters for \"All\", \"Expiring Soon\", and \"Fresh\"",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:223"
+              "location": "src\\step-definitions\\ui_steps.ts:216"
             },
             "result": {
               "status": "passed",
-              "duration": 992684600
+              "duration": 6022064499
             }
           },
           {
@@ -2085,7 +2085,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 34262699
+              "duration": 14522200
             }
           }
         ],
@@ -2113,7 +2113,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 166181799
+              "duration": 56507799
             }
           },
           {
@@ -2122,11 +2122,11 @@
             "line": 13,
             "name": "I navigate to the pantry page",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:212"
+              "location": "src\\step-definitions\\ui_steps.ts:205"
             },
             "result": {
               "status": "passed",
-              "duration": 168577300
+              "duration": 81342000
             }
           },
           {
@@ -2135,11 +2135,11 @@
             "line": 14,
             "name": "I click the \"Expiring Soon\" pantry filter pill",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:242"
+              "location": "src\\step-definitions\\ui_steps.ts:235"
             },
             "result": {
               "status": "passed",
-              "duration": 643954099
+              "duration": 6006154600
             }
           },
           {
@@ -2148,11 +2148,11 @@
             "line": 15,
             "name": "only items with high spoilage risk should be visible",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:253"
+              "location": "src\\step-definitions\\ui_steps.ts:246"
             },
             "result": {
               "status": "passed",
-              "duration": 2040799
+              "duration": 2370399
             }
           },
           {
@@ -2160,7 +2160,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 23880799
+              "duration": 9263800
             }
           }
         ],
@@ -2208,7 +2208,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 91528900
+              "duration": 54017700
             }
           },
           {
@@ -2217,11 +2217,11 @@
             "line": 8,
             "name": "I navigate to the active shopping list page",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:135"
+              "location": "src\\step-definitions\\ui_steps.ts:128"
             },
             "result": {
               "status": "passed",
-              "duration": 236324199
+              "duration": 143974500
             }
           },
           {
@@ -2230,11 +2230,11 @@
             "line": 9,
             "name": "I should see the Live Bill Predictor with Subtotal and Target Budget",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:142"
+              "location": "src\\step-definitions\\ui_steps.ts:135"
             },
             "result": {
               "status": "passed",
-              "duration": 5572500
+              "duration": 3057999
             }
           },
           {
@@ -2243,11 +2243,11 @@
             "line": 10,
             "name": "I should see the list items with checkboxes and quantity adjusters",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:146"
+              "location": "src\\step-definitions\\ui_steps.ts:139"
             },
             "result": {
               "status": "passed",
-              "duration": 8061000
+              "duration": 2458800
             }
           },
           {
@@ -2256,11 +2256,11 @@
             "line": 11,
             "name": "I click the checkbox on the first item",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:150"
+              "location": "src\\step-definitions\\ui_steps.ts:143"
             },
             "result": {
               "status": "passed",
-              "duration": 2523900
+              "duration": 1792599
             }
           },
           {
@@ -2269,11 +2269,11 @@
             "line": 12,
             "name": "the item should be marked as purchased",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:154"
+              "location": "src\\step-definitions\\ui_steps.ts:147"
             },
             "result": {
               "status": "passed",
-              "duration": 4108799
+              "duration": 6520700
             }
           },
           {
@@ -2281,7 +2281,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 31286000
+              "duration": 34829799
             }
           }
         ],
@@ -2309,7 +2309,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 114075499
+              "duration": 64370900
             }
           },
           {
@@ -2318,11 +2318,11 @@
             "line": 15,
             "name": "I navigate to the active shopping list page",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:135"
+              "location": "src\\step-definitions\\ui_steps.ts:128"
             },
             "result": {
               "status": "passed",
-              "duration": 167456500
+              "duration": 115390199
             }
           },
           {
@@ -2331,11 +2331,11 @@
             "line": 16,
             "name": "I click \"Complete Shopping Run\"",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:158"
+              "location": "src\\step-definitions\\ui_steps.ts:151"
             },
             "result": {
               "status": "passed",
-              "duration": 3152600
+              "duration": 597699
             }
           },
           {
@@ -2344,11 +2344,11 @@
             "line": 17,
             "name": "the confirmation modal should appear with my actual total",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:162"
+              "location": "src\\step-definitions\\ui_steps.ts:155"
             },
             "result": {
               "status": "passed",
-              "duration": 3975399
+              "duration": 2358399
             }
           },
           {
@@ -2357,11 +2357,11 @@
             "line": 18,
             "name": "the option to restock pantry should be selected",
             "match": {
-              "location": "src\\step-definitions\\ui_steps.ts:166"
+              "location": "src\\step-definitions\\ui_steps.ts:159"
             },
             "result": {
               "status": "passed",
-              "duration": 6038599
+              "duration": 1739499
             }
           },
           {
@@ -2369,7 +2369,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 24107600
+              "duration": 17677999
             }
           }
         ],

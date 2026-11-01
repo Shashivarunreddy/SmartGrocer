@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { AuthGate } from "@/components/AuthGate";
 import {
   Refrigerator,
   Plus,
@@ -155,7 +156,11 @@ export default function PantryPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <AuthGate
+      title="Household Pantry & Expiry Radar"
+      description="Sign in to view your home inventory, track expiration dates, and log consumed groceries."
+    >
+      <div className="space-y-6">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 bg-[#166534] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-green-900/20 flex items-center gap-2">
@@ -479,6 +484,7 @@ export default function PantryPage() {
         </div>
       )}
     </div>
+    </AuthGate>
   );
 }
 
