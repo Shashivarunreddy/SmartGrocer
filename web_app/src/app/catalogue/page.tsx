@@ -58,8 +58,8 @@ function CatalogueContent() {
         });
         setAddedMap(map);
       }
-    } catch (err) {
-      console.error("Failed to load active list:", err);
+    } catch {
+      // Gracefully handle unauthenticated or guest visits without logging console errors
     }
   };
 
