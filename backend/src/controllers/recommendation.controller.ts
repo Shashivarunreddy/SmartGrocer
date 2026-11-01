@@ -65,7 +65,7 @@ export async function chatAssistant(
   next: NextFunction
 ): Promise<void> {
   try {
-    const userId = req.userProfile!.id;
+    const userId = req.userProfile?.id || "guest";
     const { message } = req.body;
     if (!message || typeof message !== "string") {
       res.status(400).json({ error: "Message string is required." });

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
-import { requireAuth } from "../middlewares/auth";
+import { requireAuth, optionalAuth } from "../middlewares/auth";
 import {
   getReplenishmentRecommendations,
   getWasteRiskAnalysis,
@@ -27,6 +27,6 @@ router.get("/replenishments", requireAuth, getReplenishmentRecommendations);
 router.get("/waste-risk", requireAuth, getWasteRiskAnalysis);
 router.get("/alternatives/:listId", requireAuth, getAlternativeSuggestions);
 router.get("/recipes", requireAuth, getRecipeRecommendations);
-router.post("/chat", requireAuth, chatRateLimiter, chatAssistant);
+router.post("/chat", optionalAuth, chatRateLimiter, chatAssistant);
 
 export default router;

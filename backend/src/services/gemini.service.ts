@@ -138,6 +138,39 @@ class GeminiService {
     return recipes;
   }
 
+  private async callGeminiApi(prompt: string, options?: { json?: boolean }): Promise<string | null> {
+    if (!this.apiKey || this.apiKey.trim().length < 10) return null;
+    const candidateModels = ["gemini-3.8-flash", "gemini-flash-latest", "gemini-3.5-flash-lite"];
+    for (const model of candidateModels) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.apiKey}`;
+        const body: any = {
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: options?.json ? 0.3 : 0.4,
+            ...(options?.json ? { responseMimeType: "application/json" } : {}),
+          },
+        };
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        if (response.ok) {
+          const json = (await response.json()) as any;
+          const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text && text.trim().length > 0) {
+            return text.trim();
+          }
+        }
+      } catch (err: any) {
+        console.warn(`[GeminiService] Model ${model} call failed:`, err.message);
+      }
+    }
+    return null;
+  }
+
   private async callGeminiForRecipes(
     pantryItems: any[],
     expiring: any[],
@@ -177,26 +210,15 @@ Respond ONLY with a valid JSON array of recipes matching this structure:
   }
 ]`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.4, responseMimeType: "application/json" },
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
-    }
-
-    const data = (await response.json()) as any;
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const text = await this.callGeminiApi(prompt, { json: true });
     if (!text) return [];
 
-    const parsed = JSON.parse(text);
-    return Array.isArray(parsed) ? parsed : parsed.recipes || [];
+    try {
+      const parsed = JSON.parse(text);
+      return Array.isArray(parsed) ? parsed : parsed.recipes || [];
+    } catch {
+      return [];
+    }
   }
 
   /**
@@ -340,46 +362,33 @@ INSTRUCTIONS:
 
     if (this.apiKey && this.apiKey.trim().length > 10) {
       try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`;
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.3 },
-          }),
-        });
+        const reply = await this.callGeminiApi(prompt);
+        if (reply && reply.trim().length > 0) {
+          const cleanReply = reply.trim();
 
-        if (response.ok) {
-          const json = (await response.json()) as any;
-          const reply = json.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (reply && reply.trim().length > 0) {
-            const cleanReply = reply.trim();
-
-            // Security Gateway Layer 3: Output Post-Validation Sanitizer
-            if (
-              cleanReply.includes("```") ||
-              cleanReply.includes("public class") ||
-              cleanReply.includes("System.out") ||
-              cleanReply.includes("def ") ||
-              cleanReply.includes("import ")
-            ) {
-              return {
-                reply:
-                  "I am your SmartGrocer Assistant, dedicated exclusively to helping you manage your groceries, pantry, recipes, and shopping budget. I cannot provide programming code or technical scripts. How can I help with your groceries today?",
-              };
-            }
-
+          // Security Gateway Layer 3: Output Post-Validation Sanitizer
+          if (
+            cleanReply.includes("```") ||
+            cleanReply.includes("public class") ||
+            cleanReply.includes("System.out") ||
+            cleanReply.includes("def ") ||
+            cleanReply.includes("import ")
+          ) {
             return {
-              reply: cleanReply,
-              suggestedProducts: context.replenishments.slice(0, 3).map((r) => ({
-                id: r.productId,
-                name: r.productName,
-                price: Number(r.defaultUnitPrice || 1.5),
-                reason: r.reason,
-              })),
+              reply:
+                "I am your SmartGrocer Assistant, dedicated exclusively to helping you manage your groceries, pantry, recipes, and shopping budget. I cannot provide programming code or technical scripts. How can I help with your groceries today?",
             };
           }
+
+          return {
+            reply: cleanReply,
+            suggestedProducts: context.replenishments.slice(0, 3).map((r) => ({
+              id: r.productId,
+              name: r.productName,
+              price: Number(r.defaultUnitPrice || 1.5),
+              reason: r.reason,
+            })),
+          };
         }
       } catch (err: any) {
         console.warn("[GeminiService] Chat call error:", err.message);

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 import {
   Sparkles,
   X,
@@ -89,6 +90,7 @@ function getSmartFallbackResponse(query: string): {
 }
 
 export function AIChatModal() {
+  const { isSignedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -147,6 +149,18 @@ export function AIChatModal() {
   };
 
   const handleAddProduct = async (product: { id: string; name: string; price: number }) => {
+    if (!isSignedIn) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `auth-prompt-${Date.now()}`,
+          role: "assistant",
+          text: `👉 Please sign in to save "${product.name}" directly to your household shopping list!`,
+        },
+      ]);
+      return;
+    }
+
     try {
       setAddedMap((prev) => ({ ...prev, [product.id]: true }));
       const listsRes = await api.getShoppingLists();
@@ -233,7 +247,7 @@ export function AIChatModal() {
 
                   <div className="max-w-[82%] space-y-2">
                     <div
-                      className={`p-3 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                      className={`p-3 rounded-2xl text-xs sm:text-sm leading-relaxed whitespace-pre-line ${
                         msg.role === "user"
                           ? "bg-[#84C225] text-white rounded-tr-xs shadow-xs"
                           : "bg-white text-gray-800 border border-gray-100 rounded-tl-xs shadow-2xs"

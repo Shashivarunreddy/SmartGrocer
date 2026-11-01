@@ -77,3 +77,47 @@ export async function requireAuth(
     });
   }
 }
+
+/**
+ * Optional authentication middleware:
+ * Populates req.userProfile if a valid Clerk token is attached, but does not reject guest/unauthenticated calls.
+ */
+export async function optionalAuth(
+  req: AuthenticatedRequest,
+  _res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const auth = getAuth(req);
+
+    if (auth && auth.userId) {
+      const clerkUserId = auth.userId;
+      let userProfile = await prisma.userProfile.findUnique({
+        where: { clerkUserId },
+      });
+
+      if (!userProfile) {
+        try {
+          userProfile = await prisma.userProfile.upsert({
+            where: { clerkUserId },
+            update: {},
+            create: {
+              clerkUserId,
+              householdSize: 1,
+              currency: "GBP",
+            },
+          });
+        } catch {
+          userProfile = await prisma.userProfile.findUnique({
+            where: { clerkUserId },
+          });
+        }
+      }
+
+      req.userProfile = userProfile || undefined;
+    }
+  } catch {
+    // Continue without userProfile
+  }
+  next();
+}

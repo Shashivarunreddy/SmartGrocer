@@ -217,7 +217,8 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const isPublic =
     endpoint.startsWith("/health") ||
     endpoint.startsWith("/products") ||
-    endpoint.startsWith("/docs");
+    endpoint.startsWith("/docs") ||
+    endpoint.startsWith("/recommendations/chat");
 
   // If attempting to query a protected resource without an auth token:
   if (!isPublic && !token) {

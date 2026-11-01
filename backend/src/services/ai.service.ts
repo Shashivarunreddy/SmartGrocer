@@ -459,6 +459,48 @@ class AIService {
    * current pantry stock, active shopping list, and Gemini API.
    */
   async chatWithAssistant(userId: string, message: string): Promise<ChatAssistantResponse> {
+    if (!userId || userId === "guest") {
+      return geminiService.chatWithAssistant(message, {
+        householdSize: 2,
+        budget: 75,
+        actualSpending: 32.5,
+        pantryItems: [
+          { name: "Semi-Skimmed Milk (2 Pints)", quantity: 1, unit: "bottle", expiryDate: new Date(Date.now() + 2 * 86400000) },
+          { name: "Free Range Eggs", quantity: 6, unit: "pack", expiryDate: new Date(Date.now() + 5 * 86400000) },
+          { name: "Wholemeal Bread", quantity: 1, unit: "loaf", expiryDate: new Date(Date.now() + 1 * 86400000) },
+          { name: "Baby Spinach 200g", quantity: 1, unit: "bag", expiryDate: new Date(Date.now() + 2 * 86400000) },
+        ],
+        replenishments: [
+          {
+            productId: "seed-milk",
+            productName: "Semi-Skimmed Milk 2L",
+            category: "Dairy",
+            suggestedQuantity: 1,
+            unit: "bottle",
+            estimatedDaysUntilDepleted: 2,
+            urgency: "HIGH",
+            confidenceScore: 0.92,
+            reason: "Predicted depletion in 2 days based on weekly pattern",
+            defaultUnitPrice: 1.45,
+          },
+          {
+            productId: "seed-bread",
+            productName: "Wholemeal Sliced Bread 800g",
+            category: "Bakery",
+            suggestedQuantity: 1,
+            unit: "loaf",
+            estimatedDaysUntilDepleted: 1,
+            urgency: "CRITICAL",
+            confidenceScore: 0.95,
+            reason: "Loaf expiring tomorrow",
+            defaultUnitPrice: 1.15,
+          },
+        ],
+        wasteRisks: [],
+        activeListItems: [],
+      });
+    }
+
     const [profile, replenishmentsRes, wasteRes, pantryItems, activeList] = await Promise.all([
       prisma.userProfile.findUnique({ where: { id: userId } }),
       this.getReplenishmentPredictions(userId).catch(() => ({ replenishments: [] as ReplenishmentItem[] })),
