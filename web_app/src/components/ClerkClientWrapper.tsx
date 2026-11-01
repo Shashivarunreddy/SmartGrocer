@@ -35,26 +35,36 @@ function AuthenticatedApp({ children }: { children: React.ReactNode }) {
 
   if (!isLoaded && !e2eUser) {
     return (
-      <div className="min-h-screen bg-[#F8FAF6] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-10 h-10 border-4 border-[#84C225] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <span className="text-xs font-bold text-gray-500">Loading SmartGrocer...</span>
+      <>
+        <div className="min-h-screen bg-[#F8FAF6] flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-10 h-10 border-4 border-[#84C225] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <span className="text-xs font-bold text-gray-500">Loading SmartGrocer...</span>
+          </div>
         </div>
-      </div>
+        <div className="hidden" aria-hidden="true">
+          {children}
+        </div>
+      </>
     );
   }
 
   if (!isSignedIn && !e2eUser) {
     return (
-      <AuthScreen
-        onTestLogin={() => {
-          if (typeof window !== "undefined") {
-            localStorage.setItem("e2e_session", "true");
-            document.cookie = "e2e_session=true; path=/; max-age=86400";
-          }
-          setE2eUser(true);
-        }}
-      />
+      <>
+        <AuthScreen
+          onTestLogin={() => {
+            if (typeof window !== "undefined") {
+              localStorage.setItem("e2e_session", "true");
+              document.cookie = "e2e_session=true; path=/; max-age=86400";
+            }
+            setE2eUser(true);
+          }}
+        />
+        <div className="hidden" aria-hidden="true">
+          {children}
+        </div>
+      </>
     );
   }
 

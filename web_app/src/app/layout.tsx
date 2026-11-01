@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: "AI-powered UK grocery assistant with demand forecasting, budget tracking, and zero-waste chef recipes.",
 };
 
+export const instant = false;
+
 export default function RootLayout({
   children,
 }: {
