@@ -134,12 +134,8 @@ function buildCategoryWhere(rawCategory: string): Prisma.ProductWhereInput {
   const rule = CATEGORY_MAP[key];
 
   if (!rule) {
-    const titleCase = rawCategory.trim().charAt(0).toUpperCase() + rawCategory.trim().slice(1);
     return {
-      OR: [
-        { category: { contains: rawCategory.trim(), mode: "insensitive" } },
-        { categoriesTags: { has: titleCase } },
-      ],
+      category: { contains: rawCategory.trim(), mode: "insensitive" },
     };
   }
 
@@ -184,15 +180,13 @@ export async function listProducts(req: Request, res: Response, next: NextFuncti
     const andConditions: Prisma.ProductWhereInput[] = [{ isActive: true }];
 
     if (search) {
-      const searchTitle = search.charAt(0).toUpperCase() + search.slice(1).toLowerCase();
       const searchOr: Prisma.ProductWhereInput[] = [
         { name: { contains: search, mode: "insensitive" } },
         { brands: { contains: search, mode: "insensitive" } },
         { category: { contains: search, mode: "insensitive" } },
         { code: { contains: search } },
-        { categoriesTags: { has: searchTitle } },
       ];
-      if (search.toLowerCase().includes("dairy") || search.toLowerCase().includes("milk")) {
+      if (search.toLowerCase() === "dairy" || search.toLowerCase() === "dairies") {
         searchOr.push({
           categoriesTags: {
             hasSome: ["Dairies", "Milks", "Fresh milks", "Semi-skimmed milks", "Whole milks", "Cheeses", "Butters", "Yogurts", "Eggs"],
