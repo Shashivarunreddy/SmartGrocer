@@ -1,6 +1,12 @@
 import { prisma } from "../config/prisma";
 import { ENV } from "../config/env";
-import { geminiService, RecipeItem, ChatAssistantResponse } from "./gemini.service";
+import {
+  geminiService,
+  RecipeItem,
+  ChatAssistantResponse,
+  doesPantryItemMatchIngredient,
+  findBestCatalogueProduct,
+} from "./gemini.service";
 
 export interface ReplenishmentItem {
   productId: string;
@@ -418,19 +424,28 @@ class AIService {
   }
 
   /**
-   * Generates Zero-Waste Recipes using Gemini AI and Pantry items.
+   * Generates Zero-Waste Recipes using Gemini AI or Curated UK Kitchen Engine,
+   * accurately cross-checked against Pantry items and Active Shopping List.
    */
-  async getRecipeSuggestions(userId: string): Promise<{
+  async getRecipeSuggestions(
+    userId: string,
+    options?: { mealType?: string; query?: string; refresh?: boolean }
+  ): Promise<{
     recipes: RecipeItem[];
     source: string;
     summary: string;
   }> {
-    const [profile, pantryItems] = await Promise.all([
+    const [profile, pantryItems, activeList] = await Promise.all([
       prisma.userProfile.findUnique({ where: { id: userId } }),
       prisma.pantryItem.findMany({
         where: { userId },
         include: { product: true },
         orderBy: { expiryDate: "asc" },
+      }),
+      prisma.shoppingList.findFirst({
+        where: { userId, status: { in: ["ACTIVE", "DRAFT"] } },
+        include: { items: { include: { product: true } } },
+        orderBy: { updatedAt: "desc" },
       }),
     ]);
 
@@ -447,11 +462,186 @@ class AIService {
       ? (profile.dietaryPreferences as string[])
       : [];
 
+    const activeListProductIds = new Set<string>(
+      (activeList?.items || []).map((i) => i.productId)
+    );
+    const activeListProductNames = (activeList?.items || [])
+      .map((i) => i.product?.name || "")
+      .filter(Boolean);
+
     return geminiService.generateRecipes(
       formattedPantry,
       dietaryPreferences,
-      profile?.householdSize || 2
+      profile?.householdSize || 2,
+      {
+        mealType: options?.mealType,
+        query: options?.query,
+        refresh: options?.refresh,
+        activeListProductIds,
+        activeListProductNames,
+      }
     );
+  }
+
+  /**
+   * "Get All" Dish Action:
+   * Live-checks the user's current pantry stock at click time for every ingredient
+   * in the dish, skips what the user already owns or has in their active list,
+   * matches missing ingredients to real UK catalogue products, and adds them to the list.
+   */
+  async getAllRecipeIngredientsToList(
+    userId: string,
+    payload: {
+      recipeTitle: string;
+      ingredients: Array<{
+        name: string;
+        quantity?: string;
+        suggestedCategory?: string;
+        matchedProductId?: string;
+      }>;
+    }
+  ): Promise<{
+    listId: string;
+    listName: string;
+    alreadyInPantry: string[];
+    alreadyInList: string[];
+    addedItems: Array<{ productId: string; name: string; price: number; ingredientName: string }>;
+    unresolvedItems: string[];
+    totalAddedCostGbp: number;
+    summary: string;
+  }> {
+    const profile = await prisma.userProfile.findUnique({ where: { id: userId } });
+
+    const [pantryItems, existingLists] = await Promise.all([
+      prisma.pantryItem.findMany({
+        where: { userId },
+        include: { product: true },
+      }),
+      prisma.shoppingList.findMany({
+        where: { userId, status: { in: ["ACTIVE", "DRAFT"] } },
+        include: { items: { include: { product: true } } },
+        orderBy: { updatedAt: "desc" },
+      }),
+    ]);
+
+    let targetList = existingLists.find((l) => l.status === "ACTIVE") || existingLists[0];
+    if (!targetList) {
+      targetList = await prisma.shoppingList.create({
+        data: {
+          userId,
+          name: "My Smart List",
+          status: "ACTIVE",
+          budget: profile?.defaultBudget || 50,
+          currency: profile?.currency || "GBP",
+          householdSizeSnapshot: profile?.householdSize || 2,
+        },
+        include: { items: { include: { product: true } } },
+      });
+    }
+
+    const existingListProductIds = new Set(targetList.items.map((i) => i.productId));
+    const existingListNames = targetList.items.map((i) => i.product?.name?.toLowerCase() || "");
+
+    const alreadyInPantry: string[] = [];
+    const alreadyInList: string[] = [];
+    const addedItems: Array<{ productId: string; name: string; price: number; ingredientName: string }> = [];
+    const unresolvedItems: string[] = [];
+    let totalAddedCostGbp = 0;
+
+    for (const ing of payload.ingredients || []) {
+      const tokens = ing.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter((w) => w.length > 2);
+
+      // 1. Live Pantry Check: Does the user already have this ingredient?
+      const inPantry = pantryItems.find((p) =>
+        doesPantryItemMatchIngredient(p.product.name, p.product.category, tokens)
+      );
+      if (inPantry) {
+        alreadyInPantry.push(`${ing.name} (Have: ${inPantry.product.name})`);
+        continue;
+      }
+
+      // 2. Resolve UK Catalogue Product
+      let matchedProd: { id: string; name: string; defaultUnitPrice: number } | null = null;
+      if (ing.matchedProductId) {
+        const direct = await prisma.product.findUnique({
+          where: { id: ing.matchedProductId },
+          select: { id: true, name: true, defaultUnitPrice: true },
+        });
+        if (direct) {
+          matchedProd = {
+            id: direct.id,
+            name: direct.name,
+            defaultUnitPrice: Number(direct.defaultUnitPrice),
+          };
+        }
+      }
+      if (!matchedProd) {
+        const found = await findBestCatalogueProduct(ing.name, tokens, ing.suggestedCategory);
+        if (found) {
+          matchedProd = {
+            id: found.id,
+            name: found.name,
+            defaultUnitPrice: found.defaultUnitPrice,
+          };
+        }
+      }
+
+      if (!matchedProd) {
+        unresolvedItems.push(ing.name);
+        continue;
+      }
+
+      // 3. Duplicate Check on Active Shopping List
+      const isAlreadyQueued =
+        existingListProductIds.has(matchedProd.id) ||
+        existingListNames.some((ln) => tokens.length > 0 && tokens.every((t) => ln.includes(t)));
+
+      if (isAlreadyQueued) {
+        alreadyInList.push(matchedProd.name);
+        continue;
+      }
+
+      // 4. Add missing item to Shopping List
+      await prisma.shoppingListItem.create({
+        data: {
+          shoppingListId: targetList.id,
+          productId: matchedProd.id,
+          quantity: 1,
+          unitPriceSnapshot: matchedProd.defaultUnitPrice,
+          notes: `For: ${payload.recipeTitle}`,
+        },
+      });
+      existingListProductIds.add(matchedProd.id);
+
+      addedItems.push({
+        productId: matchedProd.id,
+        name: matchedProd.name,
+        price: matchedProd.defaultUnitPrice,
+        ingredientName: ing.name,
+      });
+      totalAddedCostGbp += matchedProd.defaultUnitPrice;
+    }
+
+    totalAddedCostGbp = Number(totalAddedCostGbp.toFixed(2));
+    const summaryParts: string[] = [];
+    if (alreadyInPantry.length > 0) summaryParts.push(`${alreadyInPantry.length} already in pantry`);
+    if (addedItems.length > 0) summaryParts.push(`${addedItems.length} added to "${targetList.name}" (£${totalAddedCostGbp.toFixed(2)})`);
+    if (alreadyInList.length > 0) summaryParts.push(`${alreadyInList.length} already in list`);
+
+    return {
+      listId: targetList.id,
+      listName: targetList.name,
+      alreadyInPantry,
+      alreadyInList,
+      addedItems,
+      unresolvedItems,
+      totalAddedCostGbp,
+      summary: summaryParts.join(" • ") || "All ingredients checked!",
+    };
   }
 
   /**
@@ -471,10 +661,10 @@ class AIService {
           budget: 75,
           actualSpending: 32.5,
           pantryItems: [
-            { name: "Semi-Skimmed Milk (2 Pints)", quantity: 1, unit: "bottle", expiryDate: new Date(Date.now() + 2 * 86400000) },
-            { name: "Free Range Eggs", quantity: 6, unit: "pack", expiryDate: new Date(Date.now() + 5 * 86400000) },
-            { name: "Wholemeal Bread", quantity: 1, unit: "loaf", expiryDate: new Date(Date.now() + 1 * 86400000) },
-            { name: "Baby Spinach 200g", quantity: 1, unit: "bag", expiryDate: new Date(Date.now() + 2 * 86400000) },
+            { productId: "guest-milk", name: "Semi-Skimmed Milk (2 Pints)", category: "Dairy & Eggs", quantity: 1, unit: "bottle", expiryDate: new Date(Date.now() + 2 * 86400000) },
+            { productId: "guest-eggs", name: "Free Range Eggs", category: "Dairy & Eggs", quantity: 6, unit: "pack", expiryDate: new Date(Date.now() + 5 * 86400000) },
+            { productId: "guest-bread", name: "Wholemeal Bread", category: "Bakery", quantity: 1, unit: "loaf", expiryDate: new Date(Date.now() + 1 * 86400000) },
+            { productId: "guest-spinach", name: "Baby Spinach 200g", category: "Fresh Produce", quantity: 1, unit: "bag", expiryDate: new Date(Date.now() + 2 * 86400000) },
           ],
           replenishments: [
             {
@@ -519,13 +709,20 @@ class AIService {
         orderBy: { expiryDate: "asc" },
       }),
       prisma.shoppingList.findFirst({
-        where: { userId, status: "ACTIVE" },
+        where: { userId, status: { in: ["ACTIVE", "DRAFT"] } },
         include: { items: { include: { product: true } } },
+        orderBy: { updatedAt: "desc" },
       }),
     ]);
 
+    const alternativesRes = activeList
+      ? await this.getAlternativesForList(activeList.id, userId).catch(() => ({ substitutions: [] as AlternativeItem[] }))
+      : { substitutions: [] as AlternativeItem[] };
+
     const formattedPantry = pantryItems.map((p) => ({
+      productId: p.productId,
       name: p.product.name,
+      category: p.product.category,
       quantity: Number(p.quantity),
       unit: p.unit || p.product.unit || "unit",
       expiryDate: p.expiryDate,
@@ -547,6 +744,7 @@ class AIService {
         replenishments: replenishmentsRes.replenishments,
         wasteRisks: wasteRes.atRiskItems,
         activeListItems: activeItems,
+        alternatives: alternativesRes.substitutions,
       },
       history
     );

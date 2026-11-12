@@ -52,7 +52,42 @@ export async function getRecipeRecommendations(
 ): Promise<void> {
   try {
     const userId = req.userProfile!.id;
-    const result = await aiService.getRecipeSuggestions(userId);
+    const mealType = typeof req.query.mealType === "string" ? req.query.mealType : undefined;
+    const query = typeof req.query.query === "string" ? req.query.query : undefined;
+    const refresh = req.query.refresh === "true";
+
+    const result = await aiService.getRecipeSuggestions(userId, {
+      mealType,
+      query,
+      refresh,
+    });
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllRecipeIngredients(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const userId = req.userProfile!.id;
+    const { recipeTitle, ingredients } = req.body || {};
+
+    if (!recipeTitle || !Array.isArray(ingredients)) {
+      res.status(400).json({
+        code: "VALIDATION_ERROR",
+        message: "recipeTitle and ingredients array are required.",
+      });
+      return;
+    }
+
+    const result = await aiService.getAllRecipeIngredientsToList(userId, {
+      recipeTitle,
+      ingredients,
+    });
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);

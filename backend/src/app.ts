@@ -13,6 +13,9 @@ import { swaggerSpec } from "./docs/swagger";
 
 const app = express();
 
+// Respect X-Forwarded-For behind Vercel / reverse proxies for accurate rate limiting
+app.set("trust proxy", 1);
+
 // Security Headers (SEC-11)
 app.use(
   helmet({

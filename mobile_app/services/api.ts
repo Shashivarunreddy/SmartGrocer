@@ -170,22 +170,46 @@ export interface RecipeItem {
   prepTimeMinutes: number;
   difficulty: "EASY" | "MEDIUM" | "HARD";
   cuisine: string;
+  mealType?: string;
+  tags?: string[];
   servings: number;
+  pantryMatchPercent?: number;
   usedPantryItems: Array<{
     name: string;
     quantity: string;
     isFromPantry: boolean;
     productId?: string;
+    daysUntilExpiry?: number | null;
   }>;
   missingIngredients: Array<{
     name: string;
+    quantity?: string;
     estimatedPriceGbp: number;
     suggestedCategory: string;
     matchedProductId?: string;
+    matchedProductName?: string;
+    matchedProductImage?: string | null;
+    alreadyInList?: boolean;
   }>;
   instructions: string[];
   chefTip?: string;
   wasteReductionScore: number;
+}
+
+export interface GetAllRecipeIngredientsResult {
+  listId: string;
+  listName: string;
+  alreadyInPantry: string[];
+  alreadyInList: string[];
+  addedItems: Array<{
+    productId: string;
+    name: string;
+    price: number;
+    ingredientName: string;
+  }>;
+  unresolvedItems: string[];
+  totalAddedCostGbp: number;
+  summary: string;
 }
 
 export interface ChatAssistantResponse {
@@ -195,7 +219,11 @@ export interface ChatAssistantResponse {
     name: string;
     price: number;
     reason: string;
+    imageUrl?: string | null;
+    alreadyInPantry?: boolean;
   }>;
+  suggestedRecipe?: RecipeItem;
+  suggestedFollowUps?: string[];
 }
 
 
@@ -375,22 +403,45 @@ export const api = {
     }>(`/recommendations/alternatives/${listId}`),
 
   // Zero-Waste Chef Recipes (Gemini AI + Pantry)
-  getRecipes: () =>
-    request<{
+  getRecipes: (params?: { mealType?: string; query?: string; refresh?: boolean }) => {
+    const query = new URLSearchParams();
+    if (params?.mealType && params.mealType !== "all") query.append("mealType", params.mealType);
+    if (params?.query) query.append("query", params.query);
+    if (params?.refresh) query.append("refresh", "true");
+    const qs = query.toString();
+    return request<{
       data: {
         recipes: RecipeItem[];
         source: string;
         summary: string;
       };
-    }>("/recommendations/recipes"),
+    }>(`/recommendations/recipes${qs ? `?${qs}` : ""}`);
+  },
 
-  // AI Grocery Assistant Chatbot (Gemini + Python Analysis)
-  chatWithAssistant: (message: string) =>
+  getAllRecipeIngredients: (payload: {
+    recipeTitle: string;
+    ingredients: Array<{
+      name: string;
+      quantity?: string;
+      suggestedCategory?: string;
+      matchedProductId?: string;
+    }>;
+  }) =>
+    request<{ data: GetAllRecipeIngredientsResult }>("/recommendations/recipes/get-all", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  // AI Grocery Assistant Chatbot (Multi-Turn Conversational Memory)
+  chatWithAssistant: (
+    message: string,
+    history?: Array<{ role: "user" | "assistant"; text: string }>
+  ) =>
     request<{
       data: ChatAssistantResponse;
     }>("/recommendations/chat", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, history }),
     }),
 
   // Spending & Food-Waste Analytics (Phase B)

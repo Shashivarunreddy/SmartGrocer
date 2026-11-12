@@ -21,6 +21,7 @@ import {
   ReplenishmentItem,
   WasteRiskItem,
   ChatAssistantResponse,
+  GetAllRecipeIngredientsResult,
 } from '@/services/api';
 
 type TabMode = 'recipes' | 'assistant' | 'insights';
@@ -35,12 +36,25 @@ interface ChatMessage {
     price: number;
     reason: string;
   }>;
+  recipe?: RecipeItem;
+  followUps?: string[];
 }
 
+const MEAL_FILTERS = [
+  { key: 'all', label: 'All Dishes' },
+  { key: 'pantry', label: 'Pantry Match' },
+  { key: 'quick', label: '⚡ Quick' },
+  { key: 'dinner', label: '🍽️ Dinner' },
+  { key: 'breakfast', label: '🥞 Breakfast' },
+  { key: 'vegetarian', label: '🥗 Vegetarian' },
+  { key: 'spicy', label: '🌶️ Spicy' },
+];
+
 const QUICK_PROMPTS = [
+  '🍳 Suggest a dinner dish',
+  '🥛 Find fresh milk & dairy',
   '🛒 What do I need to buy?',
   '⏳ What is expiring soon?',
-  '🍳 Suggest a meal from my pantry',
   '💰 How is my grocery budget?',
 ];
 
@@ -52,9 +66,13 @@ export default function AIScreen() {
   // Data States
   const [recipes, setRecipes] = useState<RecipeItem[]>([]);
   const [recipesSource, setRecipesSource] = useState<string>('');
+  const [recipesSummary, setRecipesSummary] = useState<string>('');
+  const [mealFilter, setMealFilter] = useState<string>('all');
+  const [recipeQuery, setRecipeQuery] = useState<string>('');
+  const [recipesLoading, setRecipesLoading] = useState<boolean>(false);
   const [expandedRecipeId, setExpandedRecipeId] = useState<string | null>(null);
   const [addingRecipeId, setAddingRecipeId] = useState<string | null>(null);
-  const [addedRecipesMap, setAddedRecipesMap] = useState<Record<string, boolean>>({});
+  const [getAllResults, setGetAllResults] = useState<Record<string, GetAllRecipeIngredientsResult>>({});
 
   // Insights States
   const [replenishments, setReplenishments] = useState<ReplenishmentItem[]>([]);
@@ -65,12 +83,14 @@ export default function AIScreen() {
     {
       id: 'welcome',
       role: 'assistant',
-      text: "Hello! 👋 I'm your SmartGrocer Assistant. Powered by Gemini and live Python forecasting, ask me 'What do I need?' or 'What's expiring?' to stay ahead on your groceries!",
+      text: "Hello! 👋 I'm your SmartGrocer Culinary & Pantry AI. Ask me what to cook tonight, search UK groceries, or let me check your pantry & build your shopping list!",
+      followUps: ['🍳 Suggest a dinner dish', '🥛 Find fresh milk & dairy'],
     },
   ]);
   const [inputText, setInputText] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const [chatAddedMap, setChatAddedMap] = useState<Record<string, boolean>>({});
+  const [chatRecipeOutcomes, setChatRecipeOutcomes] = useState<Record<string, GetAllRecipeIngredientsResult>>({});
   const chatScrollRef = useRef<any>(null);
 
   // Action status toast
@@ -81,11 +101,31 @@ export default function AIScreen() {
     setTimeout(() => setActionFeedback(null), 3000);
   };
 
+  const loadRecipesOnly = async (opts?: { mealType?: string; query?: string; refresh?: boolean }) => {
+    try {
+      setRecipesLoading(true);
+      const res = await api.getRecipes({
+        mealType: opts?.mealType ?? mealFilter,
+        query: opts?.query ?? recipeQuery,
+        refresh: opts?.refresh,
+      });
+      if (res?.data) {
+        setRecipes(res.data.recipes || []);
+        setRecipesSource(res.data.source || '');
+        setRecipesSummary(res.data.summary || '');
+      }
+    } catch (err: any) {
+      console.warn('Recipe filter error:', err.message);
+    } finally {
+      setRecipesLoading(false);
+    }
+  };
+
   const loadData = async () => {
     try {
       setLoading(true);
       const [recipeRes, repRes, wasteRes] = await Promise.allSettled([
-        api.getRecipes(),
+        api.getRecipes({ mealType: mealFilter, query: recipeQuery }),
         api.getReplenishments(),
         api.getWasteRisks(),
       ]);
@@ -93,6 +133,7 @@ export default function AIScreen() {
       if (recipeRes.status === 'fulfilled') {
         setRecipes(recipeRes.value.data.recipes);
         setRecipesSource(recipeRes.value.data.source);
+        setRecipesSummary(recipeRes.value.data.summary || '');
       }
       if (repRes.status === 'fulfilled') {
         setReplenishments(repRes.value.data.replenishments);
@@ -118,60 +159,55 @@ export default function AIScreen() {
   };
 
   // ----------------------------------------------------
-  // RECIPES LOGIC: Add Missing Ingredients to Active List
+  // RECIPES LOGIC: "Get All" Live Pantry Check & Add
   // ----------------------------------------------------
-  const handleAddMissingToList = async (recipe: RecipeItem) => {
+  const handleGetAllForRecipe = async (recipe: RecipeItem, chatMsgId?: string) => {
     const recipeKey = recipe.id || recipe.title;
     try {
       setAddingRecipeId(recipeKey);
-      const listsRes = await api.getShoppingLists();
-      const lists = listsRes?.data || [];
-      let targetList = lists.find(
-        (l: any) => l.status === 'ACTIVE' || l.status === 'DRAFT'
-      );
+      const pantryItemsList = recipe.usedPantryItems.filter((u) => u.isFromPantry);
+      const allRecipeIngredients = [
+        ...pantryItemsList.map((u) => ({
+          name: u.name,
+          quantity: u.quantity,
+          suggestedCategory: 'Groceries',
+        })),
+        ...recipe.missingIngredients.map((m) => ({
+          name: m.name,
+          quantity: m.quantity,
+          suggestedCategory: m.suggestedCategory,
+          matchedProductId: m.matchedProductId,
+        })),
+      ];
 
-      if (!targetList) {
-        const createRes = await api.createShoppingList('My Smart List', 50, 'GBP');
-        targetList = createRes.data;
+      const res = await api.getAllRecipeIngredients({
+        recipeTitle: recipe.title,
+        ingredients: allRecipeIngredients,
+      });
+      const result = res.data;
+
+      if (chatMsgId) {
+        setChatRecipeOutcomes((prev) => ({ ...prev, [chatMsgId]: result }));
+      } else {
+        setGetAllResults((prev) => ({ ...prev, [recipeKey]: result }));
+        setRecipes((prev) =>
+          prev.map((r) =>
+            r.id === recipe.id || r.title === recipe.title
+              ? { ...r, missingIngredients: [] }
+              : r
+          )
+        );
       }
 
-      let addedCount = 0;
-      for (const item of recipe.missingIngredients) {
-        let prodId = item.matchedProductId;
-
-        if (!prodId) {
-          // Fallback fuzzy search by name
-          try {
-            const searchRes = await api.getProducts({ search: item.name, pageSize: 1 });
-            if (searchRes?.data && searchRes.data.length > 0) {
-              prodId = searchRes.data[0].id;
-            }
-          } catch {}
-        }
-
-        if (prodId) {
-          await api.addItemToList(targetList.id, prodId, 1, `For: ${recipe.title}`);
-          addedCount++;
-        }
-      }
-
-      // Mark recipe as added and remove missing ingredients from the UI
-      setAddedRecipesMap((prev) => ({ ...prev, [recipeKey]: true }));
-      setRecipes((prev) =>
-        prev.map((r) =>
-          r.id === recipe.id || r.title === recipe.title
-            ? { ...r, missingIngredients: [] }
-            : r
-        )
-      );
-
-      showToast(`✓ Added ${addedCount} missing ingredient(s) to "${targetList.name}"!`);
+      showToast(`✓ ${result.summary}`);
       Alert.alert(
-        'Added to Shopping List! 🛒',
-        `Successfully added ${addedCount} missing ingredients for "${recipe.title}" to your active shopping list.`
+        'Pantry Checked & List Updated! 🛒',
+        result.addedItems.length > 0
+          ? `${result.summary}\n\nOpen the Shopping Lists tab to buy your items and start cooking "${recipe.title}".`
+          : result.summary
       );
     } catch (err: any) {
-      Alert.alert('Error', 'Could not add items to your shopping list: ' + err.message);
+      Alert.alert('Error', 'Could not check pantry & add items: ' + err.message);
     } finally {
       setAddingRecipeId(null);
     }
@@ -183,52 +219,43 @@ export default function AIScreen() {
   ) => {
     const recipeKey = recipe.id || recipe.title;
     try {
-      const listsRes = await api.getShoppingLists();
-      const lists = listsRes?.data || [];
-      let targetList = lists.find(
-        (l: any) => l.status === 'ACTIVE' || l.status === 'DRAFT'
+      const res = await api.getAllRecipeIngredients({
+        recipeTitle: recipe.title,
+        ingredients: [
+          {
+            name: item.name,
+            quantity: item.quantity,
+            suggestedCategory: item.suggestedCategory,
+            matchedProductId: item.matchedProductId,
+          },
+        ],
+      });
+      const result = res.data;
+      showToast(
+        result.addedItems.length > 0
+          ? `✓ Added "${result.addedItems[0].name}" to "${result.listName}"!`
+          : `✓ ${result.summary}`
       );
 
-      if (!targetList) {
-        const createRes = await api.createShoppingList('My Smart List', 50, 'GBP');
-        targetList = createRes.data;
-      }
-
-      let prodId = item.matchedProductId;
-      if (!prodId) {
-        try {
-          const searchRes = await api.getProducts({ search: item.name, pageSize: 1 });
-          if (searchRes?.data && searchRes.data.length > 0) {
-            prodId = searchRes.data[0].id;
-          }
-        } catch {}
-      }
-
-      if (prodId) {
-        await api.addItemToList(targetList.id, prodId, 1, `For: ${recipe.title}`);
-        showToast(`✓ Added "${item.name}" to "${targetList.name}"!`);
-
-        // Remove only this single item from recipe's missingIngredients
-        setRecipes((prev) =>
-          prev.map((r) => {
-            if (r.id === recipe.id || r.title === recipe.title) {
-              const updatedMissing = r.missingIngredients.filter((m) => m.name !== item.name);
-              if (updatedMissing.length === 0) {
-                setAddedRecipesMap((p) => ({ ...p, [recipeKey]: true }));
-              }
-              return { ...r, missingIngredients: updatedMissing };
+      setRecipes((prev) =>
+        prev.map((r) => {
+          if (r.id === recipe.id || r.title === recipe.title) {
+            const updatedMissing = r.missingIngredients.filter((m) => m.name !== item.name);
+            if (updatedMissing.length === 0) {
+              setGetAllResults((p) => ({ ...p, [recipeKey]: result }));
             }
-            return r;
-          })
-        );
-      }
+            return { ...r, missingIngredients: updatedMissing };
+          }
+          return r;
+        })
+      );
     } catch (err: any) {
       Alert.alert('Error', 'Could not add item to your shopping list: ' + err.message);
     }
   };
 
   // ----------------------------------------------------
-  // CHAT ASSISTANT LOGIC
+  // CHAT ASSISTANT LOGIC (Multi-Turn History)
   // ----------------------------------------------------
   const handleSendChatMessage = async (textToSend?: string) => {
     const query = (textToSend || inputText).trim();
@@ -249,7 +276,12 @@ export default function AIScreen() {
     }, 100);
 
     try {
-      const res = await api.chatWithAssistant(query);
+      const recentHistory = messages
+        .filter((m) => m.id !== 'welcome')
+        .slice(-6)
+        .map((m) => ({ role: m.role, text: m.text }));
+
+      const res = await api.chatWithAssistant(query, recentHistory);
       const data: ChatAssistantResponse = res.data;
 
       const aiMsg: ChatMessage = {
@@ -257,6 +289,8 @@ export default function AIScreen() {
         role: 'assistant',
         text: data.reply,
         products: data.suggestedProducts,
+        recipe: data.suggestedRecipe,
+        followUps: data.suggestedFollowUps,
       };
 
       setMessages((prev) => [...prev, aiMsg]);
@@ -405,9 +439,38 @@ export default function AIScreen() {
                     {m.text}
                   </Text>
 
+                  {m.recipe && (
+                    <View style={styles.chatRecipeCard}>
+                      <View style={styles.chatRecipeTop}>
+                        <Text style={styles.chatRecipeTitle}>🍳 {m.recipe.title}</Text>
+                        <Text style={styles.chatRecipeMeta}>
+                          {m.recipe.pantryMatchPercent ?? 0}% in pantry
+                        </Text>
+                      </View>
+                      {chatRecipeOutcomes[m.id] ? (
+                        <View style={styles.missingAddedBox}>
+                          <Ionicons name="checkmark-circle" size={14} color="#059669" />
+                          <Text style={styles.missingAddedText}>
+                            {chatRecipeOutcomes[m.id].summary}
+                          </Text>
+                        </View>
+                      ) : m.recipe.missingIngredients.length > 0 ? (
+                        <TouchableOpacity
+                          style={styles.btnAddMissing}
+                          disabled={addingRecipeId === (m.recipe.id || m.recipe.title)}
+                          onPress={() => handleGetAllForRecipe(m.recipe!, m.id)}>
+                          <Ionicons name="cart-outline" size={14} color="#FFF" />
+                          <Text style={styles.btnAddMissingText}>
+                            Get All ({m.recipe.missingIngredients.length} missing)
+                          </Text>
+                        </TouchableOpacity>
+                      ) : null}
+                    </View>
+                  )}
+
                   {m.products && m.products.length > 0 && (
                     <View style={styles.chatProductsContainer}>
-                      <Text style={styles.chatProductsHeader}>Recommended to replenish:</Text>
+                      <Text style={styles.chatProductsHeader}>UK Catalogue Suggestions:</Text>
                       {m.products.map((p) => {
                         const isAdded = chatAddedMap[p.id];
                         return (
@@ -435,6 +498,19 @@ export default function AIScreen() {
                           </View>
                         );
                       })}
+                    </View>
+                  )}
+
+                  {m.followUps && m.followUps.length > 0 && (
+                    <View style={styles.chatFollowUpRow}>
+                      {m.followUps.map((f, fIdx) => (
+                        <TouchableOpacity
+                          key={fIdx}
+                          style={styles.chatFollowUpChip}
+                          onPress={() => handleSendChatMessage(f)}>
+                          <Text style={styles.chatFollowUpText}>{f}</Text>
+                        </TouchableOpacity>
+                      ))}
                     </View>
                   )}
                 </View>
@@ -515,30 +591,97 @@ export default function AIScreen() {
                     <View style={styles.heroTextBox}>
                       <Text style={styles.heroTitle}>Zero-Waste Kitchen Chef</Text>
                       <Text style={styles.heroSubtitle}>
-                        {recipesSource === 'GEMINI_AI'
-                          ? 'Personalized British Recipes generated by Gemini AI'
-                          : 'Zero-waste British recipes tailored to your pantry stock'}
+                        {recipesSummary ||
+                          (recipesSource === 'GEMINI_AI'
+                            ? 'Personalized UK recipes prioritized by expiring pantry items'
+                            : 'Tap Get All on any dish to check your pantry & add missing items')}
                       </Text>
                     </View>
                   </View>
 
-                  {recipes.length === 0 ? (
+                  {/* Craving Search & Inspire Me */}
+                  <View style={styles.recipeFilterBox}>
+                    <View style={styles.recipeSearchRow}>
+                      <TextInput
+                        style={styles.recipeSearchInput}
+                        placeholder="Craving? (chicken, pasta, curry, eggs)..."
+                        placeholderTextColor="#9CA3AF"
+                        value={recipeQuery}
+                        onChangeText={setRecipeQuery}
+                        onSubmitEditing={() => loadRecipesOnly({ mealType: mealFilter, query: recipeQuery })}
+                      />
+                      <TouchableOpacity
+                        style={styles.recipeFindBtn}
+                        onPress={() => loadRecipesOnly({ mealType: mealFilter, query: recipeQuery })}>
+                        <Ionicons name="search" size={16} color="#FFF" />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.recipeInspireBtn}
+                        onPress={() => {
+                          setRecipeQuery('');
+                          loadRecipesOnly({ mealType: mealFilter, query: '', refresh: true });
+                        }}>
+                        <Ionicons name="shuffle" size={16} color={BrandColors.primary} />
+                        <Text style={styles.recipeInspireText}>Inspire</Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingTop: 8 }}>
+                      {MEAL_FILTERS.map((f) => (
+                        <TouchableOpacity
+                          key={f.key}
+                          style={[
+                            styles.filterChip,
+                            mealFilter === f.key && styles.filterChipActive,
+                          ]}
+                          onPress={() => {
+                            setMealFilter(f.key);
+                            loadRecipesOnly({ mealType: f.key, query: recipeQuery });
+                          }}>
+                          <Text
+                            style={[
+                              styles.filterChipText,
+                              mealFilter === f.key && styles.filterChipTextActive,
+                            ]}>
+                            {f.label}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  </View>
+
+                  {recipesLoading ? (
+                    <View style={styles.loadingContainer}>
+                      <ActivityIndicator size="small" color={BrandColors.primary} />
+                      <Text style={styles.loadingText}>Finding delicious dishes...</Text>
+                    </View>
+                  ) : recipes.length === 0 ? (
                     <View style={styles.emptyContainer}>
                       <Ionicons name="restaurant-outline" size={54} color="#9CA3AF" />
                       <Text style={styles.emptyTitle}>No Recipes Available Yet</Text>
                       <Text style={styles.emptySubtitle}>
-                        Add items to your pantry to unlock customized recipes.
+                        Tap Inspire or clear your search filter to explore curated UK dishes.
                       </Text>
                     </View>
                   ) : (
                     recipes.map((recipe) => {
-                      const isExpanded = expandedRecipeId === recipe.id;
+                      const recipeKey = recipe.id || recipe.title;
+                      const isExpanded = expandedRecipeId === recipeKey;
+                      const confirmedInPantry = recipe.usedPantryItems.filter((u) => u.isFromPantry);
+                      const totalIngs = confirmedInPantry.length + recipe.missingIngredients.length;
+                      const matchPct =
+                        typeof recipe.pantryMatchPercent === 'number'
+                          ? recipe.pantryMatchPercent
+                          : totalIngs > 0
+                          ? Math.round((confirmedInPantry.length / totalIngs) * 100)
+                          : 0;
+                      const getAllOutcome = getAllResults[recipeKey];
                       return (
-                        <View key={recipe.id} style={styles.recipeCard}>
+                        <View key={recipeKey} style={styles.recipeCard}>
                           <TouchableOpacity
                             style={styles.recipeHeader}
                             onPress={() =>
-                              setExpandedRecipeId(isExpanded ? null : recipe.id)
+                              setExpandedRecipeId(isExpanded ? null : recipeKey)
                             }>
                             <View style={{ flex: 1 }}>
                               <View style={styles.badgeRow}>
@@ -548,7 +691,11 @@ export default function AIScreen() {
                                     {recipe.wasteReductionScore}% Zero-Waste
                                   </Text>
                                 </View>
-                                <Text style={styles.cuisineText}>{recipe.cuisine}</Text>
+                                <View style={styles.pantryPctBadge}>
+                                  <Text style={styles.pantryPctText}>
+                                    {confirmedInPantry.length}/{totalIngs} in Pantry ({matchPct}%)
+                                  </Text>
+                                </View>
                               </View>
 
                               <Text style={styles.recipeTitle}>{recipe.title}</Text>
@@ -580,26 +727,54 @@ export default function AIScreen() {
                             />
                           </TouchableOpacity>
 
+                          {/* Always show Quick Get All button + Expandable Details */}
+                          {!isExpanded && recipe.missingIngredients && recipe.missingIngredients.length > 0 && !getAllOutcome && (
+                            <View style={{ paddingHorizontal: 16, paddingBottom: 14 }}>
+                              <TouchableOpacity
+                                style={[
+                                  styles.btnAddMissing,
+                                  addingRecipeId === recipeKey && { opacity: 0.7 },
+                                ]}
+                                disabled={addingRecipeId === recipeKey}
+                                onPress={() => handleGetAllForRecipe(recipe)}>
+                                <Ionicons name="cart-outline" size={16} color="#FFF" />
+                                <Text style={styles.btnAddMissingText}>
+                                  Get All • Check Pantry & Add ({recipe.missingIngredients.length} items)
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          )}
+
                           {isExpanded && (
                             <View style={styles.recipeExpandedContent}>
-                              {/* Pantry Items Used */}
-                              <Text style={styles.sectionHeader}>Ingredients from Pantry:</Text>
-                              <View style={styles.tagsContainer}>
-                                {recipe.usedPantryItems.map((ing, idx) => (
-                                  <View key={idx} style={styles.pantryTag}>
-                                    <Ionicons name="checkmark-circle" size={13} color="#059669" />
-                                    <Text style={styles.pantryTagText}>
-                                      {ing.name} ({ing.quantity})
-                                    </Text>
-                                  </View>
-                                ))}
-                              </View>
+                              {/* Confirmed Pantry Items */}
+                              <Text style={styles.sectionHeader}>
+                                In Your Pantry ({confirmedInPantry.length}):
+                              </Text>
+                              {confirmedInPantry.length > 0 ? (
+                                <View style={styles.tagsContainer}>
+                                  {confirmedInPantry.map((ing, idx) => (
+                                    <View key={idx} style={styles.pantryTag}>
+                                      <Ionicons name="checkmark-circle" size={13} color="#059669" />
+                                      <Text style={styles.pantryTagText}>
+                                        {ing.name} ({ing.quantity})
+                                      </Text>
+                                    </View>
+                                  ))}
+                                </View>
+                              ) : (
+                                <Text style={styles.emptyPantryNote}>
+                                  None in your pantry yet — tap Get All below to add everything to your list!
+                                </Text>
+                              )}
 
-                              {/* Missing Ingredients & One-Tap Add */}
+                              {/* Missing Ingredients & Get All */}
                               {recipe.missingIngredients && recipe.missingIngredients.length > 0 ? (
                                 <View style={styles.missingBox}>
                                   <View style={styles.missingHeaderRow}>
-                                    <Text style={styles.sectionHeader}>Missing Groceries:</Text>
+                                    <Text style={styles.sectionHeader}>
+                                      Need to Buy ({recipe.missingIngredients.length}):
+                                    </Text>
                                     <Text style={styles.missingPriceSummary}>
                                       +£
                                       {recipe.missingIngredients
@@ -625,27 +800,27 @@ export default function AIScreen() {
                                   <TouchableOpacity
                                     style={[
                                       styles.btnAddMissing,
-                                      addingRecipeId === (recipe.id || recipe.title) && { opacity: 0.7 },
+                                      addingRecipeId === recipeKey && { opacity: 0.7 },
                                     ]}
-                                    disabled={addingRecipeId === (recipe.id || recipe.title)}
-                                    onPress={() => handleAddMissingToList(recipe)}>
-                                    {addingRecipeId === (recipe.id || recipe.title) ? (
+                                    disabled={addingRecipeId === recipeKey}
+                                    onPress={() => handleGetAllForRecipe(recipe)}>
+                                    {addingRecipeId === recipeKey ? (
                                       <ActivityIndicator size="small" color="#FFF" />
                                     ) : (
                                       <>
                                         <Ionicons name="cart-outline" size={16} color="#FFF" />
                                         <Text style={styles.btnAddMissingText}>
-                                          Add Missing Ingredients to Shopping List
+                                          Get All • Check Pantry & Add Missing
                                         </Text>
                                       </>
                                     )}
                                   </TouchableOpacity>
                                 </View>
-                              ) : addedRecipesMap[recipe.id || recipe.title] ? (
+                              ) : getAllOutcome ? (
                                 <View style={styles.missingAddedBox}>
                                   <Ionicons name="checkmark-circle" size={16} color="#059669" />
                                   <Text style={styles.missingAddedText}>
-                                    Missing ingredients added to your active shopping list!
+                                    {getAllOutcome.summary}
                                   </Text>
                                 </View>
                               ) : null}
@@ -1365,5 +1540,132 @@ const styles = StyleSheet.create({
     backgroundColor: BrandColors.primary,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  recipeFilterBox: {
+    backgroundColor: '#FFF',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    marginBottom: 14,
+  },
+  recipeSearchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  recipeSearchInput: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 12,
+    color: '#111827',
+  },
+  recipeFindBtn: {
+    backgroundColor: BrandColors.primary,
+    padding: 9,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recipeInspireBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#F1F8E9',
+    borderWidth: 1,
+    borderColor: '#C5E1A5',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 10,
+  },
+  recipeInspireText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#4D7C0F',
+  },
+  filterChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+  },
+  filterChipActive: {
+    backgroundColor: '#111827',
+  },
+  filterChipText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#4B5563',
+  },
+  filterChipTextActive: {
+    color: '#FFF',
+  },
+  pantryPctBadge: {
+    backgroundColor: '#ECFDF5',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+    marginLeft: 6,
+  },
+  pantryPctText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#047857',
+  },
+  emptyPantryNote: {
+    fontSize: 12,
+    color: '#6B7280',
+    fontStyle: 'italic',
+    marginBottom: 8,
+  },
+  chatRecipeCard: {
+    marginTop: 8,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#D1FAE5',
+  },
+  chatRecipeTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  chatRecipeTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#111827',
+    flex: 1,
+    marginRight: 6,
+  },
+  chatRecipeMeta: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#059669',
+  },
+  chatFollowUpRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 8,
+  },
+  chatFollowUpChip: {
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  chatFollowUpText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#374151',
   },
 });

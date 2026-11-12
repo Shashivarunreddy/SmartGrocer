@@ -6,6 +6,7 @@ import {
   getWasteRiskAnalysis,
   getAlternativeSuggestions,
   getRecipeRecommendations,
+  getAllRecipeIngredients,
   chatAssistant,
 } from "../controllers/recommendation.controller";
 
@@ -27,6 +28,7 @@ router.get("/replenishments", requireAuth, getReplenishmentRecommendations);
 router.get("/waste-risk", requireAuth, getWasteRiskAnalysis);
 router.get("/alternatives/:listId", requireAuth, getAlternativeSuggestions);
 router.get("/recipes", requireAuth, getRecipeRecommendations);
+router.post("/recipes/get-all", requireAuth, getAllRecipeIngredients);
 router.post("/chat", optionalAuth, chatRateLimiter, chatAssistant);
 
 export default router;
