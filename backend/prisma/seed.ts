@@ -26,38 +26,51 @@ async function main() {
       chunk.map(async (p: any) => {
         if (!p.code || !p.product_name) return;
 
+        const cleanName = String(p.product_name).replace(/\0/g, "").trim().slice(0, 200);
+        const cleanBrands = p.brands ? String(p.brands).replace(/\0/g, "").trim().slice(0, 150) : null;
         const tags = Array.isArray(p.categories_tags_en) ? p.categories_tags_en : [];
         const mainCategory = tags.length > 0 ? tags[tags.length - 1] : "Groceries";
 
+        const parsedQty =
+          p.product_quantity !== null &&
+          p.product_quantity !== undefined &&
+          Number.isFinite(Number(p.product_quantity)) &&
+          Number(p.product_quantity) >= 0 &&
+          Number(p.product_quantity) < 1000000
+            ? new Prisma.Decimal(Number(p.product_quantity).toFixed(2))
+            : null;
+
+        const rawPrice = Number(p.price);
+        const parsedPrice =
+          Number.isFinite(rawPrice) && rawPrice > 0 && rawPrice < 10000
+            ? new Prisma.Decimal(rawPrice.toFixed(2))
+            : new Prisma.Decimal("1.99");
+
         await prisma.product.upsert({
-          where: { code: String(p.code) },
+          where: { code: String(p.code).slice(0, 64) },
           update: {
-            name: p.product_name,
-            brands: p.brands || null,
+            name: cleanName,
+            brands: cleanBrands,
             category: mainCategory,
             categoriesTags: tags,
             imageUrl: p.image_url || null,
             unit: p.product_quantity_unit || "piece",
-            productQuantity: p.product_quantity ? new Prisma.Decimal(p.product_quantity) : null,
-            defaultUnitPrice: new Prisma.Decimal(
-              p.price !== undefined && p.price !== null && p.price !== "" ? p.price : 1.99
-            ),
+            productQuantity: parsedQty,
+            defaultUnitPrice: parsedPrice,
             currency: p.currency || "GBP",
             isActive: true,
             isFood: true,
           },
           create: {
-            code: String(p.code),
-            name: p.product_name,
-            brands: p.brands || null,
+            code: String(p.code).slice(0, 64),
+            name: cleanName,
+            brands: cleanBrands,
             category: mainCategory,
             categoriesTags: tags,
             imageUrl: p.image_url || null,
             unit: p.product_quantity_unit || "piece",
-            productQuantity: p.product_quantity ? new Prisma.Decimal(p.product_quantity) : null,
-            defaultUnitPrice: new Prisma.Decimal(
-              p.price !== undefined && p.price !== null && p.price !== "" ? p.price : 1.99
-            ),
+            productQuantity: parsedQty,
+            defaultUnitPrice: parsedPrice,
             currency: p.currency || "GBP",
             isActive: true,
             isFood: true,
