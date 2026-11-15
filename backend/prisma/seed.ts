@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../src/config/prisma";
+import { classifyProductDietary } from "../src/utils/dietary";
 import fs from "fs";
 import path from "path";
 
@@ -46,6 +47,12 @@ async function main() {
             ? new Prisma.Decimal(rawPrice.toFixed(2))
             : new Prisma.Decimal("1.99");
 
+        const { tags: computedDietaryTags } = classifyProductDietary({
+          name: cleanName,
+          categoriesTags: tags,
+          category: mainCategory,
+        });
+
         await prisma.product.upsert({
           where: { code: String(p.code).slice(0, 64) },
           update: {
@@ -53,6 +60,7 @@ async function main() {
             brands: cleanBrands,
             category: mainCategory,
             categoriesTags: tags,
+            dietaryTags: computedDietaryTags,
             imageUrl: p.image_url || null,
             unit: p.product_quantity_unit || "piece",
             productQuantity: parsedQty,
@@ -67,6 +75,7 @@ async function main() {
             brands: cleanBrands,
             category: mainCategory,
             categoriesTags: tags,
+            dietaryTags: computedDietaryTags,
             imageUrl: p.image_url || null,
             unit: p.product_quantity_unit || "piece",
             productQuantity: parsedQty,

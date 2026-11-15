@@ -5,6 +5,7 @@ import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { setAuthTokenGetter } from "@/lib/api";
 import { Navigation } from "@/components/Navigation";
 import { AIChatModal } from "@/components/AIChatModal";
+import { OnboardingModal } from "@/components/OnboardingModal";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const { getToken } = useAuth();
@@ -24,6 +25,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       <Navigation />
       <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6">{children}</main>
       <AIChatModal />
+      <OnboardingModal />
     </div>
   );
 }

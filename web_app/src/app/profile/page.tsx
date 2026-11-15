@@ -90,6 +90,7 @@ export default function ProfilePage() {
         defaultBudget: parseFloat(defaultBudget) || 75,
         currency,
         dietaryPreferences: selectedDiet,
+        isOnboarded: true,
       });
       showToast("✓ Profile settings saved!");
     } catch (err: any) {

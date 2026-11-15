@@ -26,6 +26,17 @@ const CATEGORIES = [
   'Breads',
 ];
 
+const DIETARY_OPTIONS = [
+  { label: 'Vegetarian', icon: '🌿' },
+  { label: 'Vegan', icon: '🌱' },
+  { label: 'Eggetarian', icon: '🥚' },
+  { label: 'Gluten-Free', icon: '🌾' },
+  { label: 'Dairy-Free', icon: '🥛' },
+  { label: 'Nut-Free', icon: '🥜' },
+  { label: 'Halal', icon: '☪️' },
+  { label: 'Kosher', icon: '✡️' },
+];
+
 const PAGE_SIZE = 20;
 
 export default function CatalogueScreen() {
@@ -36,6 +47,7 @@ export default function CatalogueScreen() {
   const [hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedDiet, setSelectedDiet] = useState<string[]>([]);
   const [activeListId, setActiveListId] = useState<string | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
   const [basketCounts, setBasketCounts] = useState<Record<string, number>>({});
@@ -44,7 +56,8 @@ export default function CatalogueScreen() {
   const cacheRef = useRef<Record<string, { products: Product[]; hasMore: boolean }>>({});
 
   const fetchProducts = async (pageToFetch: number = 1, append: boolean = false) => {
-    const cacheKey = `${selectedCategory}:${search.trim()}`;
+    const dietKey = selectedDiet.sort().join(',');
+    const cacheKey = `${selectedCategory}:${search.trim()}:${dietKey}`;
 
     // Instant cache hit on first page
     if (!append && pageToFetch === 1 && cacheRef.current[cacheKey]) {
@@ -67,6 +80,7 @@ export default function CatalogueScreen() {
         pageSize: PAGE_SIZE,
         search: search.trim() || undefined,
         category: selectedCategory !== 'All' ? selectedCategory : undefined,
+        dietary: selectedDiet.length > 0 ? selectedDiet.join(',') : undefined,
       });
 
       const items = res.data || [];
@@ -126,11 +140,27 @@ export default function CatalogueScreen() {
   );
 
   useEffect(() => {
+    // Pre-populate active dietary preferences if saved on user profile
+    api
+      .getProfile()
+      .then((res: any) => {
+        if (
+          res.data?.dietaryPreferences &&
+          Array.isArray(res.data.dietaryPreferences) &&
+          res.data.dietaryPreferences.length > 0
+        ) {
+          setSelectedDiet(res.data.dietaryPreferences);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
     const delayDebounce = setTimeout(() => {
       fetchProducts(1, false);
     }, search ? 300 : 0);
     return () => clearTimeout(delayDebounce);
-  }, [search, selectedCategory]);
+  }, [search, selectedCategory, selectedDiet]);
 
   const handleAddToList = async (product: Product) => {
     try {
@@ -218,6 +248,32 @@ export default function CatalogueScreen() {
             {item.name}
           </Text>
           <Text style={styles.unitText}>{item.unit || '1 unit'}</Text>
+
+          {/* Dietary Badges */}
+          {item.dietaryTags && item.dietaryTags.length > 0 && (
+            <View style={styles.dietBadgesRow}>
+              {item.dietaryTags
+                .filter((t) => t !== 'Nut Allergy')
+                .slice(0, 2)
+                .map((dTag) => (
+                  <View key={dTag} style={styles.dietBadgeChip}>
+                    <Text style={styles.dietBadgeChipText} numberOfLines={1}>
+                      {dTag === 'Vegetarian'
+                        ? '🌿 Veg'
+                        : dTag === 'Vegan'
+                        ? '🌱 Vegan'
+                        : dTag === 'Gluten-Free'
+                        ? '🌾 GF'
+                        : dTag === 'Dairy-Free'
+                        ? '🥛 DF'
+                        : dTag === 'Nut-Free'
+                        ? '🥜 NF'
+                        : dTag}
+                    </Text>
+                  </View>
+                ))}
+            </View>
+          )}
         </View>
 
         {/* Bottom Price and Add Action */}
@@ -293,6 +349,41 @@ export default function CatalogueScreen() {
                     isSelected && styles.categoryPillTextActive,
                   ]}>
                   {item}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </View>
+
+      {/* Dietary Preference Filter Chips */}
+      <View style={styles.dietaryContainer}>
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={[{ label: 'All', icon: '✨' }, ...DIETARY_OPTIONS]}
+          keyExtractor={(item) => item.label}
+          contentContainerStyle={styles.dietaryList}
+          renderItem={({ item }) => {
+            const isAll = item.label === 'All';
+            const isSelected = isAll ? selectedDiet.length === 0 : selectedDiet.includes(item.label);
+            return (
+              <TouchableOpacity
+                style={[styles.dietaryPill, isSelected && styles.dietaryPillActive]}
+                onPress={() => {
+                  if (isAll) {
+                    setSelectedDiet([]);
+                  } else {
+                    setSelectedDiet((prev) =>
+                      prev.includes(item.label)
+                        ? prev.filter((d) => d !== item.label)
+                        : [...prev, item.label]
+                    );
+                  }
+                }}>
+                <Text style={styles.dietaryPillIcon}>{item.icon}</Text>
+                <Text style={[styles.dietaryPillText, isSelected && styles.dietaryPillTextActive]}>
+                  {item.label}
                 </Text>
               </TouchableOpacity>
             );
@@ -391,6 +482,63 @@ const styles = StyleSheet.create({
   },
   categoryPillTextActive: {
     color: '#FFFFFF',
+  },
+  dietaryContainer: {
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+    paddingVertical: 6,
+  },
+  dietaryList: {
+    paddingHorizontal: 16,
+    gap: 6,
+  },
+  dietaryPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 16,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    marginRight: 6,
+  },
+  dietaryPillActive: {
+    backgroundColor: '#84C225',
+    borderColor: '#689F38',
+  },
+  dietaryPillIcon: {
+    fontSize: 11,
+  },
+  dietaryPillText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#4B5563',
+  },
+  dietaryPillTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
+  dietBadgesRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 4,
+    marginTop: 4,
+  },
+  dietBadgeChip: {
+    backgroundColor: '#F1F8E9',
+    borderColor: '#DCEDC8',
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+  },
+  dietBadgeChipText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: '#2E7D32',
   },
   productsGrid: {
     padding: 12,

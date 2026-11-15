@@ -12,6 +12,7 @@ export const updateProfileSchema = z.object({
     shoppingFrequencyDays: z.number().int().positive().optional(),
     dietaryPreferences: z.any().optional(),
     allergies: z.any().optional(),
+    isOnboarded: z.boolean().optional(),
   }),
 });
 
@@ -22,7 +23,14 @@ export async function getProfile(
 ): Promise<void> {
   try {
     const profile = req.userProfile!;
-    res.status(200).json({ data: profile });
+    const isOnboarded = Boolean(
+      profile.isOnboarded ||
+      (profile.defaultBudget !== null &&
+        Number(profile.defaultBudget) > 0 &&
+        profile.householdSize &&
+        Number(profile.householdSize) >= 1)
+    );
+    res.status(200).json({ data: { ...profile, isOnboarded } });
   } catch (error) {
     next(error);
   }
@@ -43,7 +51,13 @@ export async function updateProfile(
       shoppingFrequencyDays,
       dietaryPreferences,
       allergies,
+      isOnboarded,
     } = req.body;
+
+    const shouldMarkOnboarded =
+      isOnboarded !== undefined
+        ? isOnboarded
+        : (householdSize !== undefined && householdSize > 0 && defaultBudget !== undefined && defaultBudget > 0);
 
     const updated = await prisma.userProfile.update({
       where: { id: profileId },
@@ -55,6 +69,7 @@ export async function updateProfile(
         ...(shoppingFrequencyDays !== undefined && { shoppingFrequencyDays }),
         ...(dietaryPreferences !== undefined && { dietaryPreferences }),
         ...(allergies !== undefined && { allergies }),
+        ...(shouldMarkOnboarded && { isOnboarded: true }),
       },
     });
 
@@ -69,7 +84,15 @@ export async function updateProfile(
       });
     }
 
-    res.status(200).json({ data: updated });
+    const calculatedOnboarded = Boolean(
+      updated.isOnboarded ||
+      (updated.defaultBudget !== null &&
+        Number(updated.defaultBudget) > 0 &&
+        updated.householdSize &&
+        Number(updated.householdSize) >= 1)
+    );
+
+    res.status(200).json({ data: { ...updated, isOnboarded: calculatedOnboarded } });
   } catch (error) {
     next(error);
   }

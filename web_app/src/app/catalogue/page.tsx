@@ -24,6 +24,17 @@ const CATEGORIES = [
   "Pantry Staples",
 ];
 
+const DIETARY_FILTERS = [
+  { label: "Vegetarian", icon: "🌿" },
+  { label: "Vegan", icon: "🌱" },
+  { label: "Eggetarian", icon: "🥚" },
+  { label: "Gluten-Free", icon: "🌾" },
+  { label: "Dairy-Free", icon: "🥛" },
+  { label: "Nut-Free", icon: "🥜" },
+  { label: "Halal", icon: "☪️" },
+  { label: "Kosher", icon: "✡️" },
+];
+
 function CatalogueContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "All";
@@ -32,6 +43,7 @@ function CatalogueContent() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [selectedDietary, setSelectedDietary] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -71,6 +83,7 @@ function CatalogueContent() {
         pageSize: 20,
         search: search.trim() || undefined,
         category: selectedCategory !== "All" ? selectedCategory : undefined,
+        dietary: selectedDietary.length > 0 ? selectedDietary.join(",") : undefined,
       });
 
       setProducts(res.data || []);
@@ -81,10 +94,19 @@ function CatalogueContent() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, selectedCategory]);
+  }, [page, search, selectedCategory, selectedDietary]);
 
   useEffect(() => {
     loadActiveList();
+    // Pre-populate active dietary preferences if saved on user profile
+    api
+      .getProfile()
+      .then((res) => {
+        if (res.data?.dietaryPreferences && Array.isArray(res.data.dietaryPreferences) && res.data.dietaryPreferences.length > 0) {
+          setSelectedDietary(res.data.dietaryPreferences);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -168,6 +190,51 @@ function CatalogueContent() {
         ))}
       </div>
 
+      {/* Dietary Preference Filter Bar */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none pt-1">
+        <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider shrink-0 flex items-center gap-1 mr-1">
+          <Filter className="w-3.5 h-3.5 text-[#84C225]" />
+          <span>Diet:</span>
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedDietary([]);
+            setPage(1);
+          }}
+          className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+            selectedDietary.length === 0
+              ? "bg-gray-900 text-white shadow-xs"
+              : "bg-white text-gray-500 border border-gray-200 hover:border-gray-300"
+          }`}
+        >
+          All Items
+        </button>
+        {DIETARY_FILTERS.map((df) => {
+          const isSelected = selectedDietary.includes(df.label);
+          return (
+            <button
+              key={df.label}
+              type="button"
+              onClick={() => {
+                setSelectedDietary((prev) =>
+                  prev.includes(df.label) ? prev.filter((d) => d !== df.label) : [...prev, df.label]
+                );
+                setPage(1);
+              }}
+              className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+                isSelected
+                  ? "bg-[#84C225] text-white shadow-xs font-extrabold"
+                  : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              <span>{df.icon}</span>
+              <span>{df.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 bg-[#166534] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-green-900/20 flex items-center gap-2 animate-bounce">
@@ -221,6 +288,28 @@ function CatalogueContent() {
                   <span className="text-[11px] text-gray-400 font-medium block mt-1">
                     {product.productQuantity > 0 ? `${product.productQuantity} ${product.unit}` : product.unit || "unit"}
                   </span>
+
+                  {/* Dietary Badges */}
+                  {product.dietaryTags && product.dietaryTags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {product.dietaryTags
+                        .filter((t) => t !== "Nut Allergy")
+                        .slice(0, 3)
+                        .map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-1.5 py-0.5 rounded-md text-[9px] font-bold bg-[#F1F8E9] text-[#2E7D32] border border-[#DCEDC8]"
+                          >
+                            {tag === "Vegetarian" && "🌿 "}
+                            {tag === "Vegan" && "🌱 "}
+                            {tag === "Gluten-Free" && "🌾 "}
+                            {tag === "Dairy-Free" && "🥛 "}
+                            {tag === "Nut-Free" && "🥜 "}
+                            {tag}
+                          </span>
+                        ))}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">

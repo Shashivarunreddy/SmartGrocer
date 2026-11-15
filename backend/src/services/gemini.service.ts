@@ -1,5 +1,6 @@
 import { ENV } from "../config/env";
 import { prisma } from "../config/prisma";
+import { matchesDietaryPreferences } from "../utils/dietary";
 
 export interface RecipeIngredientItem {
   name: string;
@@ -389,6 +390,52 @@ const CURATED_UK_RECIPES: CuratedRecipeTemplate[] = [
     chefTip: "Literally any leftover cooked veg, ham, or cheese nearing expiry can be folded straight into this base.",
   },
   {
+    id: "rec-jacket-potato-beans-vegan",
+    title: "Crispy Jacket Potatoes with Heinz Baked Beans & Salad",
+    description: "Fluffy-centred oven-crisped jacket potatoes topped with hot baked beans, fresh spring onions, and a crisp side salad.",
+    prepTimeMinutes: 20,
+    difficulty: "EASY",
+    cuisine: "British Classic",
+    mealType: "lunch",
+    tags: ["quick", "lunch", "dinner", "vegetarian", "vegan", "eggetarian", "gluten-free", "dairy-free", "nut-free", "halal", "kosher", "budget"],
+    ingredients: [
+      { name: "Baking Potatoes", quantity: "2 large", keywords: ["potato"], suggestedCategory: "Fresh Produce", fallbackPriceGbp: 1.2 },
+      { name: "Baked Beans in Rich Tomato Sauce", quantity: "415g tin", keywords: ["beans", "baked beans"], suggestedCategory: "Pantry Staples", fallbackPriceGbp: 0.65 },
+      { name: "Olive Oil & Sea Salt", quantity: "1 tbsp", keywords: ["oil", "olive oil"], suggestedCategory: "Pantry Staples", fallbackPriceGbp: 1.5 },
+      { name: "Fresh Salad Greens & Spring Onion", quantity: "80g", keywords: ["salad", "onion", "greens"], suggestedCategory: "Fresh Produce", fallbackPriceGbp: 1.1 },
+    ],
+    instructions: [
+      "Prick the baking potatoes with a fork, rub with olive oil & sea salt, and microwave for 7 minutes, then crisp in the oven for 10 minutes.",
+      "Heat the baked beans gently in a saucepan until piping hot.",
+      "Slice open each potato, ladle over the rich hot beans, and garnish with sliced spring onions and a side salad.",
+    ],
+    chefTip: "Crisping in the oven with olive oil instead of butter keeps the skin ultra crunchy and 100% plant-based & dairy-free!",
+  },
+  {
+    id: "rec-mediterranean-veg-rice",
+    title: "Mediterranean Herb Roasted Vegetables & Basmati Rice",
+    description: "Fragrant basmati rice tossed with sweet bell peppers, red onions, juicy tomatoes, and herbs.",
+    prepTimeMinutes: 22,
+    difficulty: "EASY",
+    cuisine: "Mediterranean",
+    mealType: "dinner",
+    tags: ["dinner", "vegetarian", "vegan", "eggetarian", "gluten-free", "dairy-free", "nut-free", "halal", "kosher", "healthy"],
+    ingredients: [
+      { name: "Basmati Rice", quantity: "250g", keywords: ["rice"], suggestedCategory: "Pantry Staples", fallbackPriceGbp: 1.2 },
+      { name: "Chopped Tomatoes", quantity: "400g tin", keywords: ["tomato"], suggestedCategory: "Pantry Staples", fallbackPriceGbp: 0.65 },
+      { name: "Mixed Bell Peppers", quantity: "2 peppers", keywords: ["pepper", "peppers"], suggestedCategory: "Fresh Produce", fallbackPriceGbp: 1.4 },
+      { name: "Red Onion & Garlic", quantity: "1 onion, 2 cloves", keywords: ["onion", "garlic"], suggestedCategory: "Fresh Produce", fallbackPriceGbp: 0.75 },
+      { name: "Olive Oil & Oregano", quantity: "1 tbsp", keywords: ["oil", "olive oil"], suggestedCategory: "Pantry Staples", fallbackPriceGbp: 1.5 },
+    ],
+    instructions: [
+      "Boil basmati rice until tender and fluffy, then drain.",
+      "Sauté sliced peppers and red onion in olive oil with garlic until golden and tender.",
+      "Pour in chopped tomatoes and dried oregano; simmer for 8 minutes to build a rich sauce.",
+      "Fold the fluffy rice into the Mediterranean vegetables and serve hot.",
+    ],
+    chefTip: "A squeeze of fresh lemon juice brightens the rice and enhances all the roasted vegetable flavours.",
+  },
+  {
     id: "rec-crispy-salmon-new-potatoes",
     title: "Pan-Crispy Salmon with Garlic Butter Potatoes",
     description: "Omega-rich pan-seared salmon fillets served over herbed butter new potatoes and vibrant greens.",
@@ -566,6 +613,41 @@ export async function findBestCatalogueProduct(
   }
 }
 
+function recipeMatchesDietary(tpl: CuratedRecipeTemplate, dietaryPreferences: string[]): boolean {
+  if (!dietaryPreferences || dietaryPreferences.length === 0) return true;
+  const tplTags = new Set(tpl.tags.map((t) => t.toLowerCase()));
+  const ingText = `${tpl.title} ${tpl.ingredients.map((i) => i.name).join(" ")}`.toLowerCase();
+
+  for (const rawPref of dietaryPreferences) {
+    const pref = rawPref.trim().toLowerCase();
+    if (!pref) continue;
+
+    if (pref === "vegetarian") {
+      if (tplTags.has("chicken") || tplTags.has("beef") || tplTags.has("salmon") || tplTags.has("fish") || tplTags.has("meat")) return false;
+      if (!tplTags.has("vegetarian")) return false;
+    } else if (pref === "vegan") {
+      if (tplTags.has("chicken") || tplTags.has("beef") || tplTags.has("salmon") || tplTags.has("dairy") || tplTags.has("cheese") || tplTags.has("milk") || tplTags.has("eggs") || tplTags.has("honey")) return false;
+      if (!tplTags.has("vegan")) return false;
+    } else if (pref === "eggetarian") {
+      if (tplTags.has("chicken") || tplTags.has("beef") || tplTags.has("salmon") || tplTags.has("meat")) return false;
+    } else if (pref === "gluten-free" || pref === "gluten free") {
+      if (tplTags.has("pasta") || tplTags.has("bread") || tplTags.has("flour")) return false;
+      if (/\b(penne|spaghetti|pasta|bread|sourdough|flour|toast)\b/i.test(ingText)) return false;
+    } else if (pref === "dairy-free" || pref === "dairy free") {
+      if (tplTags.has("dairy") || tplTags.has("cheese") || tplTags.has("milk") || tplTags.has("yogurt") || tplTags.has("cream") || tplTags.has("butter")) return false;
+      if (/\b(cream|cheddar|cheese|mozzarella|milk|butter|yogurt)\b/i.test(ingText)) return false;
+    } else if (pref === "nut allergy" || pref === "nut-free" || pref === "nut free") {
+      if (tplTags.has("nuts") || tplTags.has("peanuts")) return false;
+      if (/\b(peanut|almond|cashew|walnut|hazelnut|pistachio)\b/i.test(ingText)) return false;
+    } else if (pref === "halal") {
+      if (tplTags.has("pork") || tplTags.has("bacon") || tplTags.has("alcohol")) return false;
+    } else if (pref === "kosher") {
+      if (tplTags.has("pork") || tplTags.has("shellfish")) return false;
+    }
+  }
+  return true;
+}
+
 class GeminiService {
   private apiKey = ENV.GEMINI_API_KEY;
 
@@ -741,14 +823,11 @@ class GeminiService {
     const now = Date.now();
     const filterType = (options?.mealType || "all").toLowerCase().trim();
     const searchQuery = (options?.query || "").toLowerCase().trim();
-    const isVegDiet = dietaryPreferences.some((d) =>
-      ["vegetarian", "vegan", "plant-based"].includes(d.toLowerCase())
-    );
     const listNamesLower = (options?.activeListProductNames || []).map((n) => n.toLowerCase());
 
-    // Filter curated recipes by mealType, dietary preference, and craving query
+    // Strict 100% accurate dietary filtering
     let candidates = CURATED_UK_RECIPES.filter((tpl) => {
-      if (isVegDiet && !tpl.tags.includes("vegetarian")) return false;
+      if (!recipeMatchesDietary(tpl, dietaryPreferences)) return false;
       if (filterType && filterType !== "all" && filterType !== "pantry") {
         if (filterType === "quick") return tpl.prepTimeMinutes <= 18 || tpl.tags.includes("quick");
         return tpl.mealType === filterType || tpl.tags.includes(filterType);
@@ -768,7 +847,10 @@ class GeminiService {
     }
 
     if (candidates.length === 0) {
-      candidates = [...CURATED_UK_RECIPES];
+      candidates = CURATED_UK_RECIPES.filter((tpl) => recipeMatchesDietary(tpl, dietaryPreferences));
+      if (candidates.length === 0) {
+        candidates = [...CURATED_UK_RECIPES];
+      }
     }
 
     // Score each recipe accurately against live pantry and expiring stock
@@ -919,15 +1001,19 @@ class GeminiService {
     const filterNote = options?.mealType && options.mealType !== "all" ? `Preferred category: ${options.mealType}` : "";
     const queryNote = options?.query ? `User craving/request: "${options.query}"` : "";
 
+    const dietaryMandate = dietary.length > 0
+      ? `\nCRITICAL MANDATORY INSTRUCTION: The household strictly follows these Dietary Restrictions: [${dietStr}]. You MUST NOT suggest any dish, ingredient, or substitute that violates these restrictions under ANY circumstance (e.g., if Vegetarian, NO meat/poultry/fish/gelatin; if Vegan, NO meat/fish/dairy/eggs/honey/gelatin; if Dairy-Free, NO milk/cheese/butter/cream/yogurt; if Gluten-Free, NO wheat/pasta/bread/barley/rye; if Nut Allergy, NO peanuts or tree nuts). 100% dietary compliance is required.`
+      : "";
+
     const prompt = `You are SmartGrocer's Zero-Waste Chef in the UK.
 Household pantry inventory: [${pantryStr}]
 Items expiring soon (PRIORITIZE THESE TO AVOID WASTE): [${expiringStr}]
 Household Size: ${householdSize}
-Dietary Restrictions: ${dietStr}
+Dietary Restrictions: ${dietStr}${dietaryMandate}
 ${filterNote}
 ${queryNote}
 
-Suggest 4 realistic, UK supermarket-friendly meals. Even if the pantry is empty, propose popular approachable UK meals and list the ingredients under missingIngredients.
+Suggest 4 realistic, UK supermarket-friendly meals strictly compliant with the dietary restrictions. Even if the pantry is empty, propose popular approachable UK meals and list the ingredients under missingIngredients.
 Respond ONLY with a valid JSON array of recipes matching this structure:
 [
   {
@@ -955,7 +1041,18 @@ Respond ONLY with a valid JSON array of recipes matching this structure:
 
     try {
       const parsed = JSON.parse(text);
-      return Array.isArray(parsed) ? parsed : parsed.recipes || [];
+      const rawList: RecipeItem[] = Array.isArray(parsed) ? parsed : parsed.recipes || [];
+      if (dietary.length > 0) {
+        return rawList.filter((r) => {
+          const allIngs = [
+            r.title,
+            ...(r.usedPantryItems || []).map((u) => u.name),
+            ...(r.missingIngredients || []).map((m) => m.name),
+          ].join(" ");
+          return matchesDietaryPreferences({ name: allIngs }, dietary);
+        });
+      }
+      return rawList;
     } catch {
       return [];
     }

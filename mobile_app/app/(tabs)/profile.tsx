@@ -116,6 +116,7 @@ export default function ProfileScreen() {
           defaultBudget: parseFloat(defaultBudget) || 75,
           currency,
           dietaryPreferences: selectedDiet,
+          isOnboarded: true,
         });
       }
       Alert.alert('Saved', 'Your grocery preferences and budget have been updated.');

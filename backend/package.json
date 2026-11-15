@@ -11,7 +11,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "seed": "tsx prisma/seed.ts",
-    "seed:users": "tsx prisma/seed-users.ts"
+    "seed:users": "tsx prisma/seed-users.ts",
+    "test": "tsx src/tests/dietary-and-onboarding.test.ts"
   },
   "dependencies": {
     "@clerk/express": "^1.3.47",

@@ -168,7 +168,31 @@ export async function listProducts(req: Request, res: Response, next: NextFuncti
     const search = (req.query.search as string)?.trim();
     const category = (req.query.category as string)?.trim();
 
-    const cacheKey = `products:list:${page}:${pageSize}:${search || "all"}:${category || "all"}`;
+    // Parse dietary preferences (can be comma-separated string or array)
+    const rawDietary = req.query.dietary;
+    let dietaryList: string[] = [];
+    if (Array.isArray(rawDietary)) {
+      dietaryList = rawDietary.map((d) => String(d).trim());
+    } else if (typeof rawDietary === "string" && rawDietary.trim()) {
+      dietaryList = rawDietary.split(",").map((d) => d.trim()).filter(Boolean);
+    }
+
+    // Normalize dietary filter labels to match indexed dietary tags
+    const normalizedDietary = dietaryList.map((d) => {
+      const lower = d.toLowerCase();
+      if (lower === "vegetarian") return "Vegetarian";
+      if (lower === "vegan") return "Vegan";
+      if (lower === "eggetarian") return "Eggetarian";
+      if (lower === "gluten-free" || lower === "gluten free") return "Gluten-Free";
+      if (lower === "dairy-free" || lower === "dairy free") return "Dairy-Free";
+      if (lower === "nut allergy" || lower === "nut-free" || lower === "nut free") return "Nut-Free";
+      if (lower === "halal") return "Halal";
+      if (lower === "kosher") return "Kosher";
+      return d;
+    });
+
+    const dietaryKey = normalizedDietary.sort().join(",") || "all";
+    const cacheKey = `products:list:${page}:${pageSize}:${search || "all"}:${category || "all"}:${dietaryKey}`;
     const cached = await cacheGet<any>(cacheKey);
     if (cached) {
       res.setHeader("X-Cache", "HIT");
@@ -178,6 +202,14 @@ export async function listProducts(req: Request, res: Response, next: NextFuncti
     res.setHeader("X-Cache", "MISS");
 
     const andConditions: Prisma.ProductWhereInput[] = [{ isActive: true }];
+
+    if (normalizedDietary.length > 0) {
+      andConditions.push({
+        dietaryTags: {
+          hasEvery: normalizedDietary,
+        },
+      });
+    }
 
     if (search) {
       const searchOr: Prisma.ProductWhereInput[] = [
@@ -216,6 +248,7 @@ export async function listProducts(req: Request, res: Response, next: NextFuncti
           brands: true,
           category: true,
           categoriesTags: true,
+          dietaryTags: true,
           imageUrl: true,
           unit: true,
           productQuantity: true,

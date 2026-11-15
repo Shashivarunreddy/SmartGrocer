@@ -24,6 +24,7 @@ export interface Product {
   brands: string;
   category: string;
   categoriesTags: string[];
+  dietaryTags?: string[];
   imageUrl: string | null;
   unit: string;
   productQuantity: number;
@@ -263,12 +264,13 @@ export const api = {
   checkHealth: () => request<{ status: string; timestamp: string }>("/health"),
 
   // Products
-  getProducts: (params?: { page?: number; pageSize?: number; search?: string; category?: string }) => {
+  getProducts: (params?: { page?: number; pageSize?: number; search?: string; category?: string; dietary?: string }) => {
     const query = new URLSearchParams();
     if (params?.page) query.append("page", params.page.toString());
     if (params?.pageSize) query.append("pageSize", params.pageSize.toString());
     if (params?.search) query.append("search", params.search);
     if (params?.category && params.category !== "All") query.append("category", params.category);
+    if (params?.dietary) query.append("dietary", params.dietary);
 
     const queryString = query.toString();
     return request<{

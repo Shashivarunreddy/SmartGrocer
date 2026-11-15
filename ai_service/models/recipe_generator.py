@@ -49,6 +49,16 @@ class RecipeGenerator:
         pantry_list_str = ", ".join([f"{p.name} ({p.quantity} {p.unit}, expires in {p.days_until_expiry or 'N/A'}d)" for p in req.pantry_items])
         diet_str = ", ".join(req.dietary_preferences) if req.dietary_preferences else "None"
 
+        dietary_mandate = (
+            f"\nCRITICAL MANDATORY INSTRUCTION: The household strictly adheres to these Dietary Restrictions: [{diet_str}]. "
+            "You MUST NOT suggest any dish, ingredient, or substitute that violates these restrictions under ANY circumstance "
+            "(e.g., if Vegetarian, NO meat/poultry/fish/gelatin; if Vegan, NO meat/fish/dairy/eggs/honey/gelatin; "
+            "if Dairy-Free, NO milk/cheese/butter/cream/yogurt; if Gluten-Free, NO wheat/pasta/bread/barley/rye; "
+            "if Nut Allergy, NO peanuts or tree nuts). 100% dietary compliance is required."
+            if req.dietary_preferences
+            else ""
+        )
+
         system_instruction = (
             "You are SmartGrocer's Zero-Waste Chef, a British culinary expert helping UK households "
             "cook delicious, affordable meals using groceries currently in their pantry. "
@@ -60,7 +70,7 @@ Given this household's pantry items:
 [{pantry_list_str}]
 
 Household Size: {req.household_size} people
-Dietary Restrictions: {diet_str}
+Dietary Restrictions: {diet_str}{dietary_mandate}
 
 Generate 3 realistic, British household-friendly recipes (e.g. quick breakfasts, comforting dinners, or easy lunches).
 Format strictly as JSON with this schema:
@@ -137,111 +147,173 @@ Only return valid JSON without extra markdown backticks.
 
     def _generate_heuristic_recipes(self, req: RecipeGenerateRequest, expiring: List) -> List[RecipeItem]:
         """
-        Deterministic, appetizing UK supermarket pantry recipes.
+        Deterministic, appetizing UK supermarket pantry recipes strictly compliant
+        with the requested dietary preferences.
         """
         recipes: List[RecipeItem] = []
+
+        prefs = [p.lower() for p in req.dietary_preferences]
+        is_vegan = "vegan" in prefs
+        is_vegetarian = "vegetarian" in prefs or is_vegan
+        is_dairy_free = "dairy-free" in prefs or "dairy free" in prefs or is_vegan
+        is_gluten_free = "gluten-free" in prefs or "gluten free" in prefs
+        is_nut_free = "nut allergy" in prefs or "nut-free" in prefs or "nut free" in prefs
 
         # Find available items in user's pantry
         pantry_lookup = {p.name.lower(): p for p in req.pantry_items}
         
         has_bread = any("bread" in k or "sourdough" in k or "toast" in k for k in pantry_lookup)
         has_marmalade = any("marmalade" in k or "jam" in k or "spread" in k for k in pantry_lookup)
-        has_yogurt = any("yogurt" in k or "yoghurt" in k for k in pantry_lookup)
-        has_cheese = any("cheese" in k or "cheddar" in k for k in pantry_lookup)
-        has_pasta = any("pasta" in k or "spaghetti" in k for k in pantry_lookup)
-        has_oats = any("oat" in k or "porridge" in k for k in pantry_lookup)
-        has_milk = any("milk" in k or "dair" in k for k in pantry_lookup)
+        has_yogurt = any("yogurt" in k or "yoghurt" in k for k in pantry_lookup) and not is_dairy_free
+        has_cheese = any("cheese" in k or "cheddar" in k for k in pantry_lookup) and not is_dairy_free
+        has_pasta = any("pasta" in k or "spaghetti" in k for k in pantry_lookup) and not is_gluten_free
+        has_oats = any("oat" in k or "porridge" in k for k in pantry_lookup) and not is_gluten_free
+        has_milk = any("milk" in k or "dair" in k for k in pantry_lookup) and not is_dairy_free
+        has_potatoes = any("potato" in k or "potatoes" in k for k in pantry_lookup)
+        has_beans = any("bean" in k or "baked beans" in k or "chickpea" in k for k in pantry_lookup)
+        has_rice = any("rice" in k or "basmati" in k for k in pantry_lookup)
 
-        # Recipe 1: Artisan Toast & Preserve Breakfast
-        r1_used = []
-        if has_bread:
-            b_item = next(p for k, p in pantry_lookup.items() if "bread" in k or "sourdough" in k)
-            r1_used.append(RecipeIngredient(name=b_item.name, quantity="2 thick slices", is_from_pantry=True, product_id=b_item.product_id))
+        # Recipe 1: Breakfast option
+        if is_gluten_free:
+            recipes.append(RecipeItem(
+                id="rec-berry-rice-bowl",
+                title="Warm Cinnamon Rice & Berry Morning Bowl",
+                description="Naturally gluten-free warm rice simmered with berries and a hint of cinnamon.",
+                prep_time_minutes=12,
+                difficulty="EASY",
+                cuisine="British Breakfast",
+                servings=req.household_size,
+                used_pantry_items=[
+                    RecipeIngredient(name="Basmati Rice", quantity="120g", is_from_pantry=has_rice)
+                ],
+                missing_ingredients=[
+                    MissingIngredient(name="Fresh Summer Berries", estimated_price_gbp=1.80, suggested_category="Fresh Produce"),
+                    MissingIngredient(name="Maple Syrup", estimated_price_gbp=1.95, suggested_category="Pantry Staples"),
+                ],
+                instructions=[
+                    "Simmer basmati rice gently in water or plant milk until soft and creamy.",
+                    "Fold in a pinch of ground cinnamon and a drizzle of pure maple syrup.",
+                    "Spoon warm into bowls and top with fresh berries."
+                ],
+                chef_tip="Simmering pre-cooked cold rice with plant milk creates an instant creamy breakfast bowl.",
+                waste_reduction_score=90,
+            ))
         else:
-            r1_used.append(RecipeIngredient(name="Sourdough Bread", quantity="2 slices", is_from_pantry=False))
+            r1_used = []
+            if has_bread:
+                b_item = next(p for k, p in pantry_lookup.items() if "bread" in k or "sourdough" in k)
+                r1_used.append(RecipeIngredient(name=b_item.name, quantity="2 thick slices", is_from_pantry=True, product_id=b_item.product_id))
+            else:
+                r1_used.append(RecipeIngredient(name="Sourdough Bread", quantity="2 slices", is_from_pantry=False))
 
-        if has_marmalade:
-            m_item = next(p for k, p in pantry_lookup.items() if "marmalade" in k or "jam" in k)
-            r1_used.append(RecipeIngredient(name=m_item.name, quantity="1 tbsp", is_from_pantry=True, product_id=m_item.product_id))
+            if has_marmalade:
+                m_item = next(p for k, p in pantry_lookup.items() if "marmalade" in k or "jam" in k)
+                r1_used.append(RecipeIngredient(name=m_item.name, quantity="1 tbsp", is_from_pantry=True, product_id=m_item.product_id))
 
-        if has_yogurt:
-            y_item = next(p for k, p in pantry_lookup.items() if "yogurt" in k or "yoghurt" in k)
-            r1_used.append(RecipeIngredient(name=y_item.name, quantity="100g", is_from_pantry=True, product_id=y_item.product_id))
+            if has_yogurt and not is_dairy_free:
+                y_item = next(p for k, p in pantry_lookup.items() if "yogurt" in k or "yoghurt" in k)
+                r1_used.append(RecipeIngredient(name=y_item.name, quantity="100g", is_from_pantry=True, product_id=y_item.product_id))
 
+            recipes.append(RecipeItem(
+                id="rec-toast-parfait",
+                title="Golden Toasted Sourdough & Fine Marmalade" if is_dairy_free else "Golden Toasted Sourdough & Greek Yogurt Parfait",
+                description="Crispy griddled sourdough bread served with fine-cut marmalade and fresh fruit.",
+                prep_time_minutes=10,
+                difficulty="EASY",
+                cuisine="British Breakfast",
+                servings=req.household_size,
+                used_pantry_items=r1_used,
+                missing_ingredients=[
+                    MissingIngredient(name="Fresh Berries", estimated_price_gbp=2.00, suggested_category="Produce")
+                ] if not has_yogurt else [],
+                instructions=[
+                    "Toast the sourdough bread slices until golden brown and crispy at the edges.",
+                    "Spread with olive oil plant spread or butter and fine-cut marmalade.",
+                    "Serve warm alongside fresh seasonal fruit."
+                ],
+                chef_tip="Toast stale sourdough slices lightly in olive oil for an ultra-crunchy crust.",
+                waste_reduction_score=95,
+            ))
+
+        # Recipe 2: Lunch / Comfort Dish
+        if is_dairy_free or is_vegan or is_gluten_free:
+            recipes.append(RecipeItem(
+                id="rec-jacket-potato-beans",
+                title="Crispy Oven Jacket Potatoes with Heinz Baked Beans",
+                description="Naturally vegan, gluten-free, and dairy-free fluffy baked potatoes with steaming hot rich baked beans.",
+                prep_time_minutes=20,
+                difficulty="EASY",
+                cuisine="British Classic",
+                servings=req.household_size,
+                used_pantry_items=[
+                    RecipeIngredient(name="Baking Potatoes", quantity="2 large", is_from_pantry=has_potatoes),
+                    RecipeIngredient(name="Baked Beans", quantity="415g tin", is_from_pantry=has_beans),
+                ],
+                missing_ingredients=[
+                    MissingIngredient(name="Fresh Spring Onions", estimated_price_gbp=0.75, suggested_category="Fresh Produce")
+                ] if not has_potatoes and not has_beans else [],
+                instructions=[
+                    "Rub baking potatoes with olive oil and coarse salt, microwave for 7 mins, then crisp in the oven for 10 mins.",
+                    "Heat baked beans in a saucepan until bubbling.",
+                    "Cut a cross in the hot potato, ladle over hot beans, and scatter with chopped spring onions."
+                ],
+                chef_tip="Baking in olive oil guarantees a crispy skin without needing any butter or dairy.",
+                waste_reduction_score=96,
+            ))
+        else:
+            recipes.append(RecipeItem(
+                id="rec-cheddar-melt",
+                title="Crispy Cheddar & Vine Tomato Melt",
+                description="Melted mature cheddar sandwiched between golden griddled bread slices with herbs.",
+                prep_time_minutes=15,
+                difficulty="EASY",
+                cuisine="Comfort Food",
+                servings=req.household_size,
+                used_pantry_items=[
+                    RecipeIngredient(name="Artisan Bread", quantity="4 slices", is_from_pantry=has_bread),
+                    RecipeIngredient(name="British Mature Cheddar", quantity="80g", is_from_pantry=has_cheese),
+                ],
+                missing_ingredients=[
+                    MissingIngredient(name="Vine Tomatoes", estimated_price_gbp=1.20, suggested_category="Produce"),
+                    MissingIngredient(name="English Mustard", estimated_price_gbp=1.10, suggested_category="Condiments"),
+                ],
+                instructions=[
+                    "Slice the mature cheddar cheese thinly to ensure even melting.",
+                    "Lightly butter the exterior of each bread slice.",
+                    "Layer cheese and sliced tomatoes inside the sandwich with a dab of English mustard.",
+                    "Griddle in a hot pan for 3-4 minutes each side until cheese bubbles."
+                ],
+                chef_tip="Cover the pan with a lid while grilling to trap steam and melt the cheese faster.",
+                waste_reduction_score=88,
+            ))
+
+        # Recipe 3: Dinner option
         recipes.append(RecipeItem(
-            id="rec-toast-parfait",
-            title="Golden Toasted Sourdough & Greek Yogurt Parfait",
-            description="Warm toasted artisan bread served with fine-cut marmalade alongside creamy Greek yogurt.",
-            prep_time_minutes=10,
+            id="rec-med-veg-rice-skillet",
+            title="Mediterranean Roasted Pepper & Tomato Basmati Rice",
+            description="Fragrant basmati rice tossed with sweet bell peppers, red onions, and rich chopped tomatoes.",
+            prep_time_minutes=22,
             difficulty="EASY",
-            cuisine="British Breakfast",
-            servings=req.household_size,
-            used_pantry_items=r1_used,
-            missing_ingredients=[
-                MissingIngredient(name="Fresh Berries", estimated_price_gbp=2.00, suggested_category="Produce")
-            ] if not has_yogurt else [],
-            instructions=[
-                "Toast the sourdough bread slices until golden brown and crispy at the edges.",
-                "Spread a generous layer of butter and fine-cut marmalade across the warm toast.",
-                "Spoon chilled Greek style yogurt into a side bowl.",
-                "Serve immediately for a refreshing, protein-rich breakfast."
-            ],
-            chef_tip="Toast stale sourdough slices lightly in olive oil for an ultra-crunchy crust.",
-            waste_reduction_score=95,
-        ))
-
-        # Recipe 2: Comforting British Cheddar Panini
-        recipes.append(RecipeItem(
-            id="rec-cheddar-melt",
-            title="Crispy Cheddar & Tomato Pantry Melt",
-            description="Melted mature cheddar sandwiched between golden griddled bread slices with herbs.",
-            prep_time_minutes=15,
-            difficulty="EASY",
-            cuisine="Comfort Food",
+            cuisine="Mediterranean",
             servings=req.household_size,
             used_pantry_items=[
-                RecipeIngredient(name="Artisan Bread", quantity="4 slices", is_from_pantry=has_bread),
-                RecipeIngredient(name="British Mature Cheddar", quantity="80g", is_from_pantry=has_cheese),
+                RecipeIngredient(name="Basmati Rice", quantity="250g", is_from_pantry=has_rice),
             ],
             missing_ingredients=[
-                MissingIngredient(name="Vine Tomatoes", estimated_price_gbp=1.20, suggested_category="Produce"),
-                MissingIngredient(name="English Mustard", estimated_price_gbp=1.10, suggested_category="Condiments"),
+                MissingIngredient(name="Chopped Tomatoes", estimated_price_gbp=0.65, suggested_category="Pantry Staples"),
+                MissingIngredient(name="Sweet Bell Peppers", estimated_price_gbp=1.35, suggested_category="Fresh Produce"),
             ],
             instructions=[
-                "Slice the mature cheddar cheese thinly to ensure even melting.",
-                "Lightly butter the exterior of each bread slice.",
-                "Layer cheese and sliced tomatoes inside the sandwich with a dab of English mustard.",
-                "Heat a non-stick frying pan over medium-low heat and toast each side for 3-4 minutes until cheese is bubbling."
+                "Boil basmati rice in salted water until fluffy, then drain.",
+                "Sauté diced peppers and onions in olive oil with garlic until golden.",
+                "Simmer chopped tomatoes and oregano for 8 minutes to build a rich vegetable sauce.",
+                "Toss the fluffy rice through the warm Mediterranean sauce and serve immediately."
             ],
-            chef_tip="Cover the pan with a lid while grilling to trap steam and melt the cheese faster.",
-            waste_reduction_score=88,
-        ))
-
-        # Recipe 3: Hearty Morning Porridge
-        recipes.append(RecipeItem(
-            id="rec-hearty-porridge",
-            title="Slow-Cooked Scottish Rolled Oats with Honey",
-            description="Creamy warm porridge bowl made with semi-skimmed milk and finished with honey.",
-            prep_time_minutes=12,
-            difficulty="EASY",
-            cuisine="Scottish / British",
-            servings=req.household_size,
-            used_pantry_items=[
-                RecipeIngredient(name="Rolled Oats", quantity="80g", is_from_pantry=has_oats),
-                RecipeIngredient(name="Fresh Milk", quantity="350ml", is_from_pantry=has_milk),
-            ],
-            missing_ingredients=[
-                MissingIngredient(name="Pure Clear Honey", estimated_price_gbp=1.85, suggested_category="Spreads")
-            ],
-            instructions=[
-                "Combine rolled oats, milk, and a pinch of sea salt in a small saucepan.",
-                "Bring to a gentle simmer over medium heat, stirring continuously with a wooden spoon.",
-                "Reduce heat to low and cook for 4-5 minutes until rich, thick, and velvety.",
-                "Pour into warm bowls and drizzle with clear honey."
-            ],
-            chef_tip="Using milk nearing its use-by date in hot cooked porridge is the safest way to avoid spoilage.",
+            chef_tip="Add a squeeze of fresh lemon juice at the end to elevate the sweet tomato notes.",
             waste_reduction_score=92,
         ))
+
+        return recipes
 
         return recipes
 
