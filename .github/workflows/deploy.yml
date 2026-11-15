@@ -44,7 +44,7 @@ jobs:
         run: |
           cd ai_service
           pip install -r requirements.txt
-          pytest
+          python -m pytest
 
   # ==========================================
   # 2. CD: Automatic Deployment to AWS
