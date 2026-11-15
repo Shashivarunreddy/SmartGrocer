@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useSignIn, useSignUp } from '@clerk/expo/legacy';
 import { BrandColors } from '@/constants/Colors';
+import { setGuestSession } from '@/services/guestSession';
 
 export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
   const { isLoaded: isSignInLoaded, signIn, setActive: setSignInActive } = useSignIn();
@@ -41,6 +42,7 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
       });
 
       if (result.status === 'complete') {
+        setGuestSession(false);
         await setSignInActive({ session: result.createdSessionId });
         Alert.alert('Welcome Back! 🎉', 'You are now signed in to SmartGrocer.');
         onSuccess?.();
@@ -72,6 +74,7 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
       });
 
       if (result.status === 'complete') {
+        setGuestSession(false);
         await setSignUpActive({ session: result.createdSessionId });
         Alert.alert('Account Created! 🎉', 'Welcome to SmartGrocer.');
         onSuccess?.();
@@ -104,6 +107,7 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
       });
 
       if (result.status === 'complete') {
+        setGuestSession(false);
         await setSignUpActive({ session: result.createdSessionId });
         Alert.alert('Email Verified! 🎉', 'Your SmartGrocer account is ready.');
         setPendingVerification(false);

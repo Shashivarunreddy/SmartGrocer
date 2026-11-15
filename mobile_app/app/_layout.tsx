@@ -5,8 +5,13 @@ import React, { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import 'react-native-reanimated';
 import { ClerkProvider, useAuth } from '@clerk/expo';
+import * as WebBrowser from 'expo-web-browser';
 import { tokenCache } from '@/services/tokenCache';
 import { setAuthTokenGetter } from '@/services/api';
+import { isGuestSession, setGuestSession } from '@/services/guestSession';
+
+// Complete incoming OAuth / SSO sessions on deep link return at root level
+WebBrowser.maybeCompleteAuthSession();
 
 const CLERK_PUBLISHABLE_KEY =
   process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ||
@@ -51,14 +56,18 @@ function InitialLayout() {
   useEffect(() => {
     if (!isLoaded) return;
 
+    if (isSignedIn) {
+      setGuestSession(false);
+    }
+
     const inLoginScreen = segments[0] === 'login';
 
-    if (!isSignedIn && !inLoginScreen) {
-      // First-time user: automatically route to Clerk Login screen
-      router.replace('/login');
-    } else if (isSignedIn && inLoginScreen) {
+    if (isSignedIn && inLoginScreen) {
       // Logged in user: route to main shopping tabs
       router.replace('/(tabs)');
+    } else if (!isSignedIn && !inLoginScreen && !isGuestSession()) {
+      // First-time user / unauthenticated non-guest: route to Clerk Login screen
+      router.replace('/login');
     }
   }, [isSignedIn, isLoaded, segments]);
 

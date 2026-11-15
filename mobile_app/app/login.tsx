@@ -12,13 +12,14 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useSSO } from '@clerk/expo';
+import { useSSO, useAuth } from '@clerk/expo';
 import { useSignIn, useSignUp } from '@clerk/expo/legacy';
 import * as WebBrowser from 'expo-web-browser';
 import * as AuthSession from 'expo-auth-session';
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { BrandColors } from '@/constants/Colors';
+import { setGuestSession } from '@/services/guestSession';
 
 export const useWarmUpBrowser = () => {
   React.useEffect(() => {
@@ -34,6 +35,7 @@ WebBrowser.maybeCompleteAuthSession();
 export default function LoginScreen() {
   useWarmUpBrowser();
   const router = useRouter();
+  const { isLoaded: isAuthLoaded, isSignedIn } = useAuth();
   const { isLoaded: isSignInLoaded, signIn, setActive: setSignInActive } = useSignIn();
   const { isLoaded: isSignUpLoaded, signUp, setActive: setSignUpActive } = useSignUp();
   const { startSSOFlow } = useSSO();
@@ -47,29 +49,43 @@ export default function LoginScreen() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Once Clerk marks the user as signed in, navigate smoothly to main tabs
+  React.useEffect(() => {
+    if (isAuthLoaded && isSignedIn) {
+      router.replace('/(tabs)');
+    }
+  }, [isAuthLoaded, isSignedIn]);
+
   // 1. Google One-Tap SSO via Clerk
   const handleGoogleSignIn = async () => {
+    let authSuccess = false;
     try {
       setGoogleLoading(true);
       setErrorMessage('');
 
-      // In Expo Go, custom schemes like mobileapp:// are not registered in the OS.
-      // We must construct the Expo Go URL using Constants.expoConfig?.hostUri:
-      let redirectUrl = AuthSession.makeRedirectUri();
-      const hostUri = Constants.expoConfig?.hostUri;
-      if (hostUri) {
-        redirectUrl = `exp://${hostUri}/--/oauth-callback`;
-      }
-      console.log('Google SSO Redirect URL for Expo Go:', redirectUrl);
+      // Build consistent redirect URI for Expo Go and standalone APK builds
+      const redirectUrl = AuthSession.makeRedirectUri({
+        scheme: 'mobileapp',
+        path: 'oauth-callback',
+      });
+      console.log('Google SSO Redirect URL:', redirectUrl);
 
-      const { createdSessionId, setActive } = await startSSOFlow({
+      const { createdSessionId, setActive, signIn, signUp, authSessionResult } = await startSSOFlow({
         strategy: 'oauth_google',
         redirectUrl,
       });
 
       if (createdSessionId && setActive) {
+        authSuccess = true;
+        setGuestSession(false);
         await setActive({ session: createdSessionId });
-        router.replace('/(tabs)');
+        // Navigation will automatically occur via the isSignedIn useEffect hook
+      } else if (authSessionResult && authSessionResult.type !== 'cancel' && authSessionResult.type !== 'dismiss') {
+        if (signIn?.status && signIn.status !== 'complete') {
+          setErrorMessage(`Additional authentication required: ${signIn.status}`);
+        } else if (signUp?.status && signUp.status !== 'complete') {
+          setErrorMessage(`Sign up incomplete: ${signUp.status}`);
+        }
       }
     } catch (err: any) {
       console.log('Google Auth Error:', err);
@@ -80,7 +96,9 @@ export default function LoginScreen() {
         'Google Sign-In failed. Please use email/password.';
       setErrorMessage(msg);
     } finally {
-      setGoogleLoading(false);
+      if (!authSuccess) {
+        setGoogleLoading(false);
+      }
     }
   };
 
@@ -92,6 +110,7 @@ export default function LoginScreen() {
       return;
     }
 
+    let authSuccess = false;
     try {
       setLoading(true);
       setErrorMessage('');
@@ -102,8 +121,10 @@ export default function LoginScreen() {
       });
 
       if (result.status === 'complete') {
+        authSuccess = true;
+        setGuestSession(false);
         await setSignInActive({ session: result.createdSessionId });
-        router.replace('/(tabs)');
+        // Navigation will automatically occur via the isSignedIn useEffect hook
       } else {
         setErrorMessage(`Sign in incomplete: ${result.status}`);
       }
@@ -115,7 +136,9 @@ export default function LoginScreen() {
         'Invalid credentials. Please try again.';
       setErrorMessage(msg);
     } finally {
-      setLoading(false);
+      if (!authSuccess) {
+        setLoading(false);
+      }
     }
   };
 
@@ -127,6 +150,7 @@ export default function LoginScreen() {
       return;
     }
 
+    let authSuccess = false;
     try {
       setLoading(true);
       setErrorMessage('');
@@ -137,8 +161,9 @@ export default function LoginScreen() {
       });
 
       if (result.status === 'complete') {
+        authSuccess = true;
+        setGuestSession(false);
         await setSignUpActive({ session: result.createdSessionId });
-        router.replace('/(tabs)');
       } else {
         await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
         setPendingVerification(true);
@@ -151,7 +176,9 @@ export default function LoginScreen() {
         'Failed to create account.';
       setErrorMessage(msg);
     } finally {
-      setLoading(false);
+      if (!authSuccess) {
+        setLoading(false);
+      }
     }
   };
 
@@ -163,6 +190,7 @@ export default function LoginScreen() {
       return;
     }
 
+    let authSuccess = false;
     try {
       setLoading(true);
       setErrorMessage('');
@@ -172,8 +200,9 @@ export default function LoginScreen() {
       });
 
       if (result.status === 'complete') {
+        authSuccess = true;
+        setGuestSession(false);
         await setSignUpActive({ session: result.createdSessionId });
-        router.replace('/(tabs)');
       } else {
         setErrorMessage('Verification incomplete. Please check the code.');
       }
@@ -185,7 +214,9 @@ export default function LoginScreen() {
         'Verification failed.';
       setErrorMessage(msg);
     } finally {
-      setLoading(false);
+      if (!authSuccess) {
+        setLoading(false);
+      }
     }
   };
 
@@ -355,7 +386,10 @@ export default function LoginScreen() {
         {/* Guest Skip Option */}
         <TouchableOpacity
           style={styles.guestBtn}
-          onPress={() => router.replace('/(tabs)')}>
+          onPress={() => {
+            setGuestSession(true);
+            router.replace('/(tabs)');
+          }}>
           <Text style={styles.guestBtnText}>Browse Catalogue as Guest →</Text>
         </TouchableOpacity>
 

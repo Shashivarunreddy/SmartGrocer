@@ -11,10 +11,12 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useAuth, useUser } from '@clerk/expo';
 import { BrandColors } from '@/constants/Colors';
 import { api, AnalyticsSummary } from '@/services/api';
 import { AuthCard } from '@/components/AuthCard';
+import { setGuestSession } from '@/services/guestSession';
 
 const DIETARY_OPTIONS = [
   'Vegetarian',
@@ -28,6 +30,7 @@ const DIETARY_OPTIONS = [
 type ProfileTab = 'analytics' | 'settings';
 
 export default function ProfileScreen() {
+  const router = useRouter();
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const { user } = useUser();
 
@@ -130,7 +133,9 @@ export default function ProfileScreen() {
         text: 'Log Out',
         style: 'destructive',
         onPress: async () => {
+          setGuestSession(false);
           await signOut();
+          router.replace('/login');
           Alert.alert('Logged Out', 'You have successfully signed out.');
         },
       },
